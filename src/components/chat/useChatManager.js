@@ -15,28 +15,28 @@ export const useChatManager = () => {
             ? process.env.REACT_APP_BACKEND_URL
             : process.env.REACT_APP_URL_PROD;
 
-    useEffect(() => {
-        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-        const newSocket = io(`${protocol}://${BACKEND_URL}`);
+    // useEffect(() => {
+    //     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    //     const newSocket = io(`${protocol}://${BACKEND_URL}`);
 
-        socket.current = newSocket;
+    //     socket.current = newSocket;
 
-        newSocket.on('connect', () => {
-            console.log('Connected to WebSocket server');
-        });
+    //     newSocket.on('connect', () => {
+    //         console.log('Connected to WebSocket server');
+    //     });
 
-        newSocket.on('disconnect', () => {
-            console.log('Disconnected from WebSocket server');
-        });
+    //     newSocket.on('disconnect', () => {
+    //         console.log('Disconnected from WebSocket server');
+    //     });
 
-        newSocket.on('connect_error', (error) => {
-            console.log('Connect error', error);
-        });
+    //     newSocket.on('connect_error', (error) => {
+    //         console.log('Connect error', error);
+    //     });
 
-        return () => {
-            newSocket.disconnect();
-        };
-    }, []);
+    //     return () => {
+    //         newSocket.disconnect();
+    //     };
+    // }, []);
 
     useEffect(() => {
         if (socket.current) {

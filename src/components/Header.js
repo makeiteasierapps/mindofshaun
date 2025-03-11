@@ -1,81 +1,65 @@
-import { useContext } from 'react';
-import { Navbar, Nav, NavItem, NavLink } from 'reactstrap';
-import { ThemeContext } from '../contexts/ThemeContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faHome,
-    faGraduationCap,
-    faCode,
-    faBriefcase,
-    faEnvelope,
-} from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
+
+// MUI Icons
+import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+import EmailIcon from '@mui/icons-material/Email';
+
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    backgroundColor: 'black',
+}));
+
+const StyledIconButton = styled(IconButton)({
+    color: 'white',
+});
+
+const NavContainer = styled(Stack)(({ theme }) => ({
+    width: '100%',
+    justifyContent: 'center',
+    color: 'white',
+    fontFamily: theme.typography.fontFamily,
+    fontSize: 'clamp(25px, 3vw, 30px)',
+}));
+
 const Header = () => {
-    const theme = useContext(ThemeContext);
+    const theme = useTheme();
+
     return (
-        <Navbar expand="xs" fixed="top" style={{ backgroundColor: 'black' }}>
-            <Nav
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    width: '100%',
-                    fontFamily: theme.mainText,
-                    color: 'white',
-                    fontSize: 'clamp(25px, 3vw, 30px)',
-                }}
-                navbar
-            >
-                <NavItem>
-                    <NavLink
+        <StyledAppBar position="fixed">
+            <Toolbar disableGutters>
+                <NavContainer direction="row" spacing={2}>
+                    <StyledIconButton
+                        aria-label="home"
                         href="#home"
-                        style={{
-                            color: 'white',
-                        }}
+                        id="HomeIcon"
+                        size="large"
                     >
-                        <FontAwesomeIcon id="HomeIcon" icon={faHome} />
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
-                        href="#education"
-                        style={{
-                            color: 'white',
-                        }}
+                        <HomeIcon fontSize="inherit" />
+                    </StyledIconButton>
+
+                    <StyledIconButton
+                        aria-label="projects"
+                        href="#projects"
+                        size="large"
                     >
-                        <FontAwesomeIcon icon={faGraduationCap} />
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
-                        href="#skills"
-                        style={{
-                            color: 'white',
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faCode} />
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
-                        href="#portfolio"
-                        style={{
-                            color: 'white',
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faBriefcase} />
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
+                        <WorkIcon fontSize="inherit" />
+                    </StyledIconButton>
+
+                    <StyledIconButton
+                        aria-label="contact"
                         href="#contact"
-                        style={{
-                            color: 'white',
-                        }}
+                        size="large"
                     >
-                        <FontAwesomeIcon icon={faEnvelope} />
-                    </NavLink>
-                </NavItem>
-            </Nav>
-        </Navbar>
+                        <EmailIcon fontSize="inherit" />
+                    </StyledIconButton>
+                </NavContainer>
+            </Toolbar>
+        </StyledAppBar>
     );
 };
 
