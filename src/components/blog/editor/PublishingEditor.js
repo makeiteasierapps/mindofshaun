@@ -3,15 +3,13 @@ import {
     Box,
     Typography,
     TextField,
-    Button,
     FormControlLabel,
     Switch,
     CardContent,
-    Chip,
     Divider,
-    Grid,
+    Grid2,
 } from '@mui/material';
-import TagInput from './TagInput';
+import TagInput from '../core/TagInput';
 import {
     PublishingCard,
     TitleOption,
@@ -20,6 +18,7 @@ import {
     ActionButton,
 } from '../styles/PublishingEditor.styles';
 
+import TitleGeneratorResult from '../ai-tools/results/TitleGeneratorResult';
 const DEFAULT_AUTHOR = 'Shaun Offenbacher';
 
 const PublishingEditor = ({
@@ -100,39 +99,10 @@ const PublishingEditor = ({
                                 </Typography>
 
                                 <Box>
-                                    {publishingPackage.title_options.clickable_titles?.map(
-                                        (title, index) => (
-                                            <TitleOption
-                                                key={index}
-                                                fullWidth
-                                                selected={
-                                                    formData.title === title
-                                                }
-                                                onClick={() =>
-                                                    selectTitle(title)
-                                                }
-                                            >
-                                                {title}
-                                            </TitleOption>
-                                        )
-                                    )}
-
-                                    {publishingPackage.title_options.seo_friendly_titles?.map(
-                                        (title, index) => (
-                                            <TitleOption
-                                                key={`seo-${index}`}
-                                                fullWidth
-                                                selected={
-                                                    formData.title === title
-                                                }
-                                                onClick={() =>
-                                                    selectTitle(title)
-                                                }
-                                            >
-                                                {title}
-                                            </TitleOption>
-                                        )
-                                    )}
+                                    <TitleGeneratorResult
+                                        data={publishingPackage.title_options}
+                                        onSelectTitle={selectTitle}
+                                    />
                                 </Box>
                             </Box>
                         )}
@@ -175,8 +145,8 @@ const PublishingEditor = ({
                             label="Published"
                         />
 
-                        <Grid container spacing={2} sx={{ mt: 2 }}>
-                            <Grid item xs={6}>
+                        <Grid2 container spacing={2} sx={{ mt: 2 }}>
+                            <Grid2 item xs={6}>
                                 <ActionButton
                                     variant="outlined"
                                     fullWidth
@@ -184,8 +154,8 @@ const PublishingEditor = ({
                                 >
                                     Back to Writing
                                 </ActionButton>
-                            </Grid>
-                            <Grid item xs={6}>
+                            </Grid2>
+                            <Grid2 item xs={6}>
                                 <ActionButton
                                     type="submit"
                                     variant="contained"
@@ -196,8 +166,8 @@ const PublishingEditor = ({
                                         ? 'Update Post'
                                         : 'Create Post'}
                                 </ActionButton>
-                            </Grid>
-                        </Grid>
+                            </Grid2>
+                        </Grid2>
                     </FormContainer>
                 </CardContent>
             </PublishingCard>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, CardContent } from '@mui/material';
 import { GlassmorphicCard } from '../styles/BlogAdmin.styles';
-import WritingEditor from './WritingEditor';
-import PublishingEditor from './PublishingEditor';
+import WritingEditor from '../editor/WritingEditor';
+import PublishingEditor from '../editor/PublishingEditor';
 
 const DEFAULT_AUTHOR = 'Shaun Offenbacher';
 

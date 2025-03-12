@@ -1,0 +1,153 @@
+# Core Blog Components
+
+## Overview
+This folder contains the fundamental components that make up the blog system's core functionality. These components handle post listing, creation, editing, and management, forming the backbone of the blog application. They provide both the public-facing blog interface and the administrative tools for content management.
+
+## Key Components
+
+### Blog.js
+The main blog component that serves as the public-facing entry point for the blog system. This component:
+- Displays published blog posts to visitors
+- Provides a hidden admin login mechanism through a secret button
+- Uses the `useAuth` context for authentication management
+- Uses the `usePosts` context to retrieve and display published posts
+- Conditionally renders either the public blog view or the admin interface based on authentication status
+
+Key features:
+- Secret admin login modal with password authentication
+- Loading state handling with CircularProgress
+- Empty state handling when no posts exist
+- Post rendering with title, author, date, tags, and content
+- Styled with glassmorphic card components for visual appeal
+
+### BlogAdmin.js
+An administrative interface for managing blog posts. This component:
+- Provides a dashboard for blog post management
+- Handles CRUD operations for blog posts through the `usePosts` context
+- Manages state for editing and deleting posts
+- Integrates with PostForm for post creation and editing
+- Includes a logout mechanism
+
+Key state management:
+```javascript
+const [editingPost, setEditingPost] = useState(null);
+const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+const [postToDelete, setPostToDelete] = useState(null);
+```
+
+Key operations:
+- Edit post handling
+- Delete post handling with confirmation dialog
+- Form submission for creating and updating posts
+- Loading state management
+
+### PostForm.js
+A form component for creating and editing blog posts. This component:
+- Serves as a container that manages the state between writing and publishing modes
+- Integrates with WritingEditor for content creation
+- Integrates with PublishingEditor for metadata and publishing
+- Handles the transition between editing and publishing workflows
+- Manages form state and submission
+
+Key state management:
+```javascript
+const [content, setContent] = useState('');
+const [publishingPackage, setPublishingPackage] = useState(null);
+const [isWritingMode, setIsWritingMode] = useState(true);
+const [initialData, setInitialData] = useState({
+    title: '',
+    summary: '',
+    author: DEFAULT_AUTHOR,
+    tags: [],
+    published: false,
+});
+```
+
+Key features:
+- Mode switching between writing and publishing
+- Form state initialization for new and existing posts
+- Integration with editor components
+- Cancel functionality for editing mode
+
+### PostList.js
+A component that displays a list of blog posts for management. This component:
+- Renders a collection of PostItem components
+- Handles empty state when no posts exist
+- Passes edit and delete handlers to child components
+- Serves as a simple container with minimal logic
+
+### PostItem.js
+A component that displays a single blog post in the admin interface. This component:
+- Renders post details including title, author, date, tags, and a content preview
+- Provides edit and delete buttons for post management
+- Displays a "Draft" chip for unpublished posts
+- Formats dates for readability
+- Truncates long content for display purposes
+
+Key features:
+- Post metadata display
+- Action buttons for post management
+- Content preview with truncation
+- Tag display
+- Publication status indication
+
+### DeleteConfirmationDialog.js
+A reusable dialog component for confirming post deletion. This component:
+- Displays a confirmation dialog with the post title
+- Provides cancel and confirm actions
+- Uses Material-UI Dialog components
+- Prevents accidental deletion of content
+
+### TagInput.js
+A reusable component for inputting and managing tags for blog posts. This component:
+- Allows adding tags by typing and pressing Enter
+- Displays existing tags as chips with delete functionality
+- Prevents duplicate tags
+- Manages its own internal state for the current tag being entered
+
+Key state management:
+```javascript
+const [currentTag, setCurrentTag] = useState('');
+```
+
+Key handlers:
+- `handleTagKeyDown`: Adds a new tag when Enter is pressed
+- `removeTag`: Removes a tag when its delete button is clicked
+
+## Component Relationships
+- `Blog` is the top-level component that conditionally renders `BlogAdmin` when authenticated
+- `BlogAdmin` uses `PostForm` for creating/editing posts and `PostList` for displaying posts
+- `PostList` renders multiple `PostItem` components
+- `BlogAdmin` uses `DeleteConfirmationDialog` for delete confirmations
+- `PostForm` integrates with editor components from the `/editor` directory
+- `TagInput` is used by `PublishingEditor` for tag management
+
+## Integration Points
+- These components use context providers from `/context` directory:
+  - `useAuth` for authentication management
+  - `usePosts` for post data management
+- They integrate with editor components from `/editor` directory:
+  - `WritingEditor` for content creation
+  - `PublishingEditor` for metadata and publishing
+- They use styling from the `/styles` directory:
+  - `Blog.styles.js` for blog styling
+  - `BlogAdmin.styles.js` for admin interface styling
+- They use utility functions from `/utils` directory:
+  - `formatDate` for date formatting
+  - Other blog utilities
+
+## Data Flow
+1. User views published posts through `Blog` component
+2. Admin logs in through secret login in `Blog`
+3. Admin manages posts through `BlogAdmin`
+4. Admin creates/edits posts using `PostForm`
+5. Admin can delete posts with confirmation through `DeleteConfirmationDialog`
+6. Posts are displayed in `PostList` as `PostItem` components
+
+## Technical Details
+- Components use React hooks for state management (useState, useEffect)
+- Material-UI is used extensively for UI elements
+- Context API is used for authentication and post data management
+- Components implement proper prop validation
+- Error handling is implemented for async operations
+- Components use conditional rendering for different states (loading, empty, authenticated) 

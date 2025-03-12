@@ -7,9 +7,9 @@ import ContactMe from './components/ContactMe';
 import Home from './components/Home';
 import ConwayBackground from './components/ConwayBackground';
 import ParallaxContainer from './components/ParallaxContainer';
-import Blog from './components/blog/Blog';
+import Blog from './components/blog/core/Blog';
 import { AuthProvider } from './contexts/AuthContext';
-import { PostsProvider } from './contexts/PostsContext';
+import { PostsProvider } from './components/blog/context/PostsContext';
 
 const MainContainer = styled(Box)(({ theme }) => ({
     display: 'flex',

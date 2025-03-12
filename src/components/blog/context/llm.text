@@ -1,0 +1,175 @@
+# Blog Context Providers
+
+## Overview
+This folder contains React Context providers that manage state for the blog system. These context providers enable state sharing across components without prop drilling and centralize state management logic, particularly for blog post data and operations.
+
+## Key Components
+
+### PostsContext.js
+A comprehensive context provider that manages blog post data and CRUD operations. This context:
+- Provides a central store for blog post data
+- Handles loading and error states for API operations
+- Implements CRUD operations for posts (Create, Read, Update, Delete)
+- Offers filtering capabilities for published posts
+- Uses the Fetch API to communicate with the backend
+
+Key state management:
+```javascript
+const [posts, setPosts] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+```
+
+Key operations:
+1. **fetchAllPosts**: Retrieves all posts from the backend
+   ```javascript
+   const fetchAllPosts = useCallback(async () => {
+       try {
+           setLoading(true);
+           const response = await fetch(`${backendUrl}/api/blog/posts`);
+           if (!response.ok) {
+               throw new Error('Failed to fetch posts');
+           }
+           const data = await response.json();
+           setPosts(data);
+           return data;
+       } catch (error) {
+           console.error('Error fetching all blog posts:', error);
+           setError(error.message);
+           return [];
+       } finally {
+           setLoading(false);
+       }
+   }, [backendUrl]);
+   ```
+
+2. **createPost**: Creates a new blog post
+   ```javascript
+   const createPost = useCallback(
+       async (postData) => {
+           try {
+               const response = await fetch(`${backendUrl}/api/blog/posts`, {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify(postData),
+               });
+               if (!response.ok) {
+                   throw new Error('Failed to create post');
+               }
+               const newPost = await response.json();
+               setPosts((prevPosts) => [...prevPosts, newPost]);
+               return newPost;
+           } catch (error) {
+               console.error('Error creating blog post:', error);
+               setError(error.message);
+               throw error;
+           }
+       },
+       [backendUrl]
+   );
+   ```
+
+3. **updatePost**: Updates an existing blog post
+   ```javascript
+   const updatePost = useCallback(
+       async (postId, postData) => {
+           try {
+               const response = await fetch(
+                   `${backendUrl}/api/blog/posts/${postId}`,
+                   {
+                       method: 'PUT',
+                       headers: { 'Content-Type': 'application/json' },
+                       body: JSON.stringify(postData),
+                   }
+               );
+               if (!response.ok) {
+                   throw new Error('Failed to update post');
+               }
+               const updatedPost = await response.json();
+               setPosts((prevPosts) =>
+                   prevPosts.map((post) =>
+                       post._id === postId ? updatedPost : post
+                   )
+               );
+               return updatedPost;
+           } catch (error) {
+               console.error('Error updating blog post:', error);
+               setError(error.message);
+               throw error;
+           }
+       },
+       [backendUrl]
+   );
+   ```
+
+4. **deletePost**: Deletes a blog post
+   ```javascript
+   const deletePost = useCallback(
+       async (postId) => {
+           try {
+               const response = await fetch(
+                   `${backendUrl}/api/blog/posts/${postId}`,
+                   {
+                       method: 'DELETE',
+                   }
+               );
+               if (!response.ok) {
+                   throw new Error('Failed to delete post');
+               }
+               setPosts((prevPosts) =>
+                   prevPosts.filter((post) => post._id !== postId)
+               );
+               return true;
+           } catch (error) {
+               console.error('Error deleting blog post:', error);
+               setError(error.message);
+               throw error;
+           }
+       },
+       [backendUrl]
+   );
+   ```
+
+5. **getPublishedPosts**: Filters posts to return only published ones
+   ```javascript
+   const getPublishedPosts = useCallback(() => {
+       return posts.filter((post) => post.published);
+   }, [posts]);
+   ```
+
+## Usage Pattern
+The context is consumed using a custom hook for cleaner component code:
+```javascript
+// Custom hook for accessing the posts context
+export const usePosts = () => useContext(PostsContext);
+
+// Usage in components
+const { posts, loading, createPost, updatePost, deletePost } = usePosts();
+```
+
+## Integration Points
+- This context is used by components in the `/core` directory:
+  - `Blog.js` uses `getPublishedPosts` to display published posts
+  - `BlogAdmin.js` uses CRUD operations for post management
+- It communicates with the backend API using the `getBackendUrl` utility from `/utils`
+- It provides data that flows through the entire blog application
+
+## Error Handling
+The context implements comprehensive error handling:
+- Try/catch blocks around all async operations
+- Error state management for UI feedback
+- Console error logging for debugging
+- Error propagation to calling components when appropriate
+
+## Performance Considerations
+- Uses `useCallback` for memoization of API functions
+- Implements optimistic UI updates for better user experience
+- Uses functional updates for state changes to avoid race conditions
+- Fetches data only once on initial mount
+
+## Technical Details
+- Uses React's Context API for state management
+- Implements the provider pattern with a custom hook for consumption
+- Uses standard React hooks (useState, useEffect, useCallback)
+- Follows RESTful API patterns for backend communication
+- Implements proper error handling and loading states 

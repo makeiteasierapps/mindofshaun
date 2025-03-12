@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, CircularProgress } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { AdminContainer, AdminHeader } from '../styles/BlogAdmin.styles';
+import {
+    AdminContainer,
+    AdminHeader,
+} from '../../blog/styles/BlogAdmin.styles';
 import PostForm from './PostForm';
 import PostList from './PostList';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
-import { usePosts } from '../../contexts/PostsContext';
+import { usePosts } from '../context/PostsContext';
 
 const BlogAdmin = ({ onLogout }) => {
     const [editingPost, setEditingPost] = useState(null);

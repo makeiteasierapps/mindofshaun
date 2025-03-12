@@ -7,9 +7,9 @@ import {
     CircularProgress,
     Button,
 } from '@mui/material';
-import BlogAdmin from './BlogAdmin';
-import { useAuth } from '../../contexts/AuthContext';
-import { usePosts } from '../../contexts/PostsContext';
+import BlogAdmin from '../core/BlogAdmin';
+import { useAuth } from '../../../contexts/AuthContext';
+import { usePosts } from '../context/PostsContext';
 import {
     GlassmorphicCard,
     BlogContainer,
@@ -17,7 +17,7 @@ import {
     SecretLoginButton,
     TagsContainer,
 } from '../styles/Blog.styles';
-import { formatDate } from '../../utils/blogUtils';
+import { formatDate } from '../utils/blogUtils';
 
 const Blog = () => {
     const [showLoginModal, setShowLoginModal] = useState(false);

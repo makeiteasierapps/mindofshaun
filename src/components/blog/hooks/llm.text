@@ -1,0 +1,94 @@
+# Blog Custom Hooks
+
+## Overview
+This folder contains custom React hooks that encapsulate reusable logic for the blog system's AI functionality. These hooks abstract complex operations, state management, and API interactions to provide clean, reusable functionality across components. They form the core business logic layer for the AI-assisted writing features.
+
+## Key Hooks
+
+### useAiTools.js
+A foundational hook that provides core AI functionality for the blog system. This hook:
+- Manages state for AI operations (loading, results, text selection)
+- Handles user text selection via `handleTextSelection`
+- Provides configuration options for target audience and tone
+- Implements a generic `callAiService` function that handles API calls, loading states, and result storage
+- Offers utility functions for clearing results
+- Returns a comprehensive API for AI tool operations
+
+Key state managed:
+```javascript
+const [loading, setLoading] = useState(false);
+const [selectedText, setSelectedText] = useState('');
+const [useSelectedTextOnly, setUseSelectedTextOnly] = useState(true);
+const [targetAudience, setTargetAudience] = useState('general');
+const [tone, setTone] = useState('professional');
+const [results, setResults] = useState({});
+```
+
+### useAiToolHandlers.js
+A hook that builds on `useAiTools` to provide specific handlers for different AI operations. This hook:
+- Takes dependencies from `useAiTools` (callAiService, textToProcess, etc.)
+- Implements specific handler functions for each AI operation
+- Uses the `blogAiService` utility to make API calls
+- Memoizes handlers with useCallback for performance optimization
+
+Provides handlers for:
+- `handleOrganizeThoughts`: Structures random ideas into coherent outlines
+- `handleEditContent`: Improves writing quality and clarity
+- `handleGenerateTitles`: Creates engaging blog post titles
+- `handleExpandPoints`: Develops brief points into full paragraphs
+- `handleResearchDirections`: Suggests areas for further research
+- `handleAdjustTone`: Modifies content to match desired tone
+- `handleGenerateConclusion`: Creates compelling conclusions
+- `handleGenerateIntroduction`: Crafts engaging introductions
+
+### useWritingAiTools.js
+A specialized hook designed specifically for the writing editor. This hook:
+- Takes editor-specific dependencies (content, setLoading, previewContent, etc.)
+- Implements direct API calls to the `blogAiService`
+- Provides functions to apply AI-generated content to the preview area
+- Handles formatting of AI results for display in the editor
+
+Key function groups:
+1. **Generation functions** that call AI services:
+   - `generateIntroduction`, `generateConclusion`, `generateResearchDirections`
+   - `editContent`, `adjustTone`, `organizeThoughts`, `expandBriefPoints`
+
+2. **Application functions** that apply results to the preview:
+   - `applyIntroductionToPreview`, `applyConclusionToPreview`
+   - `applyResearchDirectionsToPreview`, `applyEditedContentToPreview`
+   - `applyAdjustedToneToPreview`, `applyExpandedPointsToPreview`
+   - `applyOrganizedThoughtsToPreview`
+
+## Hook Relationships
+- `useAiTools` provides the foundation for AI functionality
+- `useAiToolHandlers` builds on `useAiTools` for specific operations
+- `useWritingAiTools` is a standalone hook for the writing editor with similar but editor-specific functionality
+
+## Integration Points
+- These hooks are used by components in the `/ai-tools` directory:
+  - `BlogAiTools.js` uses `useAiTools` and `useAiToolHandlers`
+  - `AiToolsPanel.js` indirectly uses these hooks through props
+- They communicate with backend AI services via the `blogAiService` utility in the `/utils` directory
+- They provide functionality to editor components in `/editor` (particularly `WritingEditor.js`)
+
+## Error Handling
+All hooks implement consistent error handling patterns:
+- Try/catch blocks around async operations
+- Console error logging
+- Loading state management (setting loading to false in finally blocks)
+- Graceful degradation when errors occur
+
+## Performance Considerations
+- Extensive use of `useCallback` for memoization of functions
+- Careful dependency tracking in useCallback dependency arrays
+- State updates that preserve previous state using functional updates
+
+## Technical Details
+- Hooks follow React's rules of hooks
+- They use standard React hooks (useState, useCallback)
+- They implement clean separation of concerns:
+  - State management
+  - API interaction
+  - Business logic
+  - UI integration
+- JSDoc comments provide documentation for functions and parameters 

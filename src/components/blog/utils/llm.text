@@ -1,0 +1,106 @@
+# Blog Utility Functions
+
+## Overview
+This folder contains utility functions and services that support the blog system. These utilities provide reusable functionality for data processing, API interactions with AI services, and common operations used across multiple components.
+
+## Key Files
+
+### blogUtils.js
+A collection of utility functions for common blog operations. This file contains:
+
+1. **getBackendUrl**: Determines the appropriate backend URL based on the environment
+   ```javascript
+   export const getBackendUrl = () => {
+       return process.env.NODE_ENV === 'development'
+           ? `http://${process.env.REACT_APP_BACKEND_URL}`
+           : `https://${process.env.REACT_APP_BACKEND_URL_PROD}`;
+   };
+   ```
+
+2. **formatDate**: Formats date strings into a human-readable format
+   ```javascript
+   export const formatDate = (dateString) => {
+       const date = new Date(dateString);
+       return date.toLocaleDateString('en-US', {
+           year: 'numeric',
+           month: 'long',
+           day: 'numeric',
+       });
+   };
+   ```
+
+### blogAiService.js
+A comprehensive service that handles interactions with AI APIs for blog content enhancement. This file implements a collection of methods that communicate with backend AI services:
+
+1. **organizeThoughts**: Structures random ideas into coherent outlines
+   ```javascript
+   organizeThoughts: async (rawThoughts) => {
+       try {
+           const response = await fetch(
+               `${backendUrl}/api/blog/ai/organize-thoughts`,
+               {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({ raw_thoughts: rawThoughts }),
+               }
+           );
+
+           if (!response.ok) {
+               throw new Error('Failed to organize thoughts');
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error organizing thoughts:', error);
+           throw error;
+       }
+   }
+   ```
+
+2. **editContent**: Improves writing quality and clarity
+3. **generateTitles**: Creates engaging blog post titles
+4. **expandBriefPoints**: Develops brief points into full paragraphs
+5. **generateResearchDirections**: Suggests areas for further research
+6. **adjustTone**: Modifies content to match desired tone
+7. **generateConclusion**: Creates compelling conclusions
+8. **generateIntroduction**: Crafts engaging introductions
+9. **preparePublishingPackage**: Creates a complete package with titles, summary, and tags for publishing
+
+Each method follows a consistent pattern:
+- Takes specific parameters related to the operation
+- Makes a POST request to the appropriate backend endpoint
+- Handles errors with try/catch blocks
+- Returns the JSON response from the API
+- Includes JSDoc comments for documentation
+
+## Integration Points
+- **blogUtils.js** is used throughout the blog system:
+  - `getBackendUrl` is used by API services to determine the correct endpoint
+  - `formatDate` is used in UI components to display formatted dates
+- **blogAiService.js** is used by:
+  - Custom hooks in the `/hooks` directory (useAiTools, useAiToolHandlers, useWritingAiTools)
+  - AI tool components in the `/ai-tools` directory
+  - Editor components in the `/editor` directory
+
+## API Structure
+The blogAiService communicates with a RESTful API that follows this pattern:
+- Base URL: Determined by `getBackendUrl()`
+- Endpoints: `/api/blog/ai/{operation-name}`
+- Method: POST for all operations
+- Request format: JSON with operation-specific parameters
+- Response format: JSON with operation-specific results
+
+## Error Handling
+Both utilities implement consistent error handling:
+- blogUtils.js provides simple, pure functions without error handling needs
+- blogAiService.js implements try/catch blocks around all API calls
+- Errors are logged to the console for debugging
+- Errors are thrown to allow calling code to handle them appropriately
+
+## Technical Details
+- Functions are implemented as pure functions or async methods
+- The Fetch API is used for all HTTP requests
+- Environment variables are used for configuration
+- JSDoc comments provide documentation for all functions
+- Error handling follows best practices
+- The code follows a consistent style and pattern throughout 

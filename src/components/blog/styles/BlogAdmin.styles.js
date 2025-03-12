@@ -2,10 +2,10 @@ import { styled } from '@mui/material/styles';
 import { Box, Card } from '@mui/material';
 
 export const GlassmorphicCard = styled(Card)(({ theme }) => ({
-    background: 'rgba(255, 255, 255, 0.15)',
+    background: theme.palette.background.paper,
     backdropFilter: 'blur(10px)',
-    borderRadius: '10px',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: `0 8px 32px ${theme.palette.background.shadow}`,
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     overflow: 'hidden',
     margin: theme.spacing(2, 0),

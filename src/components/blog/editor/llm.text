@@ -1,0 +1,99 @@
+# Blog Editor Components
+
+## Overview
+This folder contains components that make up the rich text editing system for the blog. These components provide a comprehensive editing experience with a writing interface, preview capabilities, publishing workflow, and integration with AI tools. The editor system is designed to support the entire content creation process from drafting to publishing.
+
+## Key Components
+
+### WritingEditor.js
+The main rich text editor component that serves as the primary content creation interface. This component:
+- Provides a textarea-based content editor with real-time updates
+- Implements a persistent sidebar with AI tools and preview functionality
+- Supports text selection with a context menu for sending selections to preview
+- Integrates with the `useWritingAiTools` hook for AI-assisted writing
+- Manages state for:
+  - Sidebar visibility (`sidebarOpen`)
+  - Loading state (`loading`)
+  - AI results (`aiResults`)
+  - Content tone (`tone`)
+  - Preview content (`previewContent`)
+
+Key features:
+- Text selection handling with a context menu
+- Preview functionality with apply/send capabilities
+- AI tools integration through the AiToolsPanel
+- Publishing preparation workflow
+
+### PublishingEditor.js
+A component that handles the publishing workflow for blog posts. This component:
+- Manages metadata for blog posts (title, summary, tags, etc.)
+- Provides a form interface for entering and editing post metadata
+- Displays AI-generated title suggestions from the publishing package
+- Supports both creating new posts and updating existing ones
+- Includes a content preview section
+
+Key state management:
+```javascript
+const [formData, setFormData] = useState({
+    title: '',
+    summary: '',
+    author: DEFAULT_AUTHOR,
+    tags: [],
+    published: false,
+    ...initialData,
+});
+```
+
+Key features:
+- Title selection from AI-generated options
+- Tag management through TagInput component
+- Publish/unpublish toggle
+- Form validation and submission
+- Content preview
+
+### PreviewArea.js
+A component that displays a preview of the blog post content. This component:
+- Renders content with proper formatting (converts newlines to <br> tags)
+- Provides a placeholder message when no content is available
+- Uses styled components for consistent visual presentation
+- Supports HTML content rendering through dangerouslySetInnerHTML
+
+### ToneAndPreviewControls.js
+A component that provides controls for adjusting the tone of the content and managing preview content. This component:
+- Offers a dropdown for selecting content tone (professional, casual, formal, friendly, humorous)
+- Provides a button to apply preview content to the main editor
+- Uses Material-UI theming for consistent styling
+- Implements proper prop validation with PropTypes
+
+## Component Relationships
+- `WritingEditor` is the parent component that contains `ToneAndPreviewControls`, `PreviewArea`, and integrates with `AiToolsPanel`
+- `PublishingEditor` is used after content creation in `WritingEditor` to prepare the post for publishing
+- `PreviewArea` displays content that can be generated or modified by AI tools
+- `ToneAndPreviewControls` affects how AI tools process content through tone selection
+
+## Integration Points
+- These components integrate with AI tools from `/ai-tools` directory:
+  - `WritingEditor` uses `AiToolsPanel` and the `useWritingAiTools` hook
+  - `PublishingEditor` consumes AI-generated publishing packages
+- They use styling from the `/styles` directory:
+  - `WritingEditor.styles.js` for editor styling
+  - `PublishingEditor.styles.js` for publishing interface styling
+- They work with components in `/core` directory:
+  - `PublishingEditor` uses `TagInput` for tag management
+
+## Data Flow
+1. User creates content in `WritingEditor`
+2. Content can be sent to `PreviewArea` for review
+3. AI tools can process content and generate suggestions
+4. User can apply AI-generated content from preview to main editor
+5. User prepares content for publishing using `PublishingEditor`
+6. Post metadata and content are submitted for saving/publishing
+
+## Technical Details
+- Components use React hooks for state management (useState, useCallback, useRef)
+- Material-UI is used extensively for UI elements and theming
+- Styled components provide custom styling
+- PropTypes are used for type checking
+- Components implement responsive design principles
+- The editor uses a textarea-based approach rather than a rich text editor library
+- Content formatting is handled through CSS and basic HTML conversion 

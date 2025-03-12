@@ -1,4 +1,4 @@
-import { getBackendUrl } from './blogUtils';
+import { getBackendUrl } from '../utils/blogUtils';
 
 const backendUrl = getBackendUrl();
 
@@ -36,11 +36,10 @@ const blogAiService = {
     /**
      * Review blog content and provide specific improvement suggestions
      * @param {string} draftContent - The draft content to edit
-     * @param {string} targetAudience - The target audience
      * @param {string} tone - The desired tone
      * @returns {Promise<Object>} - The edited content suggestions
      */
-    editContent: async (draftContent, targetAudience, tone) => {
+    editContent: async (draftContent, tone) => {
         try {
             const response = await fetch(
                 `${backendUrl}/api/blog/ai/edit-content`,
@@ -49,7 +48,6 @@ const blogAiService = {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         draft_content: draftContent,
-                        target_audience: targetAudience,
                         tone: tone,
                     }),
                 }
@@ -215,11 +213,11 @@ const blogAiService = {
 
     /**
      * Craft engaging introductions that hook readers immediately
-     * @param {string} blogTopic - The blog topic
-     * @param {string} targetAudience - The target audience
+     * @param {string} content - The blog content
+     * @param {string} tone - The tone
      * @returns {Promise<Object>} - The generated introduction
      */
-    generateIntroduction: async (blogTopic, targetAudience) => {
+    generateIntroduction: async (content, tone) => {
         try {
             const response = await fetch(
                 `${backendUrl}/api/blog/ai/generate-introduction`,
@@ -227,8 +225,8 @@ const blogAiService = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        blog_topic: blogTopic,
-                        target_audience: targetAudience,
+                        content,
+                        tone,
                     }),
                 }
             );

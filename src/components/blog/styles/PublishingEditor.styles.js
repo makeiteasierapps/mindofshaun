@@ -3,11 +3,10 @@ import { Box, Card, Button, Paper } from '@mui/material';
 
 export const PublishingCard = styled(Card)(({ theme }) => ({
     backdropFilter: 'blur(10px)',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: theme.palette.background.paper,
+    opacity: 0.7,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(2),
-    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
     marginBottom: theme.spacing(3),
 }));
 
@@ -16,11 +15,13 @@ export const TitleOption = styled(Button)(({ theme, selected }) => ({
     justifyContent: 'flex-start',
     padding: theme.spacing(1, 2),
     marginBottom: theme.spacing(1),
-    backgroundColor: selected ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+    backgroundColor: selected ? theme.palette.action.selected : 'transparent',
+    color: theme.palette.text.primary,
     '&:hover': {
         backgroundColor: selected
-            ? 'rgba(0, 0, 0, 0.12)'
-            : 'rgba(0, 0, 0, 0.04)',
+            ? theme.palette.action.selectedOpacity
+            : theme.palette.action.hover,
+        color: theme.palette.text.hover,
     },
     borderLeft: selected ? `4px solid ${theme.palette.primary.main}` : 'none',
     borderRadius: 0,
@@ -28,11 +29,12 @@ export const TitleOption = styled(Button)(({ theme, selected }) => ({
 
 export const ContentPreview = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    color: theme.palette.text.secondary,
     borderRadius: theme.shape.borderRadius,
     maxHeight: '300px',
     overflowY: 'auto',
     whiteSpace: 'pre-wrap',
+    boxShadow: `0px 4px 12px ${theme.palette.background.shadow}`,
 }));
 
 export const FormContainer = styled(Box)(({ theme }) => ({
@@ -44,4 +46,9 @@ export const FormContainer = styled(Box)(({ theme }) => ({
 export const ActionButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(1.2),
     fontWeight: 'bold',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.primary,
+    '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+    },
 }));

@@ -3,10 +3,10 @@ import json
 from server.agents.blog.dspy_models import *
 
 # Tools for during the writing process
-def generate_introduction(blog_topic, target_audience):
+def generate_introduction(blog_content, tone):
     """Craft engaging introductions that hook readers immediately."""
     introduction_hook = ChainOfThought(IntroductionHook)
-    prediction = introduction_hook(blog_topic=blog_topic, target_audience=target_audience)
+    prediction = introduction_hook(blog_content=blog_content, tone=tone)
     introduction = {
         "story_hook": prediction.story_hook,
         "question_hook": prediction.question_hook,
@@ -24,15 +24,13 @@ def organize_thoughts(raw_thoughts):
         "key_points": prediction.key_points,
         "structure": prediction.structure,
         "writing_prompts": prediction.writing_prompts,
-        "target_audience": prediction.target_audience,
     }
-    print(organized_thoughts)
     return organized_thoughts
 
-def expand_brief_points(brief_points, desired_tone):
+def expand_brief_points(brief_points, tone):
     """Expand brief points into fully developed paragraphs."""
     content_expander = ChainOfThought(ContentExpander)
-    prediction = content_expander(brief_points=brief_points, desired_tone=desired_tone)
+    prediction = content_expander(brief_points=brief_points, tone=tone)
     expanded_content = {
         "expanded_content": prediction.expanded_content,
         "transition_suggestions": prediction.transition_suggestions,
@@ -51,10 +49,10 @@ def generate_research_directions(blog_topic):
     }
     return research_directions
 
-def generate_conclusion(blog_content):
+def generate_conclusion(blog_content, tone):
     """Create compelling conclusions that summarize and drive action."""
     conclusion_generator = ChainOfThought(ConclusionGenerator)
-    prediction = conclusion_generator(blog_content=blog_content)
+    prediction = conclusion_generator(blog_content=blog_content, tone=tone)
     conclusion = {
         "conclusion_paragraph": prediction.conclusion_paragraph,
         "key_takeaways": prediction.key_takeaways,
@@ -73,16 +71,14 @@ def create_blog_tags(blog_content):
     tags = ChainOfThought("blog_content -> tags: list[str]")
     return tags(blog_content=blog_content).tags
 
-def edit_content(draft_content, target_audience, tone):
+def edit_content(draft_content, tone):
     """Review blog content and provide specific improvement suggestions."""
     content_editor = ChainOfThought(ContentEditor)
-    prediction = content_editor(draft_content=draft_content, target_audience=target_audience, tone=tone)
+    prediction = content_editor(draft_content=draft_content, tone=tone)
     edited_content = {
         "content_feedback": prediction.content_feedback,
         "structure_suggestions": prediction.structure_suggestions,
         "clarity_improvements": prediction.clarity_improvements,
-        "engagement_tips": prediction.engagement_tips,
-        "specific_edits": prediction.specific_edits,
     }
     return edited_content
 
@@ -97,10 +93,10 @@ def adjust_tone(content, target_tone):
     }
     return adjusted_content
 
-def generate_titles(blog_content):
+def generate_titles(blog_content, tone):
     """Generate engaging blog titles from content or topic."""
     title_generator = ChainOfThought(TitleGenerator)
-    prediction = title_generator(blog_content=blog_content)
+    prediction = title_generator(blog_content=blog_content, tone=tone)
     titles = {
         "clickable_titles": prediction.clickable_titles,
         "seo_friendly_titles": prediction.seo_friendly_titles,
@@ -108,10 +104,10 @@ def generate_titles(blog_content):
     }
     return titles
 
-def prepare_publishing_package(blog_content):
+def prepare_publishing_package(blog_content, tone):
     """Create a complete publishing package with titles, summary, and tags."""
     # Get title options
-    titles = generate_titles(blog_content)
+    titles = generate_titles(blog_content, tone)
     
     # Get summary
     summary = summarize_blog(blog_content)

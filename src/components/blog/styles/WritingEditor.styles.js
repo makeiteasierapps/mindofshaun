@@ -37,9 +37,9 @@ export const SidebarToggle = styled(IconButton)(({ theme }) => ({
     transform: 'translateY(-50%)',
     zIndex: 1200,
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.text.primary,
     '&:hover': {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.light,
     },
 }));
 
@@ -55,11 +55,16 @@ export const ToolButton = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     textTransform: 'none',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.primary,
+    '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+    },
 }));
 
 export const PreviewContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius,
     height: '100%',
     overflowY: 'auto',
@@ -69,13 +74,18 @@ export const PublishButton = styled(Button)(({ theme }) => ({
     marginTop: 'auto',
     padding: theme.spacing(1.5),
     fontWeight: 'bold',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.primary,
+    '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+    },
 }));
 
 export const ResultPreview = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2),
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius,
     maxHeight: '200px',
     overflowY: 'auto',

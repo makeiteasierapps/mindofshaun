@@ -196,7 +196,6 @@ class OrganizeThoughtsRequest(BaseModel):
 
 class EditContentRequest(BaseModel):
     draft_content: str
-    target_audience: str
     tone: str
 
 class GenerateTitlesRequest(BaseModel):
@@ -218,8 +217,8 @@ class GenerateConclusionRequest(BaseModel):
     blog_content: str
 
 class GenerateIntroductionRequest(BaseModel):
-    blog_topic: str
-    target_audience: str
+    content: str
+    tone: str
 
 class PreparePublishingPackageRequest(BaseModel):
     blog_content: str
@@ -238,7 +237,7 @@ async def api_organize_thoughts(request: OrganizeThoughtsRequest):
 async def api_edit_content(request: EditContentRequest):
     """Review blog content and provide specific improvement suggestions."""
     try:
-        result = edit_content(request.draft_content, request.target_audience, request.tone)
+        result = edit_content(request.draft_content, request.tone)
         return result
     except Exception as e:
         logger.error(f"Error editing content: {str(e)}")
@@ -248,7 +247,7 @@ async def api_edit_content(request: EditContentRequest):
 async def api_generate_titles(request: GenerateTitlesRequest):
     """Generate engaging blog titles from content or topic."""
     try:
-        result = generate_titles(request.blog_content)
+        result = generate_titles(request.blog_content, "professional")
         return result
     except Exception as e:
         logger.error(f"Error generating titles: {str(e)}")
@@ -288,7 +287,7 @@ async def api_adjust_tone(request: AdjustToneRequest):
 async def api_generate_conclusion(request: GenerateConclusionRequest):
     """Create compelling conclusions that summarize and drive action."""
     try:
-        result = generate_conclusion(request.blog_content)
+        result = generate_conclusion(request.blog_content, "professional")
         return result
     except Exception as e:
         logger.error(f"Error generating conclusion: {str(e)}")
@@ -298,7 +297,7 @@ async def api_generate_conclusion(request: GenerateConclusionRequest):
 async def api_generate_introduction(request: GenerateIntroductionRequest):
     """Craft engaging introductions that hook readers immediately."""
     try:
-        result = generate_introduction(request.blog_topic, request.target_audience)
+        result = generate_introduction(request.content, request.tone)
         return result
     except Exception as e:
         logger.error(f"Error generating introduction: {str(e)}")
@@ -308,7 +307,7 @@ async def api_generate_introduction(request: GenerateIntroductionRequest):
 async def api_prepare_publishing_package(request: PreparePublishingPackageRequest):
     """Create a complete publishing package with titles, summary, and tags."""
     try:
-        result = prepare_publishing_package(request.blog_content)
+        result = prepare_publishing_package(request.blog_content, "professional")
         return result
     except Exception as e:
         logger.error(f"Error preparing publishing package: {str(e)}")

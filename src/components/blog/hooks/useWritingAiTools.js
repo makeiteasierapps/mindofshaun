@@ -1,24 +1,28 @@
-import { useCallback } from 'react';
-import blogAiService from '../../../utils/blogAiService';
+import blogAiService from '../utils/blogAiService';
 
+/**
+ * AI tool functions for the WritingEditor component
+ */
 const useWritingAiTools = (
     content,
     setLoading,
     aiResults,
     setAiResults,
-    onContentChange
+    onContentChange,
+    previewContent,
+    setPreviewContent
 ) => {
-    // Introduction
-    const generateIntroduction = useCallback(async () => {
-        if (!content.trim()) return;
-
+    /**
+     * Generates introduction options based on the content
+     */
+    const generateIntroduction = async () => {
         setLoading(true);
         try {
             // Extract the first line as the topic
             const topic = content.split('\n')[0];
             const result = await blogAiService.generateIntroduction(
                 topic,
-                'general'
+                'professional'
             );
             setAiResults((prev) => ({ ...prev, introduction: result }));
         } catch (error) {
@@ -26,25 +30,12 @@ const useWritingAiTools = (
         } finally {
             setLoading(false);
         }
-    }, [content, setLoading, setAiResults]);
+    };
 
-    const applyIntroduction = useCallback(
-        (introType) => {
-            if (!aiResults.introduction) return;
-
-            const selectedIntro = aiResults.introduction[introType];
-            if (!selectedIntro) return;
-
-            const newContent = selectedIntro + '\n\n' + content;
-            onContentChange(newContent);
-        },
-        [aiResults.introduction, content, onContentChange]
-    );
-
-    // Conclusion
-    const generateConclusion = useCallback(async () => {
-        if (!content.trim()) return;
-
+    /**
+     * Generates a conclusion based on the content
+     */
+    const generateConclusion = async () => {
         setLoading(true);
         try {
             const result = await blogAiService.generateConclusion(content);
@@ -54,20 +45,12 @@ const useWritingAiTools = (
         } finally {
             setLoading(false);
         }
-    }, [content, setLoading, setAiResults]);
+    };
 
-    const applyConclusion = useCallback(() => {
-        if (!aiResults.conclusion?.conclusion_paragraph) return;
-
-        const newContent =
-            content + '\n\n' + aiResults.conclusion.conclusion_paragraph;
-        onContentChange(newContent);
-    }, [aiResults.conclusion, content, onContentChange]);
-
-    // Research Directions
-    const generateResearchDirections = useCallback(async () => {
-        if (!content.trim()) return;
-
+    /**
+     * Generates research directions based on the content
+     */
+    const generateResearchDirections = async () => {
         setLoading(true);
         try {
             // Extract the first line as the topic
@@ -81,61 +64,42 @@ const useWritingAiTools = (
         } finally {
             setLoading(false);
         }
-    }, [content, setLoading, setAiResults]);
+    };
 
-    // Edit Content
-    const editContent = useCallback(
-        async (targetAudience = 'general', tone = 'professional') => {
-            if (!content.trim()) return;
+    /**
+     * Edits content based on the current tone
+     */
+    const editContent = async (tone) => {
+        setLoading(true);
+        try {
+            const result = await blogAiService.editContent(content, tone);
+            setAiResults((prev) => ({ ...prev, editedContent: result }));
+        } catch (error) {
+            console.error('Error editing content:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            setLoading(true);
-            try {
-                const result = await blogAiService.editContent(
-                    content,
-                    targetAudience,
-                    tone
-                );
-                setAiResults((prev) => ({ ...prev, editedContent: result }));
-            } catch (error) {
-                console.error('Error editing content:', error);
-            } finally {
-                setLoading(false);
-            }
-        },
-        [content, setLoading, setAiResults]
-    );
+    /**
+     * Adjusts the tone of the content
+     */
+    const adjustTone = async (targetTone) => {
+        setLoading(true);
+        try {
+            const result = await blogAiService.adjustTone(content, targetTone);
+            setAiResults((prev) => ({ ...prev, adjustedTone: result }));
+        } catch (error) {
+            console.error('Error adjusting tone:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    // Adjust Tone
-    const adjustTone = useCallback(
-        async (targetTone = 'professional') => {
-            if (!content.trim()) return;
-
-            setLoading(true);
-            try {
-                const result = await blogAiService.adjustTone(
-                    content,
-                    targetTone
-                );
-                setAiResults((prev) => ({ ...prev, adjustedTone: result }));
-            } catch (error) {
-                console.error('Error adjusting tone:', error);
-            } finally {
-                setLoading(false);
-            }
-        },
-        [content, setLoading, setAiResults]
-    );
-
-    const applyAdjustedTone = useCallback(() => {
-        if (!aiResults.adjustedTone?.adjusted_content) return;
-
-        onContentChange(aiResults.adjustedTone.adjusted_content);
-    }, [aiResults.adjustedTone, onContentChange]);
-
-    // Organize Thoughts
-    const organizeThoughts = useCallback(async () => {
-        if (!content.trim()) return;
-
+    /**
+     * Organizes thoughts from raw content
+     */
+    const organizeThoughts = async () => {
         setLoading(true);
         try {
             const result = await blogAiService.organizeThoughts(content);
@@ -145,47 +109,152 @@ const useWritingAiTools = (
         } finally {
             setLoading(false);
         }
-    }, [content, setLoading, setAiResults]);
+    };
 
-    // Expand Brief Points
-    const expandBriefPoints = useCallback(
-        async (desiredTone = 'professional') => {
-            if (!content.trim()) return;
+    /**
+     * Expands brief points into detailed content
+     */
+    const expandBriefPoints = async (tone) => {
+        setLoading(true);
+        try {
+            const result = await blogAiService.expandBriefPoints(content, tone);
+            setAiResults((prev) => ({ ...prev, expandedPoints: result }));
+        } catch (error) {
+            console.error('Error expanding brief points:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            setLoading(true);
-            try {
-                const result = await blogAiService.expandBriefPoints(
-                    content,
-                    desiredTone
-                );
-                setAiResults((prev) => ({ ...prev, expandedPoints: result }));
-            } catch (error) {
-                console.error('Error expanding brief points:', error);
-            } finally {
-                setLoading(false);
-            }
-        },
-        [content, setLoading, setAiResults]
-    );
+    /**
+     * Applies the selected introduction type to the preview content
+     */
+    const applyIntroductionToPreview = (introType) => {
+        if (!aiResults.introduction) return;
 
-    const applyExpandedPoints = useCallback(() => {
+        const selectedIntro = aiResults.introduction[introType];
+        if (!selectedIntro) return;
+
+        const baseContent = previewContent || content;
+        const newContent = selectedIntro + '\n\n' + baseContent;
+        setPreviewContent(newContent);
+    };
+
+    /**
+     * Applies organized thoughts to the preview content
+     */
+    const applyOrganizedThoughtsToPreview = () => {
+        if (!aiResults.organizedThoughts) return;
+
+        const thoughts = aiResults.organizedThoughts;
+        let formattedThoughts = `# ${thoughts.blog_topic}\n\n`;
+
+        formattedThoughts += '## Key Points\n';
+        thoughts.key_points.forEach((point, index) => {
+            formattedThoughts += `${index + 1}. ${point}\n`;
+        });
+
+        formattedThoughts += '\n## Suggested Structure\n';
+        thoughts.structure.forEach((item, index) => {
+            formattedThoughts += `${index + 1}. ${item}\n`;
+        });
+
+        formattedThoughts += '\n## Writing Prompts\n';
+        thoughts.writing_prompts.forEach((prompt, index) => {
+            formattedThoughts += `- ${prompt}\n`;
+        });
+
+        setPreviewContent(formattedThoughts);
+    };
+
+    /**
+     * Applies the generated conclusion to the preview content
+     */
+    const applyConclusionToPreview = () => {
+        if (!aiResults.conclusion?.conclusion_paragraph) return;
+
+        const baseContent = previewContent || content;
+        const newContent =
+            baseContent + '\n\n' + aiResults.conclusion.conclusion_paragraph;
+        setPreviewContent(newContent);
+    };
+
+    /**
+     * Applies research directions to the preview content
+     */
+    const applyResearchDirectionsToPreview = () => {
+        if (!aiResults.researchDirections?.research_areas) return;
+
+        const baseContent = previewContent || content;
+        const researchAreas = aiResults.researchDirections.research_areas;
+
+        let researchSection = '\n\n## Further Research\n';
+        researchAreas.forEach((area) => {
+            researchSection += `- ${area}\n`;
+        });
+
+        const newContent = baseContent + researchSection;
+        setPreviewContent(newContent);
+    };
+
+    /**
+     * Applies edited content suggestions to the preview
+     */
+    const applyEditedContentToPreview = () => {
+        if (!aiResults.editedContent) return;
+
+        // Create a formatted version of the editing suggestions
+        const suggestions = aiResults.editedContent;
+        let formattedSuggestions = '## Editing Suggestions\n\n';
+
+        if (suggestions.content_feedback) {
+            formattedSuggestions += `### Content Feedback\n${suggestions.content_feedback}\n\n`;
+        }
+
+        if (suggestions.structure_suggestions) {
+            formattedSuggestions += `### Structure Suggestions\n${suggestions.structure_suggestions}\n\n`;
+        }
+
+        if (suggestions.clarity_improvements) {
+            formattedSuggestions += `### Clarity Improvements\n${suggestions.clarity_improvements}\n\n`;
+        }
+
+        setPreviewContent(formattedSuggestions);
+    };
+
+    /**
+     * Applies adjusted tone content to the preview
+     */
+    const applyAdjustedToneToPreview = () => {
+        if (!aiResults.adjustedTone?.adjusted_content) return;
+
+        setPreviewContent(aiResults.adjustedTone.adjusted_content);
+    };
+
+    /**
+     * Applies expanded points to the preview
+     */
+    const applyExpandedPointsToPreview = () => {
         if (!aiResults.expandedPoints?.expanded_content) return;
 
-        onContentChange(aiResults.expandedPoints.expanded_content);
-    }, [aiResults.expandedPoints, onContentChange]);
+        setPreviewContent(aiResults.expandedPoints.expanded_content);
+    };
 
     return {
         generateIntroduction,
-        applyIntroduction,
         generateConclusion,
-        applyConclusion,
         generateResearchDirections,
         editContent,
         adjustTone,
-        applyAdjustedTone,
         organizeThoughts,
         expandBriefPoints,
-        applyExpandedPoints,
+        applyIntroductionToPreview,
+        applyConclusionToPreview,
+        applyResearchDirectionsToPreview,
+        applyEditedContentToPreview,
+        applyAdjustedToneToPreview,
+        applyExpandedPointsToPreview,
+        applyOrganizedThoughtsToPreview,
     };
 };
 
