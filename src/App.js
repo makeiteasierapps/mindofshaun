@@ -5,7 +5,7 @@ import NavBar from './components/Header';
 import Projects from './components/Projects';
 import ContactMe from './components/ContactMe';
 import Home from './components/Home';
-import ConwayBackground from './components/ConwayBackground';
+import { PixiConwayBackground } from './components/pixi';
 import ParallaxContainer from './components/ParallaxContainer';
 import Blog from './components/blog/core/Blog';
 import { AuthProvider } from './contexts/AuthContext';
@@ -36,7 +36,7 @@ const App = () => {
             <AuthProvider>
                 <PostsProvider>
                     <MainContainer>
-                        <ConwayBackground />
+                        <PixiConwayBackground />
                         <NavBar />
                         <SectionWrapper>
                             <ParallaxContainer speed={0.15}>
