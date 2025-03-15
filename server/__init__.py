@@ -67,10 +67,11 @@ def create_app():
     )
 
     # Import and include routers
-    from server.routes import blog_router
+    from server.routes import blog_router, projects_router
 
     routers = [
-        blog_router
+        blog_router,
+        projects_router
     ]
     
     for router in routers:

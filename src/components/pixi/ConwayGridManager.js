@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js';
+import { PRESETS } from './presets';
+import { screenToGrid } from './utils';
 
 // Colors for cells
 const COLORS = [
@@ -7,71 +9,14 @@ const COLORS = [
     0x89cff0, // Sky Blue
 ];
 
-// Preset patterns
-const PRESETS = {
-    glider: [
-        [0, 1, 0],
-        [0, 0, 1],
-        [1, 1, 1],
-    ],
-    blinker: [[1, 1, 1]],
-    pulsar: [
-        [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-        [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
-        [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
-    ],
-    gosperGliderGun: [
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-            0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        ],
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        ],
-        [
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-        [
-            1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1,
-            0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-            0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ],
-    ],
-};
-
 export class ConwayGridManager {
-    constructor({ app, cellSize, initialLifeProbability }) {
+    constructor({
+        app,
+        cellSize,
+        initialLifeProbability,
+        viewportWidth,
+        viewportHeight,
+    }) {
         this.app = app;
         this.cellSize = cellSize;
         this.initialLifeProbability = initialLifeProbability;
@@ -79,6 +24,8 @@ export class ConwayGridManager {
         this.tickerSpeed = 1;
         this.tickCount = 0;
         this.updateInterval = 10; // Update every 10 ticks at speed 1
+        this.viewportWidth = viewportWidth || window.innerWidth;
+        this.viewportHeight = viewportHeight || window.innerHeight;
 
         // Create containers
         this.gridContainer = new PIXI.Container();
@@ -94,11 +41,20 @@ export class ConwayGridManager {
 
     // Initialize the grid
     initGrid() {
-        const width = this.app.screen.width;
-        const height = this.app.screen.height;
+        // Use the viewport dimensions for the grid
+        const width = this.viewportWidth;
+        const height = this.viewportHeight;
 
         this.columns = Math.ceil(width / this.cellSize);
         this.rows = Math.ceil(height / this.cellSize);
+
+        console.log('Grid dimensions:', {
+            width,
+            height,
+            columns: this.columns,
+            rows: this.rows,
+            cellSize: this.cellSize,
+        });
 
         // Create grid data
         this.grid = Array.from({ length: this.columns }, () =>
@@ -131,14 +87,9 @@ export class ConwayGridManager {
         this.cellGraphics.clear();
 
         // Apply a slight fade effect to the entire screen
-        this.cellGraphics.beginFill(0x000000, 0.1);
-        this.cellGraphics.drawRect(
-            0,
-            0,
-            this.app.screen.width,
-            this.app.screen.height
-        );
-        this.cellGraphics.endFill();
+        this.cellGraphics
+            .rect(0, 0, this.app.screen.width, this.app.screen.height)
+            .fill({ color: 0x000000, alpha: 0.1 });
 
         // Draw each cell
         for (let i = 0; i < this.columns; i++) {
@@ -154,9 +105,9 @@ export class ConwayGridManager {
 
                     // Create a radial gradient effect
                     const alpha = opacity;
-                    this.cellGraphics.beginFill(color, alpha);
-                    this.cellGraphics.drawCircle(centerX, centerY, radius);
-                    this.cellGraphics.endFill();
+                    this.cellGraphics
+                        .circle(centerX, centerY, radius)
+                        .fill({ color, alpha });
                 }
             }
         }
@@ -192,7 +143,7 @@ export class ConwayGridManager {
 
                 // Update opacity
                 nextCell.opacity = nextCell.alive
-                    ? Math.min(cell.opacity + 0.05, 1)
+                    ? Math.min(cell.opacity + 0.05, 0.3)
                     : Math.max(cell.opacity - 0.05, 0);
 
                 // Keep the color
@@ -235,6 +186,10 @@ export class ConwayGridManager {
 
     // Resize the grid
     resize(width, height) {
+        // Update viewport dimensions
+        this.viewportWidth = width;
+        this.viewportHeight = height;
+
         // Save current grid state
         const oldGrid = this.grid;
         const oldColumns = this.columns;
@@ -274,39 +229,109 @@ export class ConwayGridManager {
 
     // Toggle a cell at the given position
     toggleCellAtPosition(x, y) {
-        const col = Math.floor(x / this.cellSize);
-        const row = Math.floor(y / this.cellSize);
+        // Log the input coordinates
+        console.log('toggleCellAtPosition input:', {
+            x,
+            y,
+            scrollY: window.scrollY,
+        });
 
+        // Convert screen coordinates to grid coordinates using the utility function
+        // The click handler already gives us coordinates relative to the canvas
+        const { col, row } = screenToGrid(x, y, this.cellSize);
+
+        console.log('Grid coordinates:', {
+            col,
+            row,
+            columns: this.columns,
+            rows: this.rows,
+            cellSize: this.cellSize,
+        });
+
+        // Check if the coordinates are valid
         if (col >= 0 && col < this.columns && row >= 0 && row < this.rows) {
+            // Toggle the cell
             const cell = this.grid[col][row];
             cell.alive = !cell.alive;
             cell.opacity = cell.alive ? 1 : 0;
+
+            // Log the cell state
+            console.log('Cell toggled:', { col, row, alive: cell.alive });
+
+            // Redraw the grid
             this.drawGrid();
+        } else {
+            console.log('Cell coordinates out of bounds');
         }
     }
 
     // Create a preset pattern at the center of the grid
     createPreset(presetName) {
+        // Calculate center position based on grid dimensions
+        const centerCol = Math.floor(this.columns / 2);
+        const centerRow = Math.floor(this.rows / 2);
+
+        this.createPresetAtGridPosition(presetName, centerCol, centerRow);
+    }
+
+    // Create a preset pattern at a specific screen position
+    createPresetAtPosition(presetName, x, y) {
+        console.log('Creating preset at position:', {
+            presetName,
+            x,
+            y,
+            scrollY: window.scrollY,
+        });
+
+        // Convert screen coordinates to grid coordinates using the utility function
+        // The click handler already gives us coordinates relative to the canvas
+        const { col, row } = screenToGrid(x, y, this.cellSize);
+
+        console.log('Grid coordinates for preset:', {
+            col,
+            row,
+            cellSize: this.cellSize,
+        });
+
+        this.createPresetAtGridPosition(presetName, col, row);
+    }
+
+    // Create a preset pattern at a specific grid position
+    createPresetAtGridPosition(presetName, centerCol, centerRow) {
         if (!PRESETS[presetName]) return;
 
         const pattern = PRESETS[presetName];
         const patternHeight = pattern.length;
         const patternWidth = pattern[0].length;
 
-        // Calculate center position
-        const centerCol =
-            Math.floor(this.columns / 2) - Math.floor(patternWidth / 2);
-        const centerRow =
-            Math.floor(this.rows / 2) - Math.floor(patternHeight / 2);
+        // Calculate top-left position
+        const startCol = centerCol - Math.floor(patternWidth / 2);
+        const startRow = centerRow - Math.floor(patternHeight / 2);
 
-        // Clear the grid first
-        this.clearGrid();
+        // Clear a region around the pattern
+        const clearRadius = Math.max(patternWidth, patternHeight) + 5;
+        for (let i = -clearRadius; i <= clearRadius; i++) {
+            for (let j = -clearRadius; j <= clearRadius; j++) {
+                const col = centerCol + i;
+                const row = centerRow + j;
+
+                if (
+                    col >= 0 &&
+                    col < this.columns &&
+                    row >= 0 &&
+                    row < this.rows
+                ) {
+                    this.grid[col][row].alive = false;
+                    this.grid[col][row].opacity = 0;
+                }
+            }
+        }
 
         // Place the pattern
         for (let i = 0; i < patternHeight; i++) {
             for (let j = 0; j < patternWidth; j++) {
-                const col = centerCol + j;
-                const row = centerRow + i;
+                const col = startCol + j;
+                const row = startRow + i;
 
                 if (
                     col >= 0 &&

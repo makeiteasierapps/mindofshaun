@@ -14,13 +14,21 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXTwitter } from '@fortawesome/free-brands-svg-icons';
 
-const StyledContainer = styled(MuiContainer)(({ theme }) => ({
+const ContactContainer = styled(MuiContainer)(({ theme }) => ({
     display: 'flex',
     textAlign: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
+    padding: theme.spacing(6, 2),
+    scrollSnapAlign: 'start',
+    scrollSnapStop: 'always',
+    [theme.breakpoints.down('md')]: {
+        height: 'auto',
+        minHeight: '100vh',
+        padding: theme.spacing(4, 1),
+    },
 }));
 
 const GlassmorphicContainer = styled(Box)(({ theme }) => ({
@@ -133,7 +141,7 @@ const ContactMe = () => {
     };
 
     return (
-        <StyledContainer maxWidth={false} id="contact">
+        <ContactContainer maxWidth={false} id="contact">
             <GlassmorphicContainer>
                 <Typography
                     variant="h2"
@@ -203,7 +211,7 @@ const ContactMe = () => {
                     </StyledMenu>
                 </Box>
             </GlassmorphicContainer>
-        </StyledContainer>
+        </ContactContainer>
     );
 };
 

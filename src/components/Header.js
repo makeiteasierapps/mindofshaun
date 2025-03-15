@@ -12,6 +12,7 @@ import EmailIcon from '@mui/icons-material/Email';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     backgroundColor: 'black',
+    zIndex: 1000,
 }));
 
 const StyledIconButton = styled(IconButton)({

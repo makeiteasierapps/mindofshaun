@@ -12,7 +12,7 @@ export const theme = createTheme({
             light: '#e5fcff', // lightBlue
         },
         background: {
-            default: '#ffffff',
+            default: 'rgb(0, 12, 12)',
             paper: 'rgb(0, 12, 12, 0.06)',
             shadow: 'rgba(2, 202, 252, 0.1)',
         },
@@ -20,6 +20,7 @@ export const theme = createTheme({
             primary: '#ffffff',
             secondary: 'rgb(0, 178, 181)',
             hover: 'rgb(0, 178, 181)',
+            gradient: 'linear-gradient(45deg,rgb(0, 178, 181), #004a4c)',
         },
         action: {
             active: 'rgb(0, 178, 181)',
@@ -54,8 +55,9 @@ export const theme = createTheme({
         },
         h4: {
             fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: '-0.01em',
+            fontSize: '1.2rem',
         },
         h5: {
             fontFamily: '"Montserrat", sans-serif',
@@ -93,9 +95,9 @@ export const theme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    backgroundColor: 'rgb(0, 115, 117)',
+                    backgroundColor: 'rgb(0, 115, 117, 0.6)',
                     '&:hover': {
-                        backgroundColor: 'rgb(0, 178, 181)',
+                        backgroundColor: 'rgb(0, 178, 181, 0.6)',
                     },
                 },
             },

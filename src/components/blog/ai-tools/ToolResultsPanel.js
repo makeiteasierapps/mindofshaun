@@ -11,7 +11,6 @@ import {
     IntroductionResult,
     OrganizedThoughtsResult,
     ResearchDirectionsResult,
-    TitleGeneratorResult,
 } from './results';
 import { ContentSection } from './results/styles';
 

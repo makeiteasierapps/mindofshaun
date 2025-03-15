@@ -32,12 +32,14 @@ export const ContentEditor = styled('textarea')(({ theme }) => ({
 
 export const SidebarToggle = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
-    right: 0,
+    right: '-20px',
     top: '50%',
     transform: 'translateY(-50%)',
-    zIndex: 1200,
+    zIndex: 1300,
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.primary,
+    borderRadius: '50% 0 0 50%',
+    padding: '8px 8px 8px 12px',
     '&:hover': {
         backgroundColor: theme.palette.primary.light,
     },

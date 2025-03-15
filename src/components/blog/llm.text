@@ -7,6 +7,14 @@ This folder contains a complete blog system with content creation, editing, and 
 - `/ai-tools`: Components related to AI-assisted writing and content generation
   - `/results`: Specialized components for displaying different types of AI tool results
     - `styles.js`: Shared styled components for result displays
+- `/components`: Reusable UI components for the blog system
+  - `FilterDrawer.js`: Component for filtering posts by tags and search
+  - `LoginModal.js`: Admin login modal component
+  - `FeaturedPost.js`: Featured/latest post display component
+  - `PostCard.js`: Regular post card component
+  - `FullScreenPost.js`: Full-screen reading mode component with page-like behavior
+  - `PostPagination.js`: Pagination component for navigating posts
+  - `index.js`: Barrel file exporting all components
 - `/context`: Context providers for blog state management
 - `/core`: Core blog components including post listing, creation, and management
 - `/editor`: Rich text editing and publishing components
@@ -18,16 +26,51 @@ This folder contains a complete blog system with content creation, editing, and 
 
 ### Core Components (`/core`)
 The backbone of the blog system, providing both public-facing and administrative interfaces:
-- `Blog.js`: The main public-facing component with a secret admin login
-- `BlogAdmin.js`: Administrative dashboard for post management
+- `Blog.js`: The main public-facing component with a secret admin login, featuring:
+  - Pagination for navigating multiple posts
+  - Tag-based filtering system
+  - Search functionality
+  - Full-screen reading mode
+  - Featured latest post display
+  - Post previews with "Continue Reading" option
+- `BlogAdmin.js`: Administrative dashboard for post management that behaves like a separate page:
+  - Uses Portal to render outside the normal DOM hierarchy
+  - Maintains its own scroll state independent of the main page
+  - Hides navigation, settings buttons, and Conway's Game of Life controls
+  - Provides a complete admin interface for post management
+  - Properly restores UI elements when logging out
 - `PostForm.js`: Container component managing the writing and publishing workflow
 - `PostList.js` and `PostItem.js`: Components for displaying and managing posts
 - `DeleteConfirmationDialog.js`: Reusable dialog for confirming deletions
 - `TagInput.js`: Reusable component for tag management
 
+### Modular UI Components (`/components`)
+Reusable UI components for the blog interface:
+- `FilterDrawer.js`: Drawer component for filtering posts by tags and search terms
+- `LoginModal.js`: Modal component for admin authentication
+- `FeaturedPost.js`: Component for displaying the latest/featured post with enhanced styling
+- `PostCard.js`: Component for displaying regular blog post cards
+- `FullScreenPost.js`: Component for distraction-free reading mode that behaves like a separate page:
+  - Uses Portal to render outside the normal DOM hierarchy
+  - Maintains its own scroll state independent of the main page
+  - Preserves and restores main page scroll position
+  - Hides navigation, settings buttons, and Conway's Game of Life controls when active
+  - Uses multiple strategies to find and hide UI elements that might interfere with reading
+  - Features a sticky header with navigation controls
+  - Optimized typography and layout for reading comfort
+- `PostPagination.js`: Component for paginating through multiple posts
+
 ### Editor Components (`/editor`)
 The content creation and publishing system:
 - `WritingEditor.js`: Textarea-based editor with AI tools integration
+  - Features a writing assistant sidebar with AI tools
+  - Includes an improved sidebar toggle button that:
+    - Remains visible and accessible at all times
+    - Is flush with the edge of the editor box
+    - Dynamically repositions when the sidebar opens/closes
+    - Uses a half-circle design for better visual indication
+    - Has proper z-index layering to prevent being covered by the sidebar
+  - Provides a distraction-free writing environment with optional AI assistance
 - `PublishingEditor.js`: Form interface for post metadata and publishing
 - `PreviewArea.js`: Content preview component
 - `ToneAndPreviewControls.js`: Controls for tone selection and preview management
@@ -75,14 +118,15 @@ Consistent visual design using Material-UI's styled API:
 
 ### 1. Content Creation
 1. User navigates to the blog and logs in as admin
-2. Admin creates a new post using `PostForm`
-3. `WritingEditor` provides a textarea for content creation
-4. User can select text and use AI tools from `AiToolsPanel`
-5. AI tools process content through `blogAiService` API calls
-6. Results are displayed in specialized result components in `ToolResultsPanel`
-7. User can toggle between different tool results by clicking on tool icons
-8. User can apply specific results directly to the editor at cursor position
-9. User can preview content and adjust tone
+2. Admin is presented with a full-page admin interface that behaves like a separate application
+3. Admin creates a new post using `PostForm`
+4. `WritingEditor` provides a textarea for content creation
+5. User can select text and use AI tools from `AiToolsPanel`
+6. AI tools process content through `blogAiService` API calls
+7. Results are displayed in specialized result components in `ToolResultsPanel`
+8. User can toggle between different tool results by clicking on tool icons
+9. User can apply specific results directly to the editor at cursor position
+10. User can preview content and adjust tone
 
 ### 2. Content Publishing
 1. User completes content creation and clicks "Prepare for Publishing"
@@ -92,11 +136,27 @@ Consistent visual design using Material-UI's styled API:
 5. On submission, `PostsContext` handles the API call to save the post
 
 ### 3. Content Management
-1. Admin views all posts in `BlogAdmin`
+1. Admin views all posts in the full-page `BlogAdmin` interface
 2. Posts are displayed as `PostItem` components in a `PostList`
 3. Admin can edit posts (returning to the creation workflow)
 4. Admin can delete posts with confirmation
 5. `PostsContext` handles all CRUD operations with the backend
+6. When logging out, the admin interface is removed and the original page state is restored
+
+### 4. Blog Reading Experience
+1. Latest post is featured prominently at the top of the first page (via `FeaturedPost` component)
+2. Posts are paginated for easy navigation (via `PostPagination` component)
+3. Users can filter posts by tags or search for specific content (via `FilterDrawer` component)
+4. Full-screen reading mode eliminates distractions (via `FullScreenPost` component):
+   - Renders as a separate page-like experience
+   - Maintains independent scrolling from the main page
+   - Preserves main page scroll position when returning
+   - Features navigation between posts without exiting full-screen mode
+   - Hides all UI controls including Conway's Game of Life controls
+   - Properly restores all UI elements when exiting full-screen mode
+5. Post previews show truncated content with "Continue Reading" option (via `PostCard` component)
+6. Tags are clickable to filter related content
+7. Navigation between posts is available in full-screen mode
 
 ## Data Flow
 1. User interactions trigger component state changes
@@ -116,6 +176,7 @@ Consistent visual design using Material-UI's styled API:
 - Loading states for UI feedback during async operations
 - Error state management in context providers
 - Graceful degradation when errors occur
+- Feedback for empty search/filter results
 
 ## Performance Considerations
 - Memoization with useCallback for function stability
@@ -123,6 +184,10 @@ Consistent visual design using Material-UI's styled API:
 - Functional updates for state changes
 - Conditional rendering to minimize unnecessary renders
 - Shared styled components to reduce duplication
+- Pagination to limit the number of posts rendered at once
+- Fade animations for smooth transitions between states
+- Modular component architecture for better code splitting and maintainability
+- Portal usage for rendering full-screen content and admin interface outside the normal DOM flow
 
 ## Technical Stack
 - React for UI components and hooks
@@ -130,11 +195,28 @@ Consistent visual design using Material-UI's styled API:
 - Context API for state management
 - Fetch API for backend communication
 - CSS-in-JS with Material-UI's styled API
+- React Portal API for advanced rendering scenarios
 
 ## Security Features
 - Hidden admin login mechanism
 - Password authentication for admin access
 - Confirmation dialogs for destructive actions
+
+## UX Improvements
+- Featured latest post with visual emphasis
+- Full-screen reading mode for distraction-free reading that behaves like a separate page
+- Admin interface that functions as a standalone application
+- Tag-based navigation and filtering
+- Search functionality for finding specific content
+- Pagination for navigating multiple posts
+- Responsive design for various screen sizes
+- Visual feedback for user interactions
+- Smooth transitions and animations
+- "Continue Reading" buttons for longer posts
+- Post navigation in full-screen mode
+- Scroll position preservation when exiting full-screen mode
+- Complete removal of UI distractions in full-screen mode and admin interface
+- Improved writing assistant sidebar toggle that remains accessible and visually intuitive
 
 ## Extensibility
 The modular architecture allows for easy extension:
@@ -142,4 +224,5 @@ The modular architecture allows for easy extension:
 - New result components can be added to the `ai-tools/results` directory
 - Additional utility functions can be added to `utils`
 - New UI components can leverage existing styles and hooks
-- The system can be extended with additional context providers for new features 
+- The system can be extended with additional context providers for new features
+- Modular components can be reused or extended for new features 

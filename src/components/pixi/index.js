@@ -1,3 +1,3 @@
-export { default as PixiConwayBackground } from './PixiConwayBackground';
+export { default as PixiConwayBackground } from './components/PixiConwayBackground';
 export { ConwayGridManager } from './ConwayGridManager';
-export { default as ConwayControls } from './ConwayControls';
+export { default as ConwayControls } from './components/ConwayControls';

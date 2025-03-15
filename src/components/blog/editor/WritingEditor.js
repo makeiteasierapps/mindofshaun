@@ -15,7 +15,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import SendIcon from '@mui/icons-material/Send';
 import blogAiService from '../utils/blogAiService';
 import useWritingAiTools from '../hooks/useWritingAiTools';
-import useAiTools from '../hooks/useAiTools';
 import AiToolsPanel from '../ai-tools/AiToolsPanel';
 import ToneAndPreviewControls from './ToneAndPreviewControls';
 import PreviewArea from './PreviewArea';
@@ -245,7 +244,14 @@ const WritingEditor = ({
                     '&:hover': {
                         backgroundColor: theme.palette.primary.light,
                     },
+                    transition: 'right 0.3s',
+                    right: sidebarOpen ? '330px' : '-20px', // Adjust position based on sidebar state
                 }}
+                aria-label={
+                    sidebarOpen
+                        ? 'Close writing assistant'
+                        : 'Open writing assistant'
+                }
             >
                 {sidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </SidebarToggle>
@@ -262,6 +268,8 @@ const WritingEditor = ({
                         boxSizing: 'border-box',
                         backgroundColor: theme.palette.background.paper,
                         color: theme.palette.text.primary,
+                        borderLeft: `1px solid ${theme.palette.divider}`,
+                        zIndex: 1200, // Ensure it's below the toggle button
                     },
                 }}
             >

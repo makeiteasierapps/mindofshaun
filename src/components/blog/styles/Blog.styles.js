@@ -13,9 +13,20 @@ export const GlassmorphicCard = styled(Card)(({ theme }) => ({
 
 export const BlogContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4),
+    height: '100vh',
     maxWidth: '1200px',
     margin: '0 auto',
     position: 'relative',
+    scrollSnapAlign: 'start',
+    scrollSnapStop: 'always',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    [theme.breakpoints.down('md')]: {
+        height: 'auto',
+        minHeight: '100vh',
+        padding: theme.spacing(3, 2),
+    },
 }));
 
 export const BlogHeader = styled(Box)(({ theme }) => ({

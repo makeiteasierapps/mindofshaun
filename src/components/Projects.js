@@ -1,24 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box, Container, Typography, Button, IconButton } from '@mui/material';
+import {
+    Box,
+    Container,
+    Typography,
+    Button,
+    IconButton,
+    CircularProgress,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { EmailManagerData } from '../assets/EmailManagerAssest/Data';
 import Project from './Project';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
-const projectsData = [EmailManagerData];
+import { HolographicText } from './Home.styles';
+import { useProjects } from '../contexts/ProjectsContext';
 
 const ProjectsContainer = styled(Container)(({ theme }) => ({
-    minHeight: '100%',
+    height: '100vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     color: theme.palette.secondary.light,
-    padding: '4rem 1rem',
+    padding: theme.spacing(6, 2),
     position: 'relative',
     transition: 'transform 0.3s ease-out',
+    scrollSnapAlign: 'start',
+    scrollSnapStop: 'always',
+    [theme.breakpoints.down('md')]: {
+        height: 'auto',
+        minHeight: '100vh',
+        padding: theme.spacing(4, 1),
+    },
 }));
 
 const ProjectsHeader = styled(Box)(({ theme }) => ({
@@ -78,9 +91,20 @@ const ProjectCounter = styled(Typography)(({ theme }) => ({
     color: 'rgba(255, 255, 255, 0.7)',
 }));
 
+const LoadingContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '200px',
+    width: '100%',
+}));
+
 const Projects = () => {
     const theme = useTheme();
     const [currentProject, setCurrentProject] = useState(0);
+    const { projects, loading, getPublishedProjects } = useProjects();
+
+    const publishedProjects = getPublishedProjects();
 
     const handleProjectChange = (index) => {
         setCurrentProject(index);
@@ -88,7 +112,7 @@ const Projects = () => {
 
     const goToNextProject = () => {
         setCurrentProject((prev) =>
-            prev === projectsData.length - 1 ? prev : prev + 1
+            prev === publishedProjects.length - 1 ? prev : prev + 1
         );
     };
 
@@ -96,24 +120,23 @@ const Projects = () => {
         setCurrentProject((prev) => (prev === 0 ? prev : prev - 1));
     };
 
+    if (loading) {
+        return (
+            <ProjectsContainer id="projects" maxWidth={false}>
+                <ProjectsHeader>
+                    <HolographicText>Things I've Built</HolographicText>
+                </ProjectsHeader>
+                <LoadingContainer>
+                    <CircularProgress color="primary" />
+                </LoadingContainer>
+            </ProjectsContainer>
+        );
+    }
+
     return (
         <ProjectsContainer id="projects" maxWidth={false}>
             <ProjectsHeader>
-                <Typography
-                    variant="h2"
-                    component="h2"
-                    sx={{
-                        fontWeight: 700,
-                        marginBottom: '1rem',
-                        background: 'linear-gradient(45deg, #f3ec78, #af4261)',
-                        backgroundClip: 'text',
-                        textFillColor: 'transparent',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                    }}
-                >
-                    Things I've Built
-                </Typography>
+                <HolographicText>Things I've Built</HolographicText>
                 <Typography
                     variant="body1"
                     sx={{
@@ -130,7 +153,7 @@ const Projects = () => {
             </ProjectsHeader>
 
             <ProjectsGrid>
-                {projectsData.map((project, index) => (
+                {publishedProjects.map((project, index) => (
                     <Box
                         key={index}
                         sx={{
@@ -144,7 +167,7 @@ const Projects = () => {
                 ))}
             </ProjectsGrid>
 
-            {projectsData.length > 1 ? (
+            {publishedProjects.length > 1 ? (
                 <NavigationControls>
                     <ProjectNavButton
                         onClick={goToPreviousProject}
@@ -155,7 +178,7 @@ const Projects = () => {
                     </ProjectNavButton>
 
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        {projectsData.map((_, index) => (
+                        {publishedProjects.map((_, index) => (
                             <NavDot
                                 key={index}
                                 active={currentProject === index}
@@ -165,18 +188,31 @@ const Projects = () => {
                             />
                         ))}
                         <ProjectCounter>
-                            {currentProject + 1} / {projectsData.length}
+                            {currentProject + 1} / {publishedProjects.length}
                         </ProjectCounter>
                     </Box>
 
                     <ProjectNavButton
                         onClick={goToNextProject}
-                        disabled={currentProject === projectsData.length - 1}
+                        disabled={
+                            currentProject === publishedProjects.length - 1
+                        }
                         aria-label="Next project"
                     >
                         <ArrowForwardIosIcon />
                     </ProjectNavButton>
                 </NavigationControls>
+            ) : publishedProjects.length === 0 ? (
+                <Typography
+                    variant="body2"
+                    sx={{
+                        marginTop: '2rem',
+                        opacity: 0.7,
+                        fontStyle: 'italic',
+                    }}
+                >
+                    No projects available yet. Check back soon!
+                </Typography>
             ) : (
                 <Typography
                     variant="body2"
