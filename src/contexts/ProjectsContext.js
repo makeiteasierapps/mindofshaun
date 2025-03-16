@@ -24,7 +24,7 @@ export const ProjectsProvider = ({ children }) => {
     const fetchAllProjects = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${backendUrl}/api/projects`);
+            const response = await fetch(`${backendUrl}/projects`);
             if (!response.ok) {
                 throw new Error('Failed to fetch projects');
             }
@@ -71,7 +71,7 @@ export const ProjectsProvider = ({ children }) => {
             console.log('projectData', projectData);
             try {
                 const response = await fetch(
-                    `${backendUrl}/api/projects/${projectId}`,
+                    `${backendUrl}/projects/${projectId}`,
                     {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -102,7 +102,7 @@ export const ProjectsProvider = ({ children }) => {
         async (projectId) => {
             try {
                 const response = await fetch(
-                    `${backendUrl}/api/projects/${projectId}`,
+                    `${backendUrl}/projects/${projectId}`,
                     {
                         method: 'DELETE',
                     }
@@ -131,7 +131,7 @@ export const ProjectsProvider = ({ children }) => {
                 formData.append('file', file);
 
                 const response = await fetch(
-                    `${backendUrl}/api/projects/upload-image`,
+                    `${backendUrl}/projects/upload-image`,
                     {
                         method: 'POST',
                         body: formData,

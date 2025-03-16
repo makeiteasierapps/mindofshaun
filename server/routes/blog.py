@@ -21,7 +21,7 @@ from server.agents.blog.agent_blog import (
 logger = logging.getLogger(__name__)
 
 # Create router
-router = APIRouter(prefix="/api/blog", tags=["blog"])
+router = APIRouter(prefix="/blog", tags=["blog"])
 
 # Custom type for handling ObjectId
 def validate_object_id(v: Any) -> str:

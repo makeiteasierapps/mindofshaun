@@ -13,7 +13,7 @@ import uuid
 logger = logging.getLogger(__name__)
 
 # Create router
-router = APIRouter(prefix="/api/projects", tags=["projects"])
+router = APIRouter(prefix="/projects", tags=["projects"])
 
 # Custom type for handling ObjectId
 def validate_object_id(v: Any) -> str:

@@ -22,7 +22,7 @@ export const PostsProvider = ({ children }) => {
     const fetchAllPosts = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${backendUrl}/api/blog/posts`);
+            const response = await fetch(`${backendUrl}/blog/posts`);
             if (!response.ok) {
                 throw new Error('Failed to fetch posts');
             }
@@ -42,7 +42,7 @@ export const PostsProvider = ({ children }) => {
     const createPost = useCallback(
         async (postData) => {
             try {
-                const response = await fetch(`${backendUrl}/api/blog/posts`, {
+                const response = await fetch(`${backendUrl}/blog/posts`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(postData),
@@ -67,7 +67,7 @@ export const PostsProvider = ({ children }) => {
         async (postId, postData) => {
             try {
                 const response = await fetch(
-                    `${backendUrl}/api/blog/posts/${postId}`,
+                    `${backendUrl}/blog/posts/${postId}`,
                     {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -98,7 +98,7 @@ export const PostsProvider = ({ children }) => {
         async (postId) => {
             try {
                 const response = await fetch(
-                    `${backendUrl}/api/blog/posts/${postId}`,
+                    `${backendUrl}/blog/posts/${postId}`,
                     {
                         method: 'DELETE',
                     }
