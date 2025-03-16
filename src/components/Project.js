@@ -131,8 +131,8 @@ const Project = ({ projectData, index }) => {
             <ProjectGallery>
                 <MainImageContainer>
                     <MainImage
-                        src={images[selectedImage].image}
-                        alt={images[selectedImage].alt || ProjectDetails.title}
+                        src={images[selectedImage]?.image}
+                        alt={images[selectedImage]?.alt || ProjectDetails.title}
                     />
                     <ZoomButton
                         onClick={handleOpenEnlargedImage}
@@ -143,7 +143,7 @@ const Project = ({ projectData, index }) => {
                     </ZoomButton>
                 </MainImageContainer>
 
-                {images[selectedImage].description && (
+                {images[selectedImage]?.description && (
                     <ImageDescription>
                         <Typography
                             variant="body1"
@@ -155,7 +155,7 @@ const Project = ({ projectData, index }) => {
                                 textAlign: 'center',
                             }}
                         >
-                            {images[selectedImage].description}
+                            {images[selectedImage]?.description}
                         </Typography>
                     </ImageDescription>
                 )}
@@ -188,8 +188,8 @@ const Project = ({ projectData, index }) => {
                         <CloseIcon />
                     </CloseButton>
                     <EnlargedImage
-                        src={images[selectedImage].image}
-                        alt={images[selectedImage].alt || ProjectDetails.title}
+                        src={images[selectedImage]?.image}
+                        alt={images[selectedImage]?.alt || ProjectDetails.title}
                     />
                 </EnlargedImageContainer>
             </EnlargedImageModal>

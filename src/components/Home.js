@@ -102,22 +102,6 @@ const Home = () => {
                             }}
                             align="center"
                         >
-                            {/* Add a subtle circuit pattern overlay */}
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    opacity: 0.05,
-                                    backgroundImage:
-                                        'linear-gradient(rgba(0, 178, 181, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 178, 181, 0.3) 1px, transparent 1px)',
-                                    backgroundSize: '20px 20px',
-                                    pointerEvents: 'none',
-                                    zIndex: 0,
-                                }}
-                            />
 
                             <Box sx={{ position: 'relative', zIndex: 1 }}>
                                 I spend my days crafting AI agents and tinkering

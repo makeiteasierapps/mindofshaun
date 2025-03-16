@@ -48,14 +48,6 @@ export class ConwayGridManager {
         this.columns = Math.ceil(width / this.cellSize);
         this.rows = Math.ceil(height / this.cellSize);
 
-        console.log('Grid dimensions:', {
-            width,
-            height,
-            columns: this.columns,
-            rows: this.rows,
-            cellSize: this.cellSize,
-        });
-
         // Create grid data
         this.grid = Array.from({ length: this.columns }, () =>
             Array.from({ length: this.rows }, () => ({

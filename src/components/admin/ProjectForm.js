@@ -43,20 +43,44 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
     const [newServerTech, setNewServerTech] = useState('');
     const [isUploading, setIsUploading] = useState(false);
     const [previewImages, setPreviewImages] = useState([]);
+    const [isNewProject, setIsNewProject] = useState(true);
 
     const { uploadProjectImage } = useProjects();
 
     // Initialize form with project data if editing
     useEffect(() => {
-        if (project) {
-            setFormData(project);
+        // Check if this is a new project or an existing one
+        // A new project will be an empty object or null
+        const isExistingProject = project && project._id;
+        setIsNewProject(!isExistingProject);
+
+        if (isExistingProject) {
+            // Ensure all array properties exist and are arrays
+            setFormData({
+                ...initialProjectState, // Start with defaults
+                ...project, // Override with project data
+                // Ensure these are always arrays
+                clientTech: Array.isArray(project.clientTech)
+                    ? project.clientTech
+                    : [],
+                serverTech: Array.isArray(project.serverTech)
+                    ? project.serverTech
+                    : [],
+                images: Array.isArray(project.images) ? project.images : [],
+            });
 
             // Create preview URLs for existing images
-            const previews = project.images.map((img) => ({
-                url: img.image,
-                description: img.description,
-            }));
+            const previews = project.images
+                ? project.images.map((img) => ({
+                      url: img.image,
+                      description: img.description,
+                  }))
+                : [];
             setPreviewImages(previews);
+        } else {
+            // For new projects, reset to initial state
+            setFormData(initialProjectState);
+            setPreviewImages([]);
         }
     }, [project]);
 
@@ -231,7 +255,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
     return (
         <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
             <Typography variant="h5" gutterBottom>
-                {project ? 'Edit Project' : 'Add New Project'}
+                {!isNewProject ? 'Edit Project' : 'Add New Project'}
             </Typography>
 
             <form onSubmit={handleSubmit}>
@@ -246,33 +270,10 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                                 fullWidth
                                 label="Title"
                                 name="ProjectDetails.title"
-                                value={formData.ProjectDetails.title}
+                                value={formData?.ProjectDetails?.title}
                                 onChange={handleChange}
                                 required
                                 margin="normal"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                label="Font"
-                                name="ProjectDetails.font"
-                                value={formData.ProjectDetails.font}
-                                onChange={handleChange}
-                                required
-                                margin="normal"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                label="Font Color"
-                                name="ProjectDetails.fontColor"
-                                value={formData.ProjectDetails.fontColor}
-                                onChange={handleChange}
-                                required
-                                margin="normal"
-                                placeholder="#000000"
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -280,7 +281,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                                 fullWidth
                                 label="Description"
                                 name="ProjectDetails.description"
-                                value={formData.ProjectDetails.description}
+                                value={formData?.ProjectDetails?.description}
                                 onChange={handleChange}
                                 required
                                 margin="normal"
@@ -293,7 +294,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                                 fullWidth
                                 label="Client Code URL"
                                 name="ProjectDetails.clientCode"
-                                value={formData.ProjectDetails.clientCode}
+                                value={formData?.ProjectDetails?.clientCode}
                                 onChange={handleChange}
                                 margin="normal"
                             />
@@ -303,7 +304,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                                 fullWidth
                                 label="Server Code URL"
                                 name="ProjectDetails.serverCode"
-                                value={formData.ProjectDetails.serverCode}
+                                value={formData?.ProjectDetails?.serverCode}
                                 onChange={handleChange}
                                 margin="normal"
                             />
@@ -461,7 +462,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                         </Box>
 
                         <List>
-                            {formData.clientTech.map((tech, index) => (
+                            {formData?.clientTech?.map((tech, index) => (
                                 <ListItem key={index} divider>
                                     <ListItemText primary={tech.name} />
                                     <ListItemSecondaryAction>
@@ -507,7 +508,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                         </Box>
 
                         <List>
-                            {formData.serverTech.map((tech, index) => (
+                            {formData?.serverTech?.map((tech, index) => (
                                 <ListItem key={index} divider>
                                     <ListItemText primary={tech.name} />
                                     <ListItemSecondaryAction>
@@ -534,7 +535,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={formData.published}
+                                checked={formData?.published}
                                 onChange={handlePublishedToggle}
                                 color="primary"
                             />
@@ -556,7 +557,7 @@ const ProjectForm = ({ project = null, onSubmit, onCancel }) => {
                         Cancel
                     </Button>
                     <Button variant="contained" color="primary" type="submit">
-                        {project ? 'Update Project' : 'Create Project'}
+                        {!isNewProject ? 'Update Project' : 'Create Project'}
                     </Button>
                 </Box>
             </form>

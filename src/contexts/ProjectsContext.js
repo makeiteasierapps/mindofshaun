@@ -15,12 +15,10 @@ export const ProjectsProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Get backend URL from environment or default to localhost
-    const getBackendUrl = () => {
-        return process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
-    };
-
-    const backendUrl = getBackendUrl();
+    const backendUrl =
+        process.env.NODE_ENV === 'development'
+            ? `http://${process.env.REACT_APP_BACKEND_URL}`
+            : `https://${process.env.REACT_APP_BACKEND_URL_PROD}`;
 
     // Fetch all projects (for admin)
     const fetchAllProjects = useCallback(async () => {
@@ -31,6 +29,7 @@ export const ProjectsProvider = ({ children }) => {
                 throw new Error('Failed to fetch projects');
             }
             const data = await response.json();
+            console.log('data', data);
             setProjects(data);
             return data;
         } catch (error) {
@@ -69,6 +68,7 @@ export const ProjectsProvider = ({ children }) => {
     // Update an existing project
     const updateProject = useCallback(
         async (projectId, projectData) => {
+            console.log('projectData', projectData);
             try {
                 const response = await fetch(
                     `${backendUrl}/api/projects/${projectId}`,

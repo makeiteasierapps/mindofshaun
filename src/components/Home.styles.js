@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Typography, Box, Button, Fab } from '@mui/material';
+import { Typography, Box, Fab } from '@mui/material';
 import { animated } from 'react-spring';
 
 // Holographic text effect with improved readability
@@ -35,7 +35,7 @@ export const HolographicText = styled(animated(Typography))(({ theme }) => ({
 }));
 
 // Enhanced Bio Text with improved contrast and readability
-export const EnhancedBioText = styled(animated(Typography))(({ theme }) => ({
+export const EnhancedBioText = styled(animated(Box))(({ theme }) => ({
     letterSpacing: '0.02em',
     color: '#e5fcff',
     textShadow: '0 0 5px rgba(0, 178, 181, 0.5)',

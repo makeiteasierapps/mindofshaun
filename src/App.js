@@ -106,38 +106,6 @@ const NavMenuItem = styled(Button, {
     },
 }));
 
-const ScrollToTopButton = styled(Fab)(({ theme }) => ({
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    zIndex: 1000,
-    background: 'rgba(0, 178, 181, 0.2)',
-    color: 'rgba(229, 252, 255, 0.7)',
-    boxShadow: '0 2px 5px rgba(0, 178, 181, 0.3)',
-    border: '1px solid rgba(0, 178, 181, 0.2)',
-    transition: 'all 0.3s ease-in-out',
-    '&:hover': {
-        background: 'rgba(0, 178, 181, 0.4)',
-        transform: 'scale(1.05)',
-        boxShadow: '0 3px 8px rgba(0, 178, 181, 0.4)',
-    },
-    '&:active': {
-        transform: 'scale(0.98)',
-    },
-}));
-
-const AdminButton = styled(Button)(({ theme }) => ({
-    background: 'rgba(0, 178, 181, 0.2)',
-    color: 'rgba(229, 252, 255, 0.7)',
-    boxShadow: '0 2px 5px rgba(0, 178, 181, 0.3)',
-    border: '1px solid rgba(0, 178, 181, 0.2)',
-    transition: 'all 0.3s ease-in-out',
-    '&:hover': {
-        background: 'rgba(0, 178, 181, 0.4)',
-        boxShadow: '0 3px 8px rgba(0, 178, 181, 0.4)',
-    },
-}));
-
 const App = () => {
     const [activeSection, setActiveSection] = useState(0);
     const [showAdmin, setShowAdmin] = useState(false);
@@ -242,19 +210,6 @@ const App = () => {
                 sectionVisibilityPercentage * sectionWeight +
                 normalizedCenterPosition * centerWeight;
 
-            // Debug logging
-            console.log(
-                `Section ${index} (${
-                    sectionNames[index]
-                }): viewportVis=${viewportVisibilityPercentage.toFixed(
-                    2
-                )}, sectionVis=${sectionVisibilityPercentage.toFixed(
-                    2
-                )}, center=${normalizedCenterPosition.toFixed(
-                    2
-                )}, score=${score.toFixed(2)}`
-            );
-
             // If this section has a better score, make it the active one
             if (score > bestScore) {
                 bestScore = score;
@@ -271,7 +226,7 @@ const App = () => {
             );
             setActiveSection(bestSection);
         }
-    }, [activeSection, sectionNames]); // Add sectionNames as a dependency
+    }, [activeSection]); // Add sectionNames as a dependency
 
     // Store the function in the ref
     useEffect(() => {
@@ -291,15 +246,6 @@ const App = () => {
         }, 50); // 50ms debounce time
     }, []); // No dependencies needed since we're using the ref
 
-    // Handle scroll events
-    const handleScroll = useCallback(() => {
-        // Skip if we're programmatically scrolling
-        if (isScrollingRef.current) return;
-
-        // Call the debounced function
-        debouncedCheckActiveSection();
-    }, [debouncedCheckActiveSection]);
-
     // Initialize section refs
     useEffect(() => {
         // Longer delay to ensure all components are fully rendered
@@ -309,14 +255,6 @@ const App = () => {
                 document.querySelectorAll('.section-container')
             );
             sectionRefs.current = sections;
-
-            // Log for debugging
-            console.log('Section refs initialized:', sections.length);
-            sections.forEach((section, index) => {
-                console.log(
-                    `Section ${index}: id=${section.id}, offsetTop=${section.offsetTop}`
-                );
-            });
 
             // Initial check for active section
             if (
@@ -407,44 +345,41 @@ const App = () => {
                                 onLogout={() => setShowAdmin(false)}
                             />
                         )}
-                        <MainContainer
-                            ref={mainContainerRef}
-                            onScroll={handleScroll}
-                        >
+                        <MainContainer ref={mainContainerRef}>
                             <PixiConwayBackground />
 
-                            <ScrollToTopButton
-                                onClick={scrollToTop}
-                                aria-label="scroll to top"
-                                size="medium"
-                                sx={{
-                                    opacity: activeSection > 0 ? 1 : 0,
-                                    pointerEvents:
-                                        activeSection > 0 ? 'auto' : 'none',
-                                }}
-                            >
-                                <KeyboardArrowUpIcon />
-                            </ScrollToTopButton>
-
-                            <AdminButton
-                                variant="outlined"
-                                onClick={() => setShowAdmin(true)}
-                                sx={{
-                                    position: 'fixed',
-                                    bottom: '20px',
-                                    left: '20px',
-                                    zIndex: 1000,
-                                    opacity: 0.7,
-                                    '&:hover': {
-                                        opacity: 1,
-                                    },
-                                }}
-                            >
-                                Admin
-                            </AdminButton>
-
+                            {/* Hover-activated navigation menu */}
                             <NavMenuContainer>
-                                <NavMenu>
+                                <Fab
+                                    size="small"
+                                    aria-label="Back to top"
+                                    onClick={scrollToTop}
+                                    sx={{
+                                        background: 'rgba(0, 178, 181, 0.2)',
+                                        color: 'rgba(229, 252, 255, 0.7)',
+                                        width: '40px',
+                                        height: '40px',
+                                        minHeight: 'unset',
+                                        boxShadow:
+                                            '0 2px 5px rgba(0, 178, 181, 0.3)',
+                                        border: '1px solid rgba(0, 178, 181, 0.2)',
+                                        transition: 'all 0.3s ease-in-out',
+                                        '&:hover': {
+                                            background:
+                                                'rgba(0, 178, 181, 0.4)',
+                                            transform: 'scale(1.05)',
+                                            boxShadow:
+                                                '0 3px 8px rgba(0, 178, 181, 0.4)',
+                                        },
+                                        '&:active': {
+                                            transform: 'scale(0.98)',
+                                        },
+                                    }}
+                                >
+                                    <KeyboardArrowUpIcon fontSize="small" />
+                                </Fab>
+
+                                <NavMenu className="nav-menu">
                                     {sectionNames.map((name, index) => (
                                         <NavMenuItem
                                             key={index}
@@ -458,6 +393,28 @@ const App = () => {
                                     ))}
                                 </NavMenu>
                             </NavMenuContainer>
+
+                            {/* Admin Button */}
+                            <Button
+                                variant="outlined"
+                                onClick={() => setShowAdmin(true)}
+                                sx={{
+                                    position: 'fixed',
+                                    bottom: '20px',
+                                    left: '20px',
+                                    zIndex: 1000,
+                                    opacity: 0.7,
+                                    background: 'rgba(0, 178, 181, 0.2)',
+                                    color: 'rgba(229, 252, 255, 0.7)',
+                                    border: '1px solid rgba(0, 178, 181, 0.2)',
+                                    '&:hover': {
+                                        opacity: 1,
+                                        background: 'rgba(0, 178, 181, 0.4)',
+                                    },
+                                }}
+                            >
+                                Admin
+                            </Button>
 
                             <SectionWrapper>
                                 <ParallaxContainer

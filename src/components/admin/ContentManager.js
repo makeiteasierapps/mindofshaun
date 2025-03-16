@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Typography,
@@ -7,17 +7,16 @@ import {
     Portal,
     Tabs,
     Tab,
-    Paper,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddIcon from '@mui/icons-material/Add';
-import { styled } from '@mui/material/styles';
 
 // Blog components
 import PostForm from '../blog/core/PostForm';
 import PostList from '../blog/core/PostList';
 import DeleteConfirmationDialog from '../blog/core/DeleteConfirmationDialog';
 import { usePosts } from '../blog/context/PostsContext';
+import { useBlogHandlers } from './blogHandlers';
 
 // Project components
 import ProjectForm from './ProjectForm';
@@ -25,32 +24,11 @@ import ProjectList from './ProjectList';
 import { useProjects } from '../../contexts/ProjectsContext';
 
 // Styled components
-const AdminContainer = styled(Box)(({ theme }) => ({
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.palette.background.default,
-    zIndex: 9999,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-}));
-
-const AdminHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: theme.spacing(2, 3),
-    borderBottom: `1px solid ${theme.palette.divider}`,
-}));
-
-const ContentContainer = styled(Box)(({ theme }) => ({
-    flex: 1,
-    overflow: 'auto',
-    padding: theme.spacing(3),
-}));
+import {
+    AdminContainer,
+    AdminHeader,
+    ContentContainer,
+} from './ContentManager.styles';
 
 const TabPanel = ({ children, value, index, ...other }) => {
     return (
@@ -73,30 +51,16 @@ const ContentManager = ({ onLogout }) => {
     // Tab state
     const [activeTab, setActiveTab] = useState(0);
 
-    // Blog state
-    const [editingPost, setEditingPost] = useState(null);
-    const [postToDelete, setPostToDelete] = useState(null);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
     // Project state
     const [editingProject, setEditingProject] = useState(null);
+    const [isCreatingProject, setIsCreatingProject] = useState(false);
     const [projectToDelete, setProjectToDelete] = useState(null);
     const [projectDeleteDialogOpen, setProjectDeleteDialogOpen] =
         useState(false);
 
-    // References
-    const originalBodyStyle = useRef('');
-    const containerRef = useRef(null);
-    const originalStyles = useRef({});
-
     // Context hooks
-    const {
-        posts,
-        loading: postsLoading,
-        createPost,
-        updatePost,
-        deletePost,
-    } = usePosts();
+    const { posts, loading: postsLoading } = usePosts();
+
     const {
         projects,
         loading: projectsLoading,
@@ -105,104 +69,28 @@ const ContentManager = ({ onLogout }) => {
         deleteProject,
     } = useProjects();
 
-    // Effect to handle body scrolling and hide external UI elements
-    useEffect(() => {
-        // Store original body overflow style
-        originalBodyStyle.current = document.body.style.overflow;
-
-        // Prevent body scrolling when in admin mode
-        document.body.style.overflow = 'hidden';
-
-        // Elements to hide when in admin mode
-        const elementsToHide = [
-            // Navigation button
-            document
-                .querySelector('[data-testid="KeyboardArrowUpIcon"]')
-                ?.closest('button'),
-            // Settings button
-            document
-                .querySelector('[data-testid="SettingsIcon"]')
-                ?.closest('button'),
-        ];
-
-        // Store original styles and hide elements
-        elementsToHide.forEach((element) => {
-            if (element) {
-                originalStyles.current[element.id || 'element'] =
-                    element.style.display;
-                element.style.display = 'none';
-            }
-        });
-
-        // Cleanup function to restore original styles
-        return () => {
-            document.body.style.overflow = originalBodyStyle.current;
-
-            // Restore original display styles
-            Object.entries(originalStyles.current).forEach(
-                ([elementId, style]) => {
-                    const element =
-                        document.getElementById(elementId) ||
-                        elementsToHide[
-                            Object.keys(originalStyles.current).indexOf(
-                                elementId
-                            )
-                        ];
-                    if (element) {
-                        element.style.display = style;
-                    }
-                }
-            );
-        };
-    }, []);
-
     // Tab change handler
     const handleTabChange = (event, newValue) => {
         setActiveTab(newValue);
     };
 
     // Blog handlers
-    const handleEditPost = (post) => {
-        setEditingPost(post);
-    };
-
-    const handleDeletePostClick = (post) => {
-        setPostToDelete(post);
-        setDeleteDialogOpen(true);
-    };
-
-    const handleDeletePostConfirm = async () => {
-        if (postToDelete) {
-            try {
-                await deletePost(postToDelete._id);
-                setDeleteDialogOpen(false);
-                setPostToDelete(null);
-            } catch (error) {
-                console.error('Error deleting post:', error);
-            }
-        }
-    };
-
-    const handlePostFormSubmit = async (formData) => {
-        try {
-            if (editingPost) {
-                await updatePost(editingPost._id, formData);
-            } else {
-                await createPost(formData);
-            }
-            setEditingPost(null);
-        } catch (error) {
-            console.error('Error saving post:', error);
-        }
-    };
-
-    const handleCancelPostEdit = () => {
-        setEditingPost(null);
-    };
+    const {
+        editingPost,
+        deleteDialogOpen,
+        handleEditPost,
+        handleDeletePostClick,
+        handleDeletePostConfirm,
+        handlePostFormSubmit,
+        handleCancelPostEdit,
+        setEditingPost,
+        setDeleteDialogOpen,
+    } = useBlogHandlers();
 
     // Project handlers
     const handleEditProject = (project) => {
         setEditingProject(project);
+        setIsCreatingProject(false);
     };
 
     const handleDeleteProjectClick = (project) => {
@@ -230,6 +118,7 @@ const ContentManager = ({ onLogout }) => {
                 await createProject(formData);
             }
             setEditingProject(null);
+            setIsCreatingProject(false);
         } catch (error) {
             console.error('Error saving project:', error);
         }
@@ -237,11 +126,17 @@ const ContentManager = ({ onLogout }) => {
 
     const handleCancelProjectEdit = () => {
         setEditingProject(null);
+        setIsCreatingProject(false);
+    };
+
+    const handleCreateNewProject = () => {
+        setEditingProject(null);
+        setIsCreatingProject(true);
     };
 
     return (
         <Portal>
-            <AdminContainer ref={containerRef}>
+            <AdminContainer>
                 <AdminHeader>
                     <Typography variant="h5" component="h1">
                         Content Manager
@@ -331,7 +226,7 @@ const ContentManager = ({ onLogout }) => {
 
                     {/* Projects Tab */}
                     <TabPanel value={activeTab} index={1}>
-                        {editingProject ? (
+                        {editingProject || isCreatingProject ? (
                             <ProjectForm
                                 project={editingProject}
                                 onSubmit={handleProjectFormSubmit}
@@ -354,7 +249,7 @@ const ContentManager = ({ onLogout }) => {
                                         variant="contained"
                                         color="primary"
                                         startIcon={<AddIcon />}
-                                        onClick={() => setEditingProject({})}
+                                        onClick={handleCreateNewProject}
                                     >
                                         New Project
                                     </Button>
