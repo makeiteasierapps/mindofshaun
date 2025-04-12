@@ -1,0 +1,163 @@
+.
+├── .cursorrules
+├── .env
+├── .github
+│   └── workflows
+│       └── deploy.yaml
+├── .gitignore
+├── README.md
+├── index.html
+├── package-lock.json
+├── package.json
+├── public
+│   ├── favicons
+│   │   └── favicon.ico
+│   ├── mnt
+│   │   └── media_storage
+│   │       └── mindofshaun
+│   │           └── projects
+│   │               └── projects
+│   │                   ├── 7b5e8ad7-c888-4d45-8dd2-cb9e488ea774.webp
+│   │                   └── 8fbbed10-c3d8-4447-9d18-351343804100.webp
+│   ├── robots.txt
+│   └── site.webmanifest
+├── requirements.txt
+├── run.py
+├── server
+│   ├── .env
+│   ├── __init__.py
+│   ├── agents
+│   │   └── blog
+│   │       ├── __init__.py
+│   │       ├── agent_blog.py
+│   │       └── dspy_models.py
+│   ├── models
+│   │   ├── blog.py
+│   │   ├── projects.py
+│   │   └── utils.py
+│   ├── routes
+│   │   ├── __init__.py
+│   │   ├── blog.py
+│   │   ├── blog_ai_tools.py
+│   │   └── projects.py
+│   ├── services
+│   │   ├── SocketClient.py
+│   │   ├── __init__.py
+│   │   ├── blog_service.py
+│   │   └── media_service.py
+│   └── utils
+│       ├── ai_helpers.py
+│       └── mongo_client.py
+├── src
+│   ├── App.js
+│   ├── assets
+│   │   └── EmailManagerAssest
+│   │       └── Data.js
+│   ├── components
+│   │   ├── conways
+│   │   │   ├── ConwayGridManager.js
+│   │   │   ├── components
+│   │   │   │   ├── ConwayControls.js
+│   │   │   │   ├── ConwayUIComponents.js
+│   │   │   │   └── PixiConwayBackground.js
+│   │   │   ├── hooks
+│   │   │   │   ├── useConwayControls.js
+│   │   │   │   ├── useConwayInteraction.js
+│   │   │   │   └── usePixiSetup.js
+│   │   │   ├── index.js
+│   │   │   ├── presets.js
+│   │   │   └── utils.js
+│   │   └── shared
+│   │       ├── DeleteConfirmationDialog.js
+│   │       └── styles.js
+│   ├── contexts
+│   │   ├── AuthContext.js
+│   │   ├── PostsContext.js
+│   │   ├── ProjectsContext.js
+│   │   └── SnackbarContext.js
+│   ├── index.js
+│   ├── layout
+│   │   ├── Header.js
+│   │   ├── NavMenu.js
+│   │   ├── ParallaxContainer.js
+│   │   └── SnackBar.js
+│   ├── pages
+│   │   ├── admin
+│   │   │   ├── ContentManager.js
+│   │   │   ├── ContentManager.styles.js
+│   │   │   ├── blog
+│   │   │   │   ├── BlogRoutes.js
+│   │   │   │   ├── ai-tools
+│   │   │   │   │   ├── AiToolsPanel.js
+│   │   │   │   │   ├── SelectionPreview.js
+│   │   │   │   │   ├── ToneSelector.js
+│   │   │   │   │   └── tools
+│   │   │   │   │       ├── AdjustedTone.js
+│   │   │   │   │       ├── Conclusion.js
+│   │   │   │   │       ├── EditedContent.js
+│   │   │   │   │       ├── ExpandedPoints.js
+│   │   │   │   │       ├── Introductions.js
+│   │   │   │   │       ├── OrganizedThoughts.js
+│   │   │   │   │       ├── ResearchDirections.js
+│   │   │   │   │       └── TitleGenerator.js
+│   │   │   │   ├── components
+│   │   │   │   │   └── ToolAccordion.js
+│   │   │   │   ├── core
+│   │   │   │   │   ├── DeleteConfirmationDialog.js
+│   │   │   │   │   ├── PostItem.js
+│   │   │   │   │   ├── PostList.js
+│   │   │   │   │   └── TagInput.js
+│   │   │   │   ├── editor
+│   │   │   │   │   ├── PublishingEditor.js
+│   │   │   │   │   ├── WritingAssistant.js
+│   │   │   │   │   └── WritingEditor.js
+│   │   │   │   ├── hooks
+│   │   │   │   │   └── useWritingAiTools.js
+│   │   │   │   ├── styles
+│   │   │   │   │   ├── BlogAdmin.styles.js
+│   │   │   │   │   ├── BlogAiTools.styles.js
+│   │   │   │   │   ├── PublishingEditor.styles.js
+│   │   │   │   │   └── WritingEditor.styles.js
+│   │   │   │   └── utils
+│   │   │   │       └── blogAiService.js
+│   │   │   ├── projects
+│   │   │   │   ├── ProjectDetails.js
+│   │   │   │   ├── ProjectForm.handlers.js
+│   │   │   │   ├── ProjectForm.js
+│   │   │   │   ├── ProjectImages.js
+│   │   │   │   ├── ProjectList.js
+│   │   │   │   ├── ProjectRoutes.js
+│   │   │   │   ├── ProjectTechnologies.js
+│   │   │   │   └── styles
+│   │   │   │       └── ProjectForm.styles.js
+│   │   │   └── useDeleteDialog.js
+│   │   └── home
+│   │       └── sections
+│   │           ├── blog
+│   │           │   ├── BlogMain.js
+│   │           │   ├── BlogMain.styles.js
+│   │           │   ├── components
+│   │           │   │   ├── BlogPostCard.js
+│   │           │   │   ├── PostPagination.js
+│   │           │   │   ├── SearchToolbar.js
+│   │           │   │   ├── SinglePostView.js
+│   │           │   │   └── index.js
+│   │           │   └── utils
+│   │           │       └── blogUtils.js
+│   │           ├── contact
+│   │           │   └── ContactMain.js
+│   │           ├── hero
+│   │           │   ├── HeroMain.js
+│   │           │   └── HeroMain.styles.js
+│   │           └── projects
+│   │               ├── Project.js
+│   │               ├── Project.styles.js
+│   │               ├── ProjectsMain.js
+│   │               └── ProjectsMain.styles.js
+│   └── utils
+│       ├── theme.js
+│       └── useIntersectionObserver.js
+├── tree_snapshot.txt
+└── vite.config.js
+
+49 directories, 112 files

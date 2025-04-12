@@ -1,0 +1,2 @@
+All client side libraries must support React 19.
+For responsive design, use MUI Grid2. Example: import { Grid2 } from '@mui/material';
