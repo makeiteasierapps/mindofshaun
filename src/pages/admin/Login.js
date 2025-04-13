@@ -12,7 +12,7 @@ import {
 import { Visibility, VisibilityOff, ArrowBack } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { FrostedGlassContainer, HolographicText } from '../shared/styles';
+import { FrostedGlassContainer, HolographicText } from '../../components/shared/styles';
 
 const Login = () => {
     const [username, setUsername] = useState('');

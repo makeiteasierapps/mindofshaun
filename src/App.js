@@ -11,6 +11,7 @@ import BlogMain from './pages/home/sections/blog/BlogMain';
 import { AuthProvider } from './contexts/AuthContext';
 import { PostsProvider } from './contexts/PostsContext';
 import { ProjectsProvider } from './contexts/ProjectsContext';
+import { NavigationProvider } from './contexts/NavigationContext';
 import ContentManager from './pages/admin/ContentManager';
 import NavMenu from './layout/NavMenu';
 import { useRef } from 'react';
@@ -22,8 +23,8 @@ import {
     Navigate,
 } from 'react-router-dom';
 import SinglePostView from './pages/home/sections/blog/components/SinglePostView';
-import Login from './components/admin/Login';
-import ProtectedRoute from './components/admin/ProtectedRoute';
+import Login from './pages/admin/Login';
+import ProtectedRoute from './pages/admin/ProtectedRoute';
 
 const MainContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -90,71 +91,74 @@ const App = () => {
                             <Route
                                 path="/"
                                 element={
-                                    <MainContainer ref={mainContainerRef}>
-                                        <PixiConwayBackground />
-                                        <NavMenu />
+                                    <NavigationProvider>
+                                        <MainContainer ref={mainContainerRef}>
+                                            <PixiConwayBackground />
+                                            <NavMenu />
 
-                                        {/* Hidden Admin Button */}
-                                        <Button
-                                            variant="outlined"
-                                            onClick={handleAdminClick}
-                                            sx={{
-                                                position: 'fixed',
-                                                bottom: '20px',
-                                                left: '20px',
-                                                zIndex: 1000,
-                                                opacity: 0, // Hidden but still clickable
-                                                background: 'transparent',
-                                                border: 'none',
-                                                width: '50px',
-                                                height: '50px',
-                                                minWidth: 'unset',
-                                                '&:hover': {
+                                            {/* Hidden Admin Button */}
+                                            <Button
+                                                variant="outlined"
+                                                onClick={handleAdminClick}
+                                                sx={{
+                                                    position: 'fixed',
+                                                    bottom: '20px',
+                                                    left: '20px',
+                                                    zIndex: 1000,
+                                                    opacity: 0, // Hidden but still clickable
                                                     background: 'transparent',
                                                     border: 'none',
-                                                },
-                                            }}
-                                            aria-label="Admin Access"
-                                        />
+                                                    width: '50px',
+                                                    height: '50px',
+                                                    minWidth: 'unset',
+                                                    '&:hover': {
+                                                        background:
+                                                            'transparent',
+                                                        border: 'none',
+                                                    },
+                                                }}
+                                                aria-label="Admin Access"
+                                            />
 
-                                        <SectionWrapper>
-                                            <ParallaxContainer
-                                                speed={0.15}
-                                                className="section-container"
-                                                id="home"
-                                            >
-                                                <HeroMain />
-                                            </ParallaxContainer>
-                                            <ParallaxContainer
-                                                speed={0.2}
-                                                className="section-container"
-                                                id="about"
-                                            >
-                                                <AboutMain />
-                                            </ParallaxContainer>
-                                            <ParallaxContainer
-                                                speed={0.25}
-                                                className="section-container"
-                                                id="projects"
-                                            >
-                                                <ProjectsMain />
-                                            </ParallaxContainer>
-                                            <ParallaxContainer
-                                                speed={0.3}
-                                                className="section-container"
-                                                id="blog"
-                                            >
-                                                <BlogMain />
-                                            </ParallaxContainer>
-                                            <ParallaxContainer
-                                                speed={0.35}
-                                                className="section-container"
-                                                id="contact"
-                                            >
-                                                <ContactMain />
-                                            </ParallaxContainer>
-                                        </SectionWrapper>
-                                    </MainContainer>
+                                            <SectionWrapper>
+                                                <ParallaxContainer
+                                                    speed={0.15}
+                                                    className="section-container"
+                                                    id="home"
+                                                >
+                                                    <HeroMain />
+                                                </ParallaxContainer>
+                                                <ParallaxContainer
+                                                    speed={0.2}
+                                                    className="section-container"
+                                                    id="about"
+                                                >
+                                                    <AboutMain />
+                                                </ParallaxContainer>
+                                                <ParallaxContainer
+                                                    speed={0.25}
+                                                    className="section-container"
+                                                    id="projects"
+                                                >
+                                                    <ProjectsMain />
+                                                </ParallaxContainer>
+                                                <ParallaxContainer
+                                                    speed={0.3}
+                                                    className="section-container"
+                                                    id="blog"
+                                                >
+                                                    <BlogMain />
+                                                </ParallaxContainer>
+                                                <ParallaxContainer
+                                                    speed={0.35}
+                                                    className="section-container"
+                                                    id="contact"
+                                                >
+                                                    <ContactMain />
+                                                </ParallaxContainer>
+                                            </SectionWrapper>
+                                        </MainContainer>
+                                    </NavigationProvider>
                                 }
                             />
                             <Route

@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { motion } from 'framer-motion';
 import Project from './Project';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import useIntersectionObserver from '../../../../utils/useIntersectionObserver';
 import { SectionHeader } from '../../../../components/shared/styles';
 import projectsImage from '../../../../assets/section_header_imgs/projects.webp';
 import { AnimatedSection } from '../../../../components/shared/AnimatedSection';
