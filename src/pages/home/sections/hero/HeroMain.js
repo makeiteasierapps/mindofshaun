@@ -32,7 +32,7 @@ const HeroMain = () => {
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 fontSize: {
-                                    xs: '2.5rem', // Small screens
+                                    xs: '2rem', // Small screens
                                     md: '3rem', // Medium screens
                                     lg: '3.75rem', // Large screens
                                 },
