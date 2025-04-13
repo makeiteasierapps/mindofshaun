@@ -14,7 +14,7 @@ import {
     NavDot,
     ProjectCounter,
 } from './ProjectsMain.styles';
-import { MainSectionContainer } from '../../../../components/shared/styles';
+import { MainSectionContainer, EnhancedTitle } from '../../../../components/shared/styles';
 import { useProjects } from '../../../../contexts/ProjectsContext';
 
 const ProjectsMain = () => {
@@ -55,9 +55,9 @@ const ProjectsMain = () => {
                         }}
                     />
                     <Box className="header-overlay">
-                        <Typography variant="h2" className="header-title">
+                        <EnhancedTitle variant="h2" className="header-title">
                             Things I've Built
-                        </Typography>
+                        </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
                             These are some projects I've created for fun,

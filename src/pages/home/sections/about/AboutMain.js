@@ -8,6 +8,7 @@ import {
     MainSectionContainer,
     FrostedGlassContainer,
     SectionHeader,
+    EnhancedTitle,
 } from '../../../../components/shared/styles';
 
 // Import the styles from HeroMain or create equivalent styles
@@ -29,9 +30,9 @@ const AboutMain = () => {
                     />
 
                     <Box className="header-overlay">
-                        <Typography variant="h2" className="header-title">
+                        <EnhancedTitle variant="h2" className="header-title">
                             Who I Am
-                        </Typography>
+                        </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
                             Full-stack developer and AI enthusiast focused on

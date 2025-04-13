@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { usePosts } from '../../../../contexts/PostsContext';
-import { MainSectionContainer } from '../../../../components/shared/styles';
+import { MainSectionContainer, EnhancedTitle } from '../../../../components/shared/styles';
 import { SearchToolbar, BlogPostCard, PostPagination } from './components';
 import { useNavigate } from 'react-router-dom';
 import { HeroImage } from '../hero/HeroMain.styles';
@@ -67,9 +67,9 @@ const BlogMain = () => {
                         style={{ marginBottom: 0, animation: 'none' }}
                     />
                     <Box className="header-overlay">
-                        <Typography variant="h2" className="header-title">
+                        <EnhancedTitle variant="h2" className="header-title">
                             Things I've Wrote
-                        </Typography>
+                        </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
                             These are some of my thoughts and reflections on my

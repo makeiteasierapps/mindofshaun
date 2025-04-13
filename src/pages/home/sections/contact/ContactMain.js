@@ -11,6 +11,7 @@ import { AnimatedSection } from '../../../../components/shared/AnimatedSection';
 import {
     FrostedGlassBox,
     MainSectionContainer,
+    EnhancedTitle,
 } from '../../../../components/shared/styles';
 
 const SocialIconWrapper = styled(IconButton)(({ theme }) => ({
@@ -72,9 +73,9 @@ const ContactMain = () => {
                         }}
                     />
                     <Box className="header-overlay">
-                        <Typography variant="h2" className="header-title">
+                        <EnhancedTitle variant="h2" className="header-title">
                             Let's Connect!
-                        </Typography>
+                        </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
                             I'm always looking for new opportunities to learn

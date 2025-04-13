@@ -101,3 +101,14 @@ export const StyledChip = styled(Chip)(({ theme }) => ({
     color: theme.palette.text.secondary,
     border: `2px solid ${theme.palette.primary.main}`,
 }));
+
+export const EnhancedTitle = styled(Typography)(({ theme }) => ({
+    overflow: 'hidden',
+    fontWeight: 700,
+    filter: 'drop-shadow(0 0 10px rgba(100, 180, 255, 0.5))',
+    background:
+        'linear-gradient(90deg, #ffffff 0%, rgb(1, 242, 255) 55%, rgb(0, 192, 202) 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+}));
+
