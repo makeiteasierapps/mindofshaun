@@ -1,11 +1,9 @@
-import React, { useEffect, useRef } from 'react';
 import {
     Box,
     Typography,
     Chip,
     IconButton,
     CircularProgress,
-    Grid2,
 } from '@mui/material';
 import { TagsContainer } from '../BlogMain.styles';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
@@ -20,11 +18,6 @@ const SinglePostView = () => {
     const { postId } = useParams();
     const navigate = useNavigate();
     const { loading, getPublishedPosts } = usePosts();
-
-    // Reference to store the original body overflow style
-    const originalBodyStyle = useRef('');
-    // Reference to the container for scrolling
-    const containerRef = useRef(null);
 
     // Get all published posts to find the current one and determine prev/next
     const publishedPosts = getPublishedPosts();
@@ -55,39 +48,6 @@ const SinglePostView = () => {
         navigate('/');
     };
 
-    // Effect to handle body scrolling and hide external UI elements
-    useEffect(() => {
-        // Store original body overflow style
-        originalBodyStyle.current = document.body.style.overflow;
-
-        // Prevent body scrolling when in full screen mode
-        document.body.style.overflow = 'hidden';
-
-        // Hide navigation and settings buttons if they exist
-        const navToTopButton = document
-            .querySelector('[data-testid="KeyboardArrowUpIcon"]')
-            ?.closest('button');
-        const settingsButton = document
-            .querySelector('[data-testid="SettingsIcon"]')
-            ?.closest('button');
-
-        if (navToTopButton) navToTopButton.style.display = 'none';
-        if (settingsButton) settingsButton.style.display = 'none';
-
-        // Reset scroll position of the full screen container
-        if (containerRef.current) {
-            containerRef.current.scrollTop = 0;
-        }
-
-        // Clean up function to restore original styles and show buttons again
-        return () => {
-            document.body.style.overflow = originalBodyStyle.current;
-
-            if (navToTopButton) navToTopButton.style.display = '';
-            if (settingsButton) settingsButton.style.display = '';
-        };
-    }, [postId]); // Re-run when postId changes
-
     if (loading) {
         return (
             <Box
@@ -104,37 +64,6 @@ const SinglePostView = () => {
             </Box>
         );
     }
-
-    if (!post) {
-        return (
-            <Box
-                sx={{
-                    bgcolor: 'background.default',
-                    height: '100vh',
-                    width: '100vw',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    p: 3,
-                }}
-            >
-                <Typography variant="h4" gutterBottom>
-                    Post Not Found
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                    <IconButton
-                        onClick={handleClose}
-                        aria-label="Return to blog"
-                        color="primary"
-                    >
-                        <ArrowBackIcon /> Return to Blog
-                    </IconButton>
-                </Box>
-            </Box>
-        );
-    }
-    console.log(post);
 
     return (
         <>
