@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
+    ports:
+      - "6066:6066"
+    environment:
+      - PORT=6066
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    network_mode: host
+    restart: unless-stopped

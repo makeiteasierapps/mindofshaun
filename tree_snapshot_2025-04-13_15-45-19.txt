@@ -32,11 +32,13 @@
 │   │       ├── agent_blog.py
 │   │       └── dspy_models.py
 │   ├── models
+│   │   ├── auth.py
 │   │   ├── blog.py
 │   │   ├── projects.py
 │   │   └── utils.py
 │   ├── routes
 │   │   ├── __init__.py
+│   │   ├── admin.py
 │   │   ├── blog.py
 │   │   ├── blog_ai_tools.py
 │   │   └── projects.py
@@ -51,8 +53,14 @@
 ├── src
 │   ├── App.js
 │   ├── assets
-│   │   └── EmailManagerAssest
-│   │       └── Data.js
+│   │   ├── EmailManagerAssest
+│   │   │   └── Data.js
+│   │   └── section_header_imgs
+│   │       ├── about.webp
+│   │       ├── blog.webp
+│   │       ├── connect.webp
+│   │       ├── hero.webp
+│   │       └── projects.webp
 │   ├── components
 │   │   ├── conways
 │   │   │   ├── ConwayGridManager.js
@@ -68,23 +76,27 @@
 │   │   │   ├── presets.js
 │   │   │   └── utils.js
 │   │   └── shared
+│   │       ├── AnimatedSection.js
 │   │       ├── DeleteConfirmationDialog.js
 │   │       └── styles.js
 │   ├── contexts
 │   │   ├── AuthContext.js
+│   │   ├── NavigationContext.js
 │   │   ├── PostsContext.js
 │   │   ├── ProjectsContext.js
 │   │   └── SnackbarContext.js
 │   ├── index.js
 │   ├── layout
-│   │   ├── Header.js
 │   │   ├── NavMenu.js
+│   │   ├── NavMenu.styles.js
 │   │   ├── ParallaxContainer.js
 │   │   └── SnackBar.js
 │   ├── pages
 │   │   ├── admin
 │   │   │   ├── ContentManager.js
 │   │   │   ├── ContentManager.styles.js
+│   │   │   ├── Login.js
+│   │   │   ├── ProtectedRoute.js
 │   │   │   ├── blog
 │   │   │   │   ├── BlogRoutes.js
 │   │   │   │   ├── ai-tools
@@ -133,17 +145,17 @@
 │   │   │   └── useDeleteDialog.js
 │   │   └── home
 │   │       └── sections
+│   │           ├── about
+│   │           │   └── AboutMain.js
 │   │           ├── blog
 │   │           │   ├── BlogMain.js
 │   │           │   ├── BlogMain.styles.js
-│   │           │   ├── components
-│   │           │   │   ├── BlogPostCard.js
-│   │           │   │   ├── PostPagination.js
-│   │           │   │   ├── SearchToolbar.js
-│   │           │   │   ├── SinglePostView.js
-│   │           │   │   └── index.js
-│   │           │   └── utils
-│   │           │       └── blogUtils.js
+│   │           │   └── components
+│   │           │       ├── BlogPostCard.js
+│   │           │       ├── PostPagination.js
+│   │           │       ├── SearchToolbar.js
+│   │           │       ├── SinglePostView.js
+│   │           │       └── index.js
 │   │           ├── contact
 │   │           │   └── ContactMain.js
 │   │           ├── hero
@@ -156,8 +168,10 @@
 │   │               └── ProjectsMain.styles.js
 │   └── utils
 │       ├── theme.js
-│       └── useIntersectionObserver.js
+│       ├── useIntersectionObserver.js
+│       └── utils.js
 ├── tree_snapshot.txt
+├── tree_snapshot_2025-04-13_15-45-19.txt
 └── vite.config.js
 
-49 directories, 112 files
+50 directories, 125 files

@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "6066:6066"
+    env_file:
+      - ./server/.env
+    environment:
+      - NODE_ENV=development
+    network_mode: bridge 
