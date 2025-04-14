@@ -63,7 +63,7 @@ def create_app():
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["https://mindofshaun.com", "http://localhost:3000"],
+        allow_origins=["https://mindofshaun.com", "http://localhost:6066"],
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS", "PUT", "DELETE", "PATCH"],
         allow_headers=["Content-Type", "Accept", "dbName", "uid", 'Kb-ID'],

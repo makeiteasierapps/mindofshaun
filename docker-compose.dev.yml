@@ -5,10 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_URL_PROD=127.0.0.1:6066/api
+        - VITE_LOCAL_DEV=true
     ports:
       - "6066:6066"
     env_file:
       - ./server/.env
-    environment:
-      - NODE_ENV=development
-    network_mode: bridge 
+    command: bash -c "service nginx start && python run.py --dev" 

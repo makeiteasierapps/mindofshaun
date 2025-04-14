@@ -13,10 +13,10 @@ def main(debug=False):
     logger.info(f"Starting server in {'debug' if debug else 'production'} mode")
     if debug:
         logger.info("Running with reload=True")
-        uvicorn.run("run:app", host="0.0.0.0", port=6066, reload=True, log_level="debug")
+        uvicorn.run("run:app", host="0.0.0.0", port=8000, reload=True, log_level="debug")
     else:
         logger.info("Running with workers=1")
-        uvicorn.run("run:app", host="0.0.0.0", port=6066, workers=1, log_level="info")
+        uvicorn.run("run:app", host="0.0.0.0", port=8000, workers=1, log_level="info")
     logger.info("Server started")
 
 if __name__ == '__main__':

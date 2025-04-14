@@ -6,7 +6,7 @@ import logging
 from server.models.blog import BlogPostCreate, BlogPostUpdate, BlogPostResponse
 from server.services.blog_service import create_blog, update_blog
 
-router = APIRouter(prefix="/blog", tags=["blog"])
+router = APIRouter(prefix="/api/blog", tags=["blog"])
 logger = logging.getLogger(__name__)
 
 async def get_blog_collection(request: Request):

@@ -11,7 +11,7 @@ from server.models.projects import ProjectResponse
 logger = logging.getLogger(__name__)
 
 # Create router
-router = APIRouter(prefix="/projects", tags=["projects"])
+router = APIRouter(prefix="/api/projects", tags=["projects"])
 
 async def get_projects_collection(request: Request):
     return request.app.state.mongo_client.db.projects

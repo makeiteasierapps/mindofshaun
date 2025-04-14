@@ -4,6 +4,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+# Pass build-time environment variables
+ARG VITE_BACKEND_URL_PROD
+ARG VITE_LOCAL_DEV
+ENV VITE_BACKEND_URL_PROD=${VITE_BACKEND_URL_PROD}
+ENV VITE_LOCAL_DEV=${VITE_LOCAL_DEV}
 RUN npm run build
 
 # --- Stage 2: Backend + NGINX ---
@@ -32,6 +37,8 @@ COPY --from=client-builder /app/dist /dist
 COPY nginx/nginx.conf /etc/nginx/sites-available/default
 RUN mkdir -p /var/log/nginx && \
     mkdir -p /var/lib/nginx/body && \
+    mkdir -p /run/nginx && \
+    chown -R www-data:www-data /var/log/nginx /var/lib/nginx /run/nginx && \
     ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log && \
     ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
@@ -40,4 +47,4 @@ RUN mkdir -p /var/log/nginx && \
 EXPOSE 6066
 
 # Start NGINX and the Python API server
-CMD service nginx start && uvicorn run:app --host 127.0.0.1 --port 8000 --proxy-headers
+CMD service nginx start && python run.py
