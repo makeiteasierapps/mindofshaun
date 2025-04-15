@@ -20,4 +20,3 @@ yarn-error.log*
 
 __pycache__/
 mnt/
-package-lock.json
