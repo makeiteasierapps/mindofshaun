@@ -36,14 +36,14 @@ jobs:
           cache-from: type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:buildcache
           cache-to: type=registry,ref=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:buildcache,mode=max
           
-      - name: Calculate deployment signature
-        run: |
-          echo "DEPLOY_SIGNATURE=$(echo -n '' | openssl dgst -sha256 -hmac '${{ secrets.DEPLOY_SECRET }}' | awk '{print $2}')" >> $GITHUB_ENV
+      # - name: Calculate deployment signature
+      #   run: |
+      #     echo "DEPLOY_SIGNATURE=$(echo -n '' | openssl dgst -sha256 -hmac '${{ secrets.DEPLOY_SECRET }}' | awk '{print $2}')" >> $GITHUB_ENV
           
-      - name: Trigger deployment
-        run: |
-          curl -X POST \
-            -H "X-Deploy-Signature: ${{ env.DEPLOY_SIGNATURE }}" \
-            -H "Content-Type: application/json" \
-            -d '{"image": "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}"}' \
-            https://api.paxxium.com/api/deploy/mindofshaun
+      # - name: Trigger deployment
+      #   run: |
+      #     curl -X POST \
+      #       -H "X-Deploy-Signature: ${{ env.DEPLOY_SIGNATURE }}" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"image": "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}"}' \
+      #       https://api.paxxium.com/api/deploy/mindofshaun

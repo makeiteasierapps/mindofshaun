@@ -6,8 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - VITE_BACKEND_URL_PROD=127.0.0.1:6066/api
-        - VITE_LOCAL_DEV=true
+        - VITE_BACKEND_URL_PROD=mindofshaun.com/api
     ports:
       - "6066:6066"
     env_file:

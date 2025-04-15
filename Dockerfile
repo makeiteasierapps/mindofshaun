@@ -6,9 +6,7 @@ RUN npm ci
 COPY . .
 # Pass build-time environment variables
 ARG VITE_BACKEND_URL_PROD
-ARG VITE_LOCAL_DEV
 ENV VITE_BACKEND_URL_PROD=${VITE_BACKEND_URL_PROD}
-ENV VITE_LOCAL_DEV=${VITE_LOCAL_DEV}
 RUN npm run build
 
 # --- Stage 2: Backend + NGINX ---
