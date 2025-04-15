@@ -33,8 +33,8 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest,${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
-          cache-from: type=registry,ref=123456789012.dkr.ecr.us-east-2.amazonaws.com/prod/paxxium:buildcache
-          cache-to: type=registry,ref=123456789012.dkr.ecr.us-east-2.amazonaws.com/prod/paxxium:buildcache,mode=max
+          # cache-from: type=registry,ref=123456789012.dkr.ecr.us-east-2.amazonaws.com/prod/paxxium:buildcache
+          # cache-to: type=registry,ref=123456789012.dkr.ecr.us-east-2.amazonaws.com/prod/paxxium:buildcache,mode=max
 
       # - name: Calculate deployment signature
       #   run: |
