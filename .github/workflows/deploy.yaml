@@ -38,7 +38,8 @@ jobs:
 
       - name: Calculate deployment signature
         run: |
-          echo "DEPLOY_SIGNATURE=$(echo -n '' | openssl dgst -sha256 -hmac '${{ secrets.DEPLOY_SECRET }}' | awk '{print $2}')" >> $GITHUB_ENV
+          PAYLOAD='{"image": "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}"}'
+          echo "DEPLOY_SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac '${{ secrets.DEPLOY_SECRET }}' | awk '{print $2}')" >> $GITHUB_ENV
           
       - name: Trigger deployment
         run: |
