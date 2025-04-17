@@ -1,28 +1,30 @@
 # --- Stage 1: Build the React frontend ---
 FROM node:20-alpine AS client-builder
+
+# Install dependencies first (separate from code to improve caching)
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
+
+# Copy source and build 
 COPY . .
-# Pass build-time environment variables
 ARG VITE_BACKEND_URL_PROD
 ENV VITE_BACKEND_URL_PROD=${VITE_BACKEND_URL_PROD}
 RUN npm run build
 
 # --- Stage 2: Backend + NGINX ---
-FROM python:3.11-slim
+FROM python:3.11-slim AS server-builder
 
-# Install required packages
-RUN apt-get update && \
-    apt-get install -y nginx && \
-    pip install --no-cache-dir uvicorn
-
-# Set workdir
+# Install Python dependencies first (separate layer)
 WORKDIR /app
-
-# Copy Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install OS packages in a single layer
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends nginx && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy Python backend code
 COPY server/ ./server/
@@ -31,7 +33,7 @@ COPY run.py .
 # Copy built static files from client
 COPY --from=client-builder /app/dist /dist
 
-# Copy nginx config and create needed directories
+# Configure nginx
 COPY nginx/nginx.conf /etc/nginx/sites-available/default
 RUN mkdir -p /var/log/nginx && \
     mkdir -p /var/lib/nginx/body && \

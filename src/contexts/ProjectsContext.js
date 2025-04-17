@@ -8,7 +8,7 @@ import React, {
 import { useProjectFormHandlers } from '../pages/admin/projects/ProjectForm.handlers';
 import { getBackendUrl } from '../utils/utils';
 const ProjectsContext = createContext();
-
+console.log(getBackendUrl());
 export const useProjects = () => useContext(ProjectsContext);
 
 export const ProjectsProvider = ({ children }) => {

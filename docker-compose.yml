@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   app:
     build:
@@ -11,4 +9,4 @@ services:
       - "6066:6066"
     env_file:
       - ./server/.env
-    command: bash -c "service nginx start && python run.py --dev" 
+    command: bash -c "service nginx start && python run.py" 
