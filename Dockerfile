@@ -6,10 +6,14 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --prefer-offline --no-audit
 
-# Copy source and build 
+# Copy source
 COPY . .
+
+# Set build arg and create .env file for Vite
 ARG VITE_BACKEND_URL_PROD
-ENV VITE_BACKEND_URL_PROD=${VITE_BACKEND_URL_PROD}
+RUN echo "VITE_BACKEND_URL_PROD=${VITE_BACKEND_URL_PROD}" > .env
+
+# Build the app
 RUN npm run build
 
 # --- Stage 2: Backend + NGINX ---
