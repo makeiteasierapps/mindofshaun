@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_BACKEND_URL_PROD=mindofshaun.com/api
+    image: ${IMAGE_NAME:-mindofshaun}:${IMAGE_TAG:-latest}
     ports:
       - "6066:6066"
     env_file:
