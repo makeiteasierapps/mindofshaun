@@ -9,4 +9,6 @@ services:
       - "6066:6066"
     env_file:
       - ./server/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash -c "service nginx start && python run.py" 
