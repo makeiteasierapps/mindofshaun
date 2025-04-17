@@ -4,7 +4,7 @@ FROM node:20-alpine AS client-builder
 # Install dependencies first (separate from code to improve caching)
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --prefer-offline --no-audit
 
 # Copy source and build 
 COPY . .
