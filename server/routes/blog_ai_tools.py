@@ -13,7 +13,7 @@ from server.agents.blog.agent_blog import (
     prepare_publishing_package
 )
 
-router = APIRouter(prefix="/blog/ai", tags=["blog-ai"])
+router = APIRouter(prefix="/api/blog/ai", tags=["blog-ai"])
 
 async def get_blog_collection(request: Request):
     return request.app.state.mongo_client.get_blog_posts_collection()
