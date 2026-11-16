@@ -3,7 +3,6 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import CodeIcon from '@mui/icons-material/Code';
-import ArticleIcon from '@mui/icons-material/Article';
 import EmailIcon from '@mui/icons-material/Email';
 import { MenuContainer, Menu, NavMenuItem, MenuFab } from './NavMenu.styles';
 import { useNavigation } from '../contexts/NavigationContext';
@@ -36,8 +35,6 @@ const NavMenu = () => {
                 return <PersonIcon fontSize="small" />;
             case 'projects':
                 return <CodeIcon fontSize="small" />;
-            case 'blog':
-                return <ArticleIcon fontSize="small" />;
             case 'contact':
                 return <EmailIcon fontSize="small" />;
             default:

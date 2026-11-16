@@ -33,7 +33,8 @@ const Project = ({ projectData, index }) => {
     // Handle both old and new data structures
     const projectDetails =
         projectData.project_details || projectData.ProjectDetails || {};
-    const { images } = projectData;
+    const images = Array.isArray(projectData.images) ? projectData.images : [];
+    const hasImages = images.length > 0;
 
     // Extract key technologies as tags from clientTech and serverTech
     const clientTech =
@@ -72,6 +73,19 @@ const Project = ({ projectData, index }) => {
                     >
                         {projectDetails.description}
                     </Typography>
+                    {projectDetails.outcome ? (
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                color: 'rgba(255, 255, 255, 0.9)',
+                                lineHeight: 1.7,
+                                fontSize: '1.05rem',
+                                mt: 2,
+                            }}
+                        >
+                            {projectDetails.outcome}
+                        </Typography>
+                    ) : null}
                 </Box>
 
                 <TagsContainer>
@@ -118,6 +132,7 @@ const Project = ({ projectData, index }) => {
                 </ProjectLinks>
             </ProjectContent>
 
+            {hasImages ? (
             <ProjectGallery>
                 <MainImageContainer>
                     <MainImage
@@ -164,6 +179,7 @@ const Project = ({ projectData, index }) => {
                     </ThumbnailGrid>
                 )}
             </ProjectGallery>
+            ) : null}
 
             <EnlargedImageModal
                 open={enlargedImageOpen}

@@ -34,20 +34,62 @@ const HeroMain = () => {
                                 },
                             }}
                         >
-                            mindofshaun.com
+                            Shaun Offenbacher
                         </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
-                            Digital systems, tools, and ideas — at the edge of
-                            code and consciousness.
+                            I build AI-powered apps and the systems that host
+                            them.
+                        </Typography>
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                color: '#e5fcff',
+                                maxWidth: '640px',
+                                margin: '0 auto',
+                                lineHeight: 1.6,
+                            }}
+                        >
+                            Full-stack product work, practical AI, and GitOps
+                            hosting — from a prompt or an architecture sketch
+                            through a running deployment.
                         </Typography>
                     </Box>
                 </SectionHeader>
 
                 <CTAButtonContainer sx={{ mt: 3 }}>
-                    <CTAButton href="/blog">BLOG ↗</CTAButton>
-                    <CTAButton href="#projects">PROJECTS ↘</CTAButton>
+                    <CTAButton href="#contact">Let's work together</CTAButton>
+                    <CTAButton href="#projects">View projects</CTAButton>
                 </CTAButtonContainer>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 3,
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
+                        mt: 2,
+                        '& a': {
+                            color: '#e5fcff',
+                            textDecoration: 'none',
+                        },
+                    }}
+                >
+                    <a
+                        href="https://github.com/makeiteasierapps"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        GitHub
+                    </a>
+                    <a
+                        href="https://www.linkedin.com/in/shaun-o-940b591b5/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        LinkedIn
+                    </a>
+                    <a href="mailto:shaunoffenbacher@yahoo.com">Email</a>
+                </Box>
             </AnimatedSection>
         </MainSectionContainer>
     );

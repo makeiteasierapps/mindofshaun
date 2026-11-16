@@ -19,7 +19,7 @@ import { useProjects } from '../../../../contexts/ProjectsContext';
 
 const ProjectsMain = () => {
     const [currentProject, setCurrentProject] = useState(0);
-    const { loading, getPublishedProjects } = useProjects();
+    const { loading, error, getPublishedProjects } = useProjects();
 
     const publishedProjects = getPublishedProjects();
 
@@ -60,15 +60,28 @@ const ProjectsMain = () => {
                         </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
-                            These are some projects I've created for fun,
-                            learning, and solving problems I've encountered.
-                            Each represents a journey of exploration and
-                            creativity.
+                            Two systems I shipped and still run. Family
+                            AHA is the product. The platform is how it gets
+                            deployed.
                         </Typography>
                     </Box>
                 </SectionHeader>
             </AnimatedSection>
             <AnimatedSection>
+                {error ? (
+                    <Typography
+                        sx={{ color: '#e5fcff', textAlign: 'center', mt: 2 }}
+                    >
+                        Projects are unavailable right now.
+                    </Typography>
+                ) : null}
+                {loading ? (
+                    <Typography
+                        sx={{ color: '#e5fcff', textAlign: 'center', mt: 2 }}
+                    >
+                        Loading projects.
+                    </Typography>
+                ) : null}
                 <ProjectsGrid>
                     {publishedProjects.map((project, index) => (
                         <Box
@@ -121,6 +134,17 @@ const ProjectsMain = () => {
                         </ProjectNavButton>
                     </NavigationControls>
                 ) : null}
+                <Typography
+                    sx={{
+                        color: 'rgba(229, 252, 255, 0.8)',
+                        textAlign: 'center',
+                        mt: 4,
+                        maxWidth: '640px',
+                    }}
+                >
+                    An extractable AI and creative engine is a later product
+                    seed, not a case study yet.
+                </Typography>
             </AnimatedSection>
         </MainSectionContainer>
     );

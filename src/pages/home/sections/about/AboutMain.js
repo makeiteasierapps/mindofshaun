@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, Box, Grid2 } from '@mui/material';
-import { motion } from 'framer-motion';
 import { AnimatedSection } from '../../../../components/shared/AnimatedSection';
 import aboutImage from '../../../../assets/section_header_imgs/about.webp';
 
@@ -35,8 +34,7 @@ const AboutMain = () => {
                         </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
-                            Full-stack developer and AI enthusiast focused on
-                            building innovative digital experiences.
+                            Full-stack and AI, from idea through deployment.
                         </Typography>
                     </Box>
                 </SectionHeader>
@@ -56,23 +54,17 @@ const AboutMain = () => {
                                         fontFamily: 'monospace',
                                     }}
                                 >
-                                    I spend my days crafting AI agents and
-                                    tinkering with MCP servers, finding joy in
-                                    the full stack development process.
-                                    Self-hosting has become both a passion and
-                                    an endless learning opportunity for me. When
-                                    working with LLMs, DSPy is my framework of
-                                    choice for its elegant approach to prompt
-                                    engineering. There's something incredibly
-                                    satisfying about building systems that
-                                    connect from the database all the way to the
-                                    user interface, seeing all the pieces work
-                                    together. I'm constantly exploring the
-                                    intersection of AI capabilities and
-                                    practical applications, believing that the
-                                    most interesting innovations happen when we
-                                    bridge theoretical potential with real-world
-                                    needs.
+                                    I build software people use, and the
+                                    systems that keep it running. That includes
+                                    Family AHA, a daily family-connection app I
+                                    designed and own, and a single-operator
+                                    hosting platform that deploys full-stack
+                                    apps with GitOps. I take an idea from the
+                                    first prompt and architecture through the
+                                    interface, the API, and a real deployment. I
+                                    prefer tools that make everyday life easier:
+                                    practical AI, clear systems, and software
+                                    someone else can run.
                                 </Typography>
                             </FrostedGlassContainer>
                         </AnimatedSection>

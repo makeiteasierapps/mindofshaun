@@ -78,9 +78,9 @@ const ContactMain = () => {
                         </EnhancedTitle>
 
                         <Typography variant="h6" className="header-description">
-                            I'm always looking for new opportunities to learn
-                            and grow. If you have any questions or would like to
-                            get in touch, please don't hesitate to reach out.
+                            Available for freelance and contract work.
+                            AI-powered apps, full-stack features, GitOps and
+                            hosting setups, and internal tools.
                         </Typography>
                     </Box>
                 </SectionHeader>
@@ -96,6 +96,19 @@ const ContactMain = () => {
                             justifyContent="center"
                             padding={6}
                         >
+                            <Box
+                                component="ul"
+                                sx={{
+                                    color: '#e5fcff',
+                                    textAlign: 'left',
+                                    mb: 4,
+                                    pl: 3,
+                                }}
+                            >
+                                <li>App builds</li>
+                                <li>AI integrations</li>
+                                <li>Deployment systems</li>
+                            </Box>
                             <Box
                                 display="flex"
                                 justifyContent="center"

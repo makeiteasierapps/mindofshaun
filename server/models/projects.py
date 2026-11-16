@@ -18,6 +18,7 @@ class ProjectDetails(BaseModel):
     clientTech: List[str] = []
     serverTech: List[str] = []
     published: bool = False
+    outcome: str | None = None
 
 # Base model for projects
 class ProjectBase(BaseModel):

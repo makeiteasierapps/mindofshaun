@@ -24,6 +24,9 @@ const usePixiSetup = ({ containerRef, cellSize, initialLifeProbability }) => {
                 // Get the viewport dimensions
                 const { width: viewportWidth, height: viewportHeight } =
                     getViewportDimensions();
+                const prefersReducedMotion = window.matchMedia(
+                    '(prefers-reduced-motion: reduce)'
+                ).matches;
 
                 // Update viewport size state
                 setViewportSize({
@@ -40,7 +43,10 @@ const usePixiSetup = ({ containerRef, cellSize, initialLifeProbability }) => {
                     height: viewportHeight,
                     background: 0x000000,
                     antialias: true,
-                    resolution: window.devicePixelRatio || 1,
+                    resolution:
+                        viewportWidth < 768
+                            ? 1
+                            : window.devicePixelRatio || 1,
                     autoDensity: true,
                 });
 
@@ -90,8 +96,9 @@ const usePixiSetup = ({ containerRef, cellSize, initialLifeProbability }) => {
 
                 window.addEventListener('resize', handleResize);
 
-                // Start the animation
-                gridManager.start();
+                if (!prefersReducedMotion) {
+                    gridManager.start();
+                }
 
                 // Enable interaction after setup
                 setInteractionEnabled(true);

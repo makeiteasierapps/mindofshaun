@@ -13,17 +13,18 @@ class MongoDbClient:
         self._connect()
 
     def _load_mongo_uri(self):
-        load_dotenv(override=True)
+        env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+        load_dotenv(env_path, override=True)
         uri = os.getenv('MONGO_URI_DEV') if os.getenv('LOCAL_DEV') == 'true' else os.getenv('MONGO_URI')
         if not uri:
             self.logger.error("MongoDB URI not found in environment variables")
             raise ValueError("MongoDB URI is required but was not found in environment variables")
-        self.logger.info("Loaded MongoDB URI: %s", uri)
+        self.logger.info("Loaded MongoDB URI")
         return uri
 
     def _connect(self):
         if not self._client:
-            self.logger.info("Attempting to connect to MongoDB at %s", self.mongo_uri)
+            self.logger.info("Attempting to connect to MongoDB")
             try:
                 self._client = AsyncIOMotorClient(self.mongo_uri)
                 self._db = self._client[self.db_name]

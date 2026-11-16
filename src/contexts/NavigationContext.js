@@ -11,7 +11,6 @@ const sections = [
     { name: 'Home', id: 'home' },
     { name: 'About', id: 'about' },
     { name: 'Projects', id: 'projects' },
-    { name: 'Blog', id: 'blog' },
     { name: 'Contact', id: 'contact' },
 ];
 
