@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "skills": {
+    "dark-tech": {
+      "source": "/tmp/design-taste",
+      "sourceType": "local",
+      "computedHash": "bf01a439537551e18268495f5c97609480d8d32f887aec6a3e5594dfd1c62148"
+    },
+    "design-taste": {
+      "source": "/tmp/design-taste",
+      "sourceType": "local",
+      "computedHash": "ecb63f30514a97991f9b12d0cdccb13985a61d9f8d43c6271a08adc9abf05dc1"
+    },
+    "emil-design-eng": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/emil-design-eng/SKILL.md",
+      "computedHash": "479c09fe9e574178112bbbcd8473c60064539b9687a3c1a6ebd36e1c2370898e"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "taste-accessibility": {
+      "source": "/tmp/design-taste",
+      "sourceType": "local",
+      "computedHash": "30e5e74f416ea2165daf227a429625a6c04b503e9abfe3dccd4a1c3ff976d213"
+    },
+    "taste-landing-page": {
+      "source": "/tmp/design-taste",
+      "sourceType": "local",
+      "computedHash": "abf65844f47655fa5bff6ac57beaaa45d5793c00d572d2194b9dfa729560e3f9"
+    },
+    "taste-motion": {
+      "source": "/tmp/design-taste",
+      "sourceType": "local",
+      "computedHash": "14fecbcaaf34d7b554f00c50b81013d62289390bba722b26fbf990bf343881a0"
+    },
+    "taste-typography": {
+      "source": "/tmp/design-taste",
+      "sourceType": "local",
+      "computedHash": "522fdd4da35d222d9d9ef2dede828cfe946ed04866a304a49ed1e86980687be5"
+    }
+  }
+}

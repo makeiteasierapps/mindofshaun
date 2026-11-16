@@ -17,20 +17,16 @@ This project is containerized with Docker and supports automatic failover to a c
 
 - Docker and Docker Compose
 - Node.js 20+ (for local development)
-- Python 3.11+ (for local development)
+- Python 3.11+ (for the container's health API)
 - AWS CLI (configured with appropriate permissions)
 
 ### Local Development
 
+The site is static. The Python process only serves `GET /api/health` so the nginx container still has an API upstream.
+
 ```bash
-# Install dependencies
 npm install
-
-# Run in development mode
 npm run dev
-
-# In a separate terminal, run the Python backend
-python run.py --dev
 ```
 
 ### Building Docker Image

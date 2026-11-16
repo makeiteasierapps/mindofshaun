@@ -1,34 +1,21 @@
-import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'node:url';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
+    },
     server: {
         port: 3000,
         host: true,
     },
     build: {
         outDir: 'dist',
-        sourcemap: true,
+        sourcemap: false,
     },
-    esbuild: {
-        loader: 'jsx',
-        include: /src\/.*\.[tj]sx?$/,
-        exclude: [],
-    },
-    optimizeDeps: {
-        esbuildOptions: {
-            loader: {
-                '.js': 'jsx',
-            },
-        },
-    },
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, './src'),
-        },
-    },
-    base: '/',
-    publicDir: 'public',
 });

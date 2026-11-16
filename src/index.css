@@ -1,0 +1,123 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@font-face {
+    font-family: "Familjen Grotesk";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/familjen-grotesk-latin-400.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Familjen Grotesk";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/familjen-grotesk-latin-600.woff2") format("woff2");
+}
+
+@custom-variant fine-hover (@media (hover: hover) and (pointer: fine));
+
+@theme inline {
+    --font-sans: "Familjen Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+
+    --color-ground: #08090a;
+    --color-panel: #0e0f11;
+    --color-raised: #131417;
+    --color-bone: #f3f0e8;
+    --color-parchment: #c8c2b4;
+    --color-brass: #c4a574;
+    --color-brass-hover: #d7b07a;
+    --color-quiet: #8e8678;
+    --color-line: rgb(255 255 255 / 0.08);
+
+    --color-background: #08090a;
+    --color-foreground: #c8c2b4;
+    --color-primary: #c4a574;
+    --color-primary-foreground: #08090a;
+    --color-border: rgb(255 255 255 / 0.08);
+    --color-ring: #c4a574;
+
+    --radius: 8px;
+}
+
+@layer base {
+    html {
+        color-scheme: dark;
+        scroll-padding-top: 5rem;
+        overflow-x: clip;
+        background: var(--color-ground);
+    }
+
+    body {
+        margin: 0;
+        background: var(--color-ground);
+        color: var(--color-parchment);
+        font-family: var(--font-sans);
+        font-size: 17px;
+        font-weight: 400;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+        color: var(--color-bone);
+        font-weight: 600;
+        letter-spacing: -0.03em;
+    }
+
+    h1 {
+        margin: 0 0 1rem;
+        font-size: clamp(2.2rem, 5vw, 4rem);
+        line-height: 1.05;
+        text-rendering: optimizeLegibility;
+    }
+
+    h2 {
+        margin: 0 0 1rem;
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        line-height: 1.1;
+        text-rendering: optimizeLegibility;
+    }
+
+    h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.15rem;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+    }
+
+    p {
+        max-width: 62ch;
+        margin: 0 0 1rem;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    ::selection {
+        background: #c4a574;
+        color: #08090a;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

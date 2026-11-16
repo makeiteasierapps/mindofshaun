@@ -20,38 +20,41 @@
             href="/favicons/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat&family=Open+Sans:wght@600&family=Oswald:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
+            rel="preload"
+            href="/fonts/familjen-grotesk-latin-600.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
         />
         <link
-            href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-            rel="stylesheet"
+            rel="preload"
+            href="/fonts/familjen-grotesk-latin-400.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#08090A" />
         <meta
             name="description"
-            content="Portfolio of Shaun Offenbacher. Full-stack and AI product work, including Family AHA and a GitOps hosting platform. Available for freelance and contract work."
+            content="Shaun Offenbacher builds AI-powered apps and the systems that run them, for founders and small teams."
         />
-        <meta property="og:title" content="Shaun Offenbacher — AI apps and the systems that host them" />
+        <meta
+            property="og:title"
+            content="Shaun Offenbacher — I build AI-powered apps and the systems that run them"
+        />
         <meta
             property="og:description"
-            content="Portfolio of Shaun Offenbacher. Full-stack and AI product work, including Family AHA and a GitOps hosting platform. Available for freelance and contract work."
+            content="AI products, built and shipped. Family AHA and Observatory. Based in Salt Lake City."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://mindofshaun.com" />
-        <title>Shaun Offenbacher — AI apps and the systems that host them</title>
+        <title>Shaun Offenbacher — AI apps and the systems that run them</title>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
-        <script type="module" src="/src/index.js"></script>
+        <script type="module" src="/src/main.jsx"></script>
     </body>
 </html>
