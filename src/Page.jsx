@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { LifeField } from '@/LifeField';
 import {
-    bookingUrl,
+    BOOKING_URL,
     email,
     offers,
     profiles,
@@ -13,6 +13,21 @@ import {
 } from '@/content';
 
 const wrap = 'mx-auto w-full max-w-[1120px] px-5 sm:px-8 lg:px-12';
+
+function BookLink({ className, ...props }) {
+    return (
+        <a
+            {...props}
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={className}
+        >
+            Book a call
+            <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+    );
+}
 
 function Hero() {
     const reduce = useReducedMotion();
@@ -38,7 +53,7 @@ function Hero() {
                 </p>
                 <div className="mt-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-6">
                     <Button asChild className="w-full sm:w-auto">
-                        <a href={bookingUrl}>Book a call</a>
+                        <BookLink />
                     </Button>
                     <Button asChild variant="link" className="w-full sm:w-auto">
                         <a href="#work">See the work</a>
@@ -52,83 +67,148 @@ function Hero() {
     );
 }
 
-function Study({ study }) {
-    const hasMedia = study.shots.length > 0 || study.clip;
+function LiveLink({ live }) {
+    if (!live) return null;
 
     return (
-        <article
-            id={study.id}
-            aria-labelledby={`${study.id}-title`}
-            className={
-                hasMedia
-                    ? 'grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-16'
-                    : undefined
-            }
-        >
-            <div className={study.reverse ? 'lg:order-2' : undefined}>
+        <p>
+            <a
+                href={live.href}
+                className="text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
+            >
+                {live.label}
+            </a>
+        </p>
+    );
+}
+
+function ProsePart({ part }) {
+    return (
+        <div className="mt-6">
+            <h3>{part.heading}</h3>
+            <p className="mb-0">{part.body}</p>
+        </div>
+    );
+}
+
+function Pipeline({ part }) {
+    return (
+        <div className="mt-10">
+            <h3>{part.heading}</h3>
+            <dl className="m-0 grid md:grid-cols-2 md:gap-x-12">
+                {part.items.map((item) => (
+                    <div key={item.lead} className="border-t border-line py-4">
+                        <dt className="mb-1 text-[15px] font-semibold text-bone">
+                            {item.lead}
+                        </dt>
+                        <dd className="m-0 max-w-[62ch]">{item.body}</dd>
+                    </div>
+                ))}
+            </dl>
+        </div>
+    );
+}
+
+function MediaFigure({ item }) {
+    const isVideo = item.src.endsWith('.webm');
+
+    return (
+        <figure className="overflow-hidden rounded-[8px] border border-line bg-panel">
+            {isVideo ? (
+                <video
+                    controls
+                    playsInline
+                    muted
+                    preload="none"
+                    poster={item.poster}
+                    width={item.width}
+                    height={item.height}
+                    aria-label={item.label}
+                    className="block h-auto w-full"
+                >
+                    <source src={item.src} type="video/webm" />
+                </video>
+            ) : (
+                <img
+                    src={item.src}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-auto w-full"
+                />
+            )}
+            <figcaption className="px-3 py-2.5 text-sm leading-snug text-quiet">
+                {item.caption}
+            </figcaption>
+        </figure>
+    );
+}
+
+function Study({ study }) {
+    const listAt = study.parts.findIndex((part) => part.items);
+    const hasList = listAt !== -1;
+
+    if (!hasList) {
+        return (
+            <article id={study.id} aria-labelledby={`${study.id}-title`}>
                 <h2 id={`${study.id}-title`}>{study.title}</h2>
                 <p className="text-parchment">{study.lede}</p>
                 {study.parts.map((part) => (
-                    <div key={part.heading} className="mt-6">
+                    <ProsePart key={part.heading} part={part} />
+                ))}
+                <LiveLink live={study.live} />
+            </article>
+        );
+    }
+
+    const before = study.parts.slice(0, listAt);
+    const list = study.parts[listAt];
+    const after = study.parts.slice(listAt + 1);
+    const paired = after.slice(0, -1);
+    const closing = after.slice(-1);
+
+    return (
+        <article id={study.id} aria-labelledby={`${study.id}-title`}>
+            <div className="max-w-[62ch]">
+                <h2 id={`${study.id}-title`}>{study.title}</h2>
+                <p className="text-parchment">{study.lede}</p>
+                {before.map((part) => (
+                    <ProsePart key={part.heading} part={part} />
+                ))}
+            </div>
+            <Pipeline part={list} />
+            {paired.length > 0 ? (
+                <div className="mt-10 grid gap-x-12 md:grid-cols-2">
+                    {paired.map((part) => (
+                        <div
+                            key={part.heading}
+                            className="border-t border-line pt-5"
+                        >
+                            <h3>{part.heading}</h3>
+                            <p className="mb-0">{part.body}</p>
+                        </div>
+                    ))}
+                </div>
+            ) : null}
+            <div className="mt-10 max-w-[62ch]">
+                {closing.map((part) => (
+                    <div key={part.heading}>
                         <h3>{part.heading}</h3>
-                        <p>{part.body}</p>
+                        <p className="mb-0">{part.body}</p>
                     </div>
                 ))}
-                {study.live ? (
-                    <p>
-                        <a
-                            href={study.live.href}
-                            className="text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
-                        >
-                            {study.live.label}
-                        </a>
-                    </p>
-                ) : null}
+                <div className="mt-6">
+                    <LiveLink live={study.live} />
+                </div>
             </div>
-            {hasMedia ? (
-            <div
-                className={`flex flex-col gap-4 ${study.reverse ? 'lg:order-1' : ''}`}
-            >
-                {study.shots.map((shot) => (
-                    <figure
-                        key={shot.src}
-                        className="overflow-hidden rounded-[8px] border border-line bg-panel"
-                    >
-                        <img
-                            src={shot.src}
-                            alt={shot.alt}
-                            width={shot.width}
-                            height={shot.height}
-                            loading="lazy"
-                            decoding="async"
-                            className="block h-auto w-full"
-                        />
-                        <figcaption className="px-3 py-2.5 text-sm leading-snug text-quiet">
-                            {shot.caption}
-                        </figcaption>
-                    </figure>
-                ))}
-                {study.clip ? (
-                    <figure className="overflow-hidden rounded-[8px] border border-line bg-panel">
-                        <video
-                            controls
-                            playsInline
-                            muted
-                            preload="none"
-                            poster={study.clip.poster}
-                            width="1440"
-                            height="900"
-                            aria-label={study.clip.label}
-                            className="block h-auto w-full"
-                        >
-                            <source src={study.clip.src} type="video/webm" />
-                        </video>
-                        <figcaption className="px-3 py-2.5 text-sm leading-snug text-quiet">
-                            {study.clip.caption}
-                        </figcaption>
-                    </figure>
-                ) : null}
-            </div>
+            {study.media.length > 0 ? (
+                <div className="mt-14 flex flex-col gap-4">
+                    {study.media.map((item) => (
+                        <MediaFigure key={item.src} item={item} />
+                    ))}
+                </div>
             ) : null}
         </article>
     );
@@ -242,19 +322,8 @@ function Contact() {
                 <h2 id="contact-title">Contact</h2>
                 <p>Tell me what you want shipped.</p>
                 <Button asChild className="mt-2 w-full sm:w-auto">
-                    <a href={bookingUrl}>Book a call</a>
+                    <BookLink />
                 </Button>
-                <p className="mt-8 text-sm text-quiet">
-                    Booking link [placeholder]
-                </p>
-                <p>
-                    <a
-                        href={bookingUrl}
-                        className="break-all text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
-                    >
-                        {bookingUrl}
-                    </a>
-                </p>
                 <ul className="mt-6 list-none p-0">
                     <li>
                         <a
@@ -299,12 +368,7 @@ export function Page() {
                     >
                         Shaun Offenbacher
                     </a>
-                    <a
-                        href={bookingUrl}
-                        className="ml-auto inline-flex min-h-11 items-center text-[15px] font-semibold text-bone underline-offset-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass fine-hover:hover:underline md:order-3"
-                    >
-                        Book a call
-                    </a>
+                    <BookLink className="ml-auto inline-flex min-h-11 items-center text-[15px] font-semibold text-bone underline-offset-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass fine-hover:hover:underline md:order-3" />
                     <nav
                         aria-label="Sections"
                         className="order-3 flex w-full max-w-full flex-wrap gap-x-4 md:order-2 md:w-auto"
