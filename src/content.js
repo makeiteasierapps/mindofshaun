@@ -1,7 +1,8 @@
-/** Paste the real booking link here. Every "Book a call" control uses this. */
-export const BOOKING_URL = 'https://example.com/replace-with-booking-link';
+/** Every "Book a call" control uses this Zoho Calendar booking page. */
+export const BOOKING_URL =
+    'https://calendar.zoho.com/zc/view/slot-booking/0801123c9bb09de875eb7b8f61644dfc000020310e582af6ee9f62577a4582a3dfb614cb5fc7d62d911772a26e0e34f2aa3fa28ff39c2bc7484069552542ce8e';
 
-export const email = 'shaunoffenbacher@yahoo.com';
+export const email = 'shaun@novapaxx.com';
 
 export const profiles = [
     {
