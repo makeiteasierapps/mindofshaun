@@ -155,6 +155,10 @@ function Process() {
     );
 }
 
+function isPlaceholder(value) {
+    return typeof value !== 'string' || /^\[[^\]]*\]$/.test(value.trim());
+}
+
 function Offers() {
     return (
         <section
@@ -165,39 +169,61 @@ function Offers() {
             <div className={wrap}>
                 <h2 id="offers-title">Offers</h2>
                 <div className="mt-6 grid gap-4 md:grid-cols-2">
-                    {offers.map((offer) => (
-                        <article
-                            key={offer.title}
-                            className={
-                                offer.featured
-                                    ? 'flex h-full flex-col rounded-[8px] border border-brass bg-raised px-6 py-6 md:px-8 md:py-8'
-                                    : 'flex h-full flex-col rounded-[8px] border border-line bg-panel px-6 py-6 md:px-8 md:py-8'
-                            }
-                        >
-                            <h3>{offer.title}</h3>
-                            <dl className="m-0">
-                                <dt className="sr-only">Price</dt>
-                                <dd className="m-0 text-[1.75rem] font-semibold tracking-[-0.03em] text-bone">
-                                    {offer.price}
-                                </dd>
-                                <dt className="mb-1 mt-5 text-[15px] text-quiet">
-                                    Included
-                                </dt>
-                                <dd className="m-0">{offer.body}</dd>
-                                <dt className="mb-1 mt-5 text-[15px] text-quiet">
-                                    Timeline
-                                </dt>
-                                <dd className="m-0 font-semibold text-bone">
-                                    {offer.timeline}
-                                </dd>
-                            </dl>
-                            <div className="mt-auto pt-6">
-                                <Button asChild className="w-full">
-                                    <BookLink />
-                                </Button>
-                            </div>
-                        </article>
-                    ))}
+                    {offers.map((offer) => {
+                        const pricePending = isPlaceholder(offer.price);
+                        const timelinePending = isPlaceholder(offer.timeline);
+                        return (
+                            <article
+                                key={offer.title}
+                                className={
+                                    offer.featured
+                                        ? 'flex h-full flex-col rounded-[8px] border border-brass bg-raised px-6 py-6 md:px-8 md:py-8'
+                                        : 'flex h-full flex-col rounded-[8px] border border-line bg-panel px-6 py-6 md:px-8 md:py-8'
+                                }
+                            >
+                                <h3>{offer.title}</h3>
+                                {pricePending ? (
+                                    <p className="m-0 text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.03em] text-bone">
+                                        Scoped on a call
+                                    </p>
+                                ) : (
+                                    <p className="m-0 text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.03em] text-bone">
+                                        <span className="sr-only">Price: </span>
+                                        {offer.price}
+                                    </p>
+                                )}
+                                <dl className="m-0">
+                                    <dt className="mb-2 mt-5 text-[15px] text-quiet">
+                                        Included
+                                    </dt>
+                                    <dd className="m-0">
+                                        <ul className="m-0 flex list-disc flex-col gap-2 pl-5 marker:text-brass">
+                                            {offer.included.map((item) => (
+                                                <li key={item} className="pl-1">
+                                                    {item}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </dd>
+                                    {timelinePending ? null : (
+                                        <>
+                                            <dt className="mb-1 mt-5 text-[15px] text-quiet">
+                                                Timeline
+                                            </dt>
+                                            <dd className="m-0 font-semibold text-bone">
+                                                {offer.timeline}
+                                            </dd>
+                                        </>
+                                    )}
+                                </dl>
+                                <div className="mt-auto pt-6">
+                                    <Button asChild className="w-full">
+                                        <BookLink />
+                                    </Button>
+                                </div>
+                            </article>
+                        );
+                    })}
                 </div>
             </div>
         </section>
@@ -294,9 +320,11 @@ export function Page() {
                     >
                         {[
                             ['#work', 'Work'],
+                            ['#observatory', 'Observatory'],
                             ['#process', 'How I work'],
                             ['#offers', 'Offers'],
                             ['#about', 'About'],
+                            ['#contact', 'Contact'],
                         ].map(([href, label]) => (
                             <a
                                 key={href}

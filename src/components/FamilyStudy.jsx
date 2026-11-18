@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 
 import { MediaFrame, usePrefersReducedMotion } from '@/components/MediaFrame';
@@ -22,22 +22,58 @@ function useMinWidth(px) {
     return matches;
 }
 
-function StepBody({ step }) {
-    if (step.blocks) {
-        return step.blocks.map((block) => (
-            <div key={block.heading} className="mt-8 first:mt-0">
-                <h3>{block.heading}</h3>
-                <p className="mb-0">{block.body}</p>
-            </div>
-        ));
+function slotHasMedia(slot) {
+    return Boolean(slot && (slot.src || slot.poster));
+}
+
+function blocksFrom(step) {
+    if (step.blocks?.length) {
+        return step.blocks.map((block) => ({
+            id: `${step.id}:${block.heading}`,
+            heading: block.heading,
+            body: block.body,
+        }));
     }
 
-    return (
-        <>
-            <h3>{step.heading}</h3>
-            <p className="mb-0">{step.body}</p>
-        </>
-    );
+    return [{ id: step.id, heading: step.heading, body: step.body }];
+}
+
+// Steps with no file yet are folded into the next step that has one.
+// Add src or poster on the slot and that step comes back as its own frame.
+function stepsForBand(steps) {
+    const visible = [];
+    let leadIn = [];
+
+    for (const step of steps) {
+        if (!slotHasMedia(step.slot)) {
+            leadIn.push(...blocksFrom(step));
+            continue;
+        }
+
+        visible.push(leadIn.length ? { ...step, leadIn } : step);
+        leadIn = [];
+    }
+
+    if (leadIn.length && visible.length) {
+        const last = visible[visible.length - 1];
+        visible[visible.length - 1] = {
+            ...last,
+            leadIn: [...(last.leadIn || []), ...leadIn],
+        };
+    }
+
+    return visible;
+}
+
+function StepBody({ step }) {
+    const blocks = [...(step.leadIn || []), ...blocksFrom(step)];
+
+    return blocks.map((block, index) => (
+        <div key={block.id} className={index === 0 ? undefined : 'mt-8'}>
+            <h3>{block.heading}</h3>
+            <p className="mb-0">{block.body}</p>
+        </div>
+    ));
 }
 
 function StepIndex({ index }) {
@@ -59,34 +95,59 @@ function asStill(media) {
 }
 
 function FrameStage({ steps, active, reduce }) {
+    const [hold, setHold] = useState(active);
+    const next = Math.min(active + 1, steps.length - 1);
+    const aspect = (steps[active]?.slot.aspect || '16:10').replace(':', ' / ');
+
+    useEffect(() => {
+        if (reduce) {
+            setHold(active);
+            return undefined;
+        }
+        const id = window.setTimeout(() => setHold(active), 320);
+        return () => window.clearTimeout(id);
+    }, [active, reduce]);
+
+    const indices = [];
+    for (let index = 0; index < steps.length; index += 1) {
+        if (index === active || index === hold || index === next) indices.push(index);
+    }
+
     return (
         <div className="relative">
-            {steps.map((step, index) => (
-                <motion.div
-                    key={step.id}
-                    className={cn(
-                            index === 0 ? 'relative' : 'absolute inset-0',
-                            index !== active && 'pointer-events-none',
-                        )}
-                    style={{ zIndex: index === active ? 2 : 0 }}
-                    initial={false}
-                    animate={{ opacity: index === active ? 1 : 0 }}
-                    transition={{
-                        duration: reduce ? 0 : 0.3,
-                        ease: [0.22, 1, 0.36, 1],
-                    }}
-                    aria-hidden={index !== active}
-                >
-                    <div className={index === active ? undefined : 'pointer-events-none'}>
+            <div
+                aria-hidden="true"
+                className="invisible rounded-[8px] border border-transparent"
+            >
+                <div className="h-9" />
+                <div style={{ aspectRatio: aspect }} />
+            </div>
+            {indices.map((index) => {
+                const step = steps[index];
+                const current = index === active;
+                return (
+                    <motion.div
+                        key={step.id}
+                        className={cn('absolute inset-0', !current && 'pointer-events-none')}
+                        style={{ zIndex: current ? 2 : 1 }}
+                        initial={false}
+                        animate={{ opacity: current ? 1 : 0 }}
+                        transition={{
+                            duration: reduce ? 0 : 0.3,
+                            ease: [0.22, 1, 0.36, 1],
+                        }}
+                        aria-hidden={!current}
+                        inert={current ? undefined : true}
+                    >
                         <MediaFrame
                             slot={step.slot}
                             chrome="browser"
                             elevated
-                            playback={index === active}
+                            playback={current || index === hold}
                         />
-                    </div>
-                </motion.div>
-            ))}
+                    </motion.div>
+                );
+            })}
         </div>
     );
 }
@@ -99,14 +160,19 @@ function Bento() {
                 if (item.bento === 'visual') {
                     return (
                         <li key={item.lead} className={span}>
-                            <p className="mb-3 mt-0 max-w-none text-[1.15rem] font-semibold leading-[1.25] tracking-[-0.02em] text-bone">
-                                {item.lead}
-                            </p>
-                            <MediaFrame
-                                slot={asStill(item.slot)}
-                                chrome="device"
-                                ratio={item.ratio}
-                            />
+                            <h3 className="mb-3">{item.lead}</h3>
+                            <figure className="m-0">
+                                <MediaFrame
+                                    slot={asStill(item.slot)}
+                                    chrome="device"
+                                    ratio={item.ratio}
+                                />
+                                {item.slot.caption ? (
+                                    <figcaption className="mt-3 text-sm leading-snug text-quiet">
+                                        {item.slot.caption}
+                                    </figcaption>
+                                ) : null}
+                            </figure>
                         </li>
                     );
                 }
@@ -119,10 +185,8 @@ function Bento() {
                             'rounded-[8px] border border-line bg-panel px-5 py-5',
                         )}
                     >
-                        <p className="m-0 text-[1.15rem] font-semibold leading-[1.25] tracking-[-0.02em] text-bone">
-                            {item.lead}
-                        </p>
-                        <p className="mb-0 mt-2">{item.body}</p>
+                        <h3>{item.lead}</h3>
+                        <p className="mb-0">{item.body}</p>
                     </li>
                 );
             })}
@@ -135,19 +199,24 @@ export function FamilyStudy() {
     const reduce = usePrefersReducedMotion();
     const stepRefs = useRef([]);
     const [active, setActive] = useState(0);
-    const { steps } = familyStudy;
+    const steps = useMemo(() => stepsForBand(familyStudy.steps), []);
 
     useEffect(() => {
         if (!desktop) return undefined;
-        const nodes = stepRefs.current.filter(Boolean);
-        if (!nodes.length) return undefined;
+        const nodes = stepRefs.current.slice(0, steps.length);
+        if (!nodes.some(Boolean)) return undefined;
 
         const observer = new IntersectionObserver(
             (entries) => {
-                const visible = entries
-                    .filter((entry) => entry.isIntersecting)
-                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-                if (!visible[0]) return;
+                const visible = entries.filter((entry) => entry.isIntersecting && entry.rootBounds);
+                if (!visible.length) return;
+                const bandMid =
+                    visible[0].rootBounds.top + visible[0].rootBounds.height / 2;
+                visible.sort((a, b) => {
+                    const amid = a.boundingClientRect.top + a.boundingClientRect.height / 2;
+                    const bmid = b.boundingClientRect.top + b.boundingClientRect.height / 2;
+                    return Math.abs(amid - bandMid) - Math.abs(bmid - bandMid);
+                });
                 const index = nodes.indexOf(visible[0].target);
                 if (index >= 0) setActive(index);
             },
@@ -157,7 +226,9 @@ export function FamilyStudy() {
             },
         );
 
-        nodes.forEach((node) => observer.observe(node));
+        nodes.forEach((node) => {
+            if (node) observer.observe(node);
+        });
         return () => observer.disconnect();
     }, [desktop, steps.length]);
 
@@ -172,8 +243,14 @@ export function FamilyStudy() {
                     <h2 id="family-aha-title">{familyStudy.title}</h2>
                     <p className="text-parchment">{familyStudy.lede}</p>
                     <p>
-                        <a href={familyStudy.live.href} className={textLink}>
+                        <a
+                            href={familyStudy.live.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`${textLink} inline-flex min-h-11 items-center`}
+                        >
                             {familyStudy.live.label}
+                            <span className="sr-only"> (opens in a new tab)</span>
                         </a>
                     </p>
                 </header>
@@ -188,7 +265,7 @@ export function FamilyStudy() {
                                     ref={(node) => {
                                         stepRefs.current[index] = node;
                                     }}
-                                    className="flex min-h-[70svh] flex-col justify-center py-10"
+                                    className="flex min-h-[42svh] flex-col justify-center py-10"
                                 >
                                     <StepIndex index={index} />
                                     <StepBody step={step} />

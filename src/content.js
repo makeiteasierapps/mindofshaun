@@ -41,6 +41,8 @@ export const heroSlot = slot({
     kind: 'video',
 });
 
+// No src yet, so the sticky band folds this copy into the next step that has
+// one. Set src, alt, and caption and the step comes back as its own frame.
 const faProblem = slot({
     id: 'fa-problem',
     aspect: '16:10',
@@ -68,6 +70,7 @@ const faFacts = slot({
     caption: 'Did You Know. The fact and the illustration for it.',
 });
 
+// Same as fa-problem: add a src and this frame returns to the band.
 const faUnique = slot({
     id: 'fa-unique',
     aspect: '16:10',
@@ -194,9 +197,7 @@ const pipeline = [
         lead: 'Daily story and guide letters',
         body: "A second pass writes the night's story with its own rules against repeating plots. Then each animal guide writes a letter adapted to the kid's age.",
         slot: faStory,
-        bento: 'visual',
-        span: 2,
-        ratio: '4:3',
+        bento: 'text',
     },
     {
         lead: 'Session art',
@@ -226,7 +227,9 @@ const pipeline = [
         lead: 'Animal Guide quiz',
         body: 'A small OpenAI model writes a personalized "why this guide" for each family member, with a safe fallback.',
         slot: faQuiz,
-        bento: 'text',
+        bento: 'visual',
+        span: 2,
+        ratio: '4:3',
     },
 ];
 
@@ -270,12 +273,12 @@ export const familyStudy = {
     bento: [
         pipeline.find((item) => item.lead === 'Family portraits'),
         pipeline.find((item) => item.lead === 'Grounded fact cards'),
-        pipeline.find((item) => item.lead === 'Daily story and guide letters'),
         pipeline.find((item) => item.lead === 'Session art'),
         pipeline.find((item) => item.lead === 'Fact-check and repair'),
+        pipeline.find((item) => item.lead === 'Animal Guide quiz'),
         pipeline.find((item) => item.lead === 'Session writer'),
         pipeline.find((item) => item.lead === 'Uniqueness checks'),
-        pipeline.find((item) => item.lead === 'Animal Guide quiz'),
+        pipeline.find((item) => item.lead === 'Daily story and guide letters'),
     ],
 };
 
@@ -335,16 +338,27 @@ export const steps = [
 export const offers = [
     {
         title: 'AI MVP Build',
-        body: 'A new AI product, from the first scope through a running deployment.',
+        // Bracketed price and timeline stay hidden until real values replace them.
         price: '[price]',
         timeline: '[timeline]',
         featured: true,
+        included: [
+            'A scope: who it\'s for, what it has to do, and what is out',
+            'The product designed and shipped to a real deployment',
+            'Prompts versioned, outputs checked against a schema, and every model call logged with its cost',
+            'Hosting and monitoring after it ships',
+        ],
     },
     {
         title: 'AI Feature Sprint',
-        body: 'One AI feature in a product you already have, scoped and shipped.',
         price: '[price]',
         timeline: '[timeline]',
         featured: false,
+        included: [
+            'One feature, with what is out of it written down',
+            'Built into the product you already have',
+            'Shipped to the deployment that product already runs on',
+            'A schema check and a cost log for the model call, left in place',
+        ],
     },
 ];
