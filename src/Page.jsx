@@ -1,18 +1,24 @@
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 
+import { FamilyStudy } from '@/components/FamilyStudy';
+import { MediaFrame, usePrefersReducedMotion } from '@/components/MediaFrame';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { LifeField } from '@/LifeField';
 import {
     BOOKING_URL,
+    diagram,
     email,
+    heroSlot,
+    observatory,
     offers,
     profiles,
     steps,
-    studies,
 } from '@/content';
 
 const wrap = 'mx-auto w-full max-w-[1120px] px-5 sm:px-8 lg:px-12';
+const wide = 'mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12';
+const textLink =
+    'inline-flex min-h-11 items-center text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass';
 
 function BookLink({ className, ...props }) {
     return (
@@ -30,19 +36,21 @@ function BookLink({ className, ...props }) {
 }
 
 function Hero() {
-    const reduce = useReducedMotion();
+    const reduce = usePrefersReducedMotion();
 
     return (
         <section
             id="top"
             aria-labelledby="hero-title"
-            className={`${wrap} grid items-center gap-8 py-8 md:min-h-[calc(100svh-4.5rem)] md:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] md:py-12`}
+            className={`${wrap} grid items-center gap-10 py-10 md:min-h-[calc(100svh-4.5rem)] md:grid-cols-[minmax(0,0.92fr)_minmax(300px,1.08fr)] md:gap-14 md:py-16`}
         >
             <motion.div
-                className="order-2 min-w-0 md:order-1"
                 initial={reduce ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                transition={{
+                    duration: reduce ? 0 : 0.6,
+                    ease: [0.22, 1, 0.36, 1],
+                }}
             >
                 <h1 id="hero-title">
                     I build AI-powered apps and the systems that run them.
@@ -60,166 +68,60 @@ function Hero() {
                     </Button>
                 </div>
             </motion.div>
-            <div className="relative order-1 h-[28vh] min-h-40 md:order-2 md:h-[min(70vh,640px)]">
-                <LifeField />
-            </div>
+            <MediaFrame slot={heroSlot} chrome="browser" elevated priority />
         </section>
     );
 }
 
-function LiveLink({ live }) {
-    if (!live) return null;
-
+function Diagram() {
     return (
-        <p>
-            <a
-                href={live.href}
-                className="text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
-            >
-                {live.label}
-            </a>
-        </p>
+        <ol className="m-0 mt-10 grid list-none gap-px overflow-hidden rounded-[8px] border border-line bg-line p-0 sm:grid-cols-3">
+            {diagram.map((line, index) => (
+                <li key={line} className="bg-raised px-4 py-4">
+                    <span
+                        aria-hidden="true"
+                        className="mb-2 block text-[15px] font-semibold text-quiet"
+                    >
+                        {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <p className="m-0 max-w-none text-[15px] font-semibold leading-snug text-bone">
+                        {line}
+                    </p>
+                </li>
+            ))}
+        </ol>
     );
 }
 
-function ProsePart({ part }) {
+function Observatory() {
     return (
-        <div className="mt-6">
-            <h3>{part.heading}</h3>
-            <p className="mb-0">{part.body}</p>
-        </div>
-    );
-}
-
-function Pipeline({ part }) {
-    return (
-        <div className="mt-10">
-            <h3>{part.heading}</h3>
-            <dl className="m-0 grid md:grid-cols-2 md:gap-x-12">
-                {part.items.map((item) => (
-                    <div key={item.lead} className="border-t border-line py-4">
-                        <dt className="mb-1 text-[15px] font-semibold text-bone">
-                            {item.lead}
-                        </dt>
-                        <dd className="m-0 max-w-[62ch]">{item.body}</dd>
+        <section
+            id="observatory"
+            aria-labelledby="observatory-title"
+            className="border-t border-line bg-panel"
+        >
+            <div className={`${wide} py-20 md:py-28`}>
+                <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-16">
+                    <div>
+                        <h2 id="observatory-title">{observatory.title}</h2>
+                        <p className="text-parchment">{observatory.lede}</p>
+                        {observatory.parts.map((part) => (
+                            <div key={part.heading} className="mt-8">
+                                <h3>{part.heading}</h3>
+                                <p className="mb-0">{part.body}</p>
+                            </div>
+                        ))}
+                        <Diagram />
                     </div>
-                ))}
-            </dl>
-        </div>
-    );
-}
-
-function MediaFigure({ item }) {
-    const isVideo = item.src.endsWith('.webm');
-
-    return (
-        <figure className="overflow-hidden rounded-[8px] border border-line bg-panel">
-            {isVideo ? (
-                <video
-                    controls
-                    playsInline
-                    muted
-                    preload="none"
-                    poster={item.poster}
-                    width={item.width}
-                    height={item.height}
-                    aria-label={item.label}
-                    className="block h-auto w-full"
-                >
-                    <source src={item.src} type="video/webm" />
-                </video>
-            ) : (
-                <img
-                    src={item.src}
-                    alt={item.alt}
-                    width={item.width}
-                    height={item.height}
-                    loading="lazy"
-                    decoding="async"
-                    className="block h-auto w-full"
-                />
-            )}
-            <figcaption className="px-3 py-2.5 text-sm leading-snug text-quiet">
-                {item.caption}
-            </figcaption>
-        </figure>
-    );
-}
-
-function Study({ study }) {
-    const listAt = study.parts.findIndex((part) => part.items);
-    const hasList = listAt !== -1;
-
-    if (!hasList) {
-        return (
-            <article id={study.id} aria-labelledby={`${study.id}-title`}>
-                <h2 id={`${study.id}-title`}>{study.title}</h2>
-                <p className="text-parchment">{study.lede}</p>
-                {study.parts.map((part) => (
-                    <ProsePart key={part.heading} part={part} />
-                ))}
-                <LiveLink live={study.live} />
-            </article>
-        );
-    }
-
-    const before = study.parts.slice(0, listAt);
-    const list = study.parts[listAt];
-    const after = study.parts.slice(listAt + 1);
-    const paired = after.slice(0, -1);
-    const closing = after.slice(-1);
-
-    return (
-        <article id={study.id} aria-labelledby={`${study.id}-title`}>
-            <div className="max-w-[62ch]">
-                <h2 id={`${study.id}-title`}>{study.title}</h2>
-                <p className="text-parchment">{study.lede}</p>
-                {before.map((part) => (
-                    <ProsePart key={part.heading} part={part} />
-                ))}
-            </div>
-            <Pipeline part={list} />
-            {paired.length > 0 ? (
-                <div className="mt-10 grid gap-x-12 md:grid-cols-2">
-                    {paired.map((part) => (
-                        <div
-                            key={part.heading}
-                            className="border-t border-line pt-5"
-                        >
-                            <h3>{part.heading}</h3>
-                            <p className="mb-0">{part.body}</p>
-                        </div>
-                    ))}
-                </div>
-            ) : null}
-            <div className="mt-10 max-w-[62ch]">
-                {closing.map((part) => (
-                    <div key={part.heading}>
-                        <h3>{part.heading}</h3>
-                        <p className="mb-0">{part.body}</p>
+                    <div className="lg:sticky lg:top-24">
+                        <MediaFrame
+                            slot={observatory.slot}
+                            chrome="browser"
+                            elevated
+                        />
                     </div>
-                ))}
-                <div className="mt-6">
-                    <LiveLink live={study.live} />
                 </div>
             </div>
-            {study.media.length > 0 ? (
-                <div className="mt-14 flex flex-col gap-4">
-                    {study.media.map((item) => (
-                        <MediaFigure key={item.src} item={item} />
-                    ))}
-                </div>
-            ) : null}
-        </article>
-    );
-}
-
-function Work() {
-    return (
-        <section id="work" aria-label="Work" className={`${wrap} py-24 md:py-32`}>
-            <Study study={studies[0]} />
-            <Separator className="my-24 md:my-32" />
-            <Study study={studies[1]} />
         </section>
     );
 }
@@ -229,16 +131,13 @@ function Process() {
         <section
             id="process"
             aria-labelledby="process-title"
-            className="border-t border-line py-24 md:py-32"
+            className="border-t border-line py-12 md:py-16"
         >
             <div className={wrap}>
                 <h2 id="process-title">How I work</h2>
-                <ol className="mt-8 grid list-none gap-0 p-0 md:grid-cols-3">
+                <ol className="mt-6 grid list-none gap-0 p-0 md:grid-cols-3">
                     {steps.map((step) => (
-                        <li
-                            key={step.n}
-                            className="border-t border-line py-5 md:pr-8"
-                        >
+                        <li key={step.n} className="border-t border-line py-5 md:pr-8">
                             <span className="mb-2 block text-[15px] font-semibold text-bone">
                                 {step.n}
                             </span>
@@ -247,7 +146,7 @@ function Process() {
                         </li>
                     ))}
                 </ol>
-                <p className="mt-8 text-bone">
+                <p className="mt-6 text-bone">
                     Everything I ship is hosted and monitored on a platform I
                     built.
                 </p>
@@ -261,25 +160,42 @@ function Offers() {
         <section
             id="offers"
             aria-labelledby="offers-title"
-            className="border-t border-line py-24 md:py-32"
+            className="border-t border-line py-16 md:py-24"
         >
             <div className={wrap}>
                 <h2 id="offers-title">Offers</h2>
-                <div className="mt-8">
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
                     {offers.map((offer) => (
                         <article
                             key={offer.title}
                             className={
                                 offer.featured
-                                    ? 'mt-4 grid gap-3 rounded-[8px] border border-brass bg-raised px-6 py-6 md:grid-cols-[1fr_auto] md:items-baseline'
-                                    : 'grid gap-3 border-t border-line py-6 md:grid-cols-[1fr_auto] md:items-baseline'
+                                    ? 'flex h-full flex-col rounded-[8px] border border-brass bg-raised px-6 py-6 md:px-8 md:py-8'
+                                    : 'flex h-full flex-col rounded-[8px] border border-line bg-panel px-6 py-6 md:px-8 md:py-8'
                             }
                         >
                             <h3>{offer.title}</h3>
-                            <p className="text-xl font-semibold text-bone md:col-start-2 md:row-start-1 md:text-right">
-                                [price]
-                            </p>
-                            <p className="md:col-start-1">{offer.body}</p>
+                            <dl className="m-0">
+                                <dt className="sr-only">Price</dt>
+                                <dd className="m-0 text-[1.75rem] font-semibold tracking-[-0.03em] text-bone">
+                                    {offer.price}
+                                </dd>
+                                <dt className="mb-1 mt-5 text-[15px] text-quiet">
+                                    Included
+                                </dt>
+                                <dd className="m-0">{offer.body}</dd>
+                                <dt className="mb-1 mt-5 text-[15px] text-quiet">
+                                    Timeline
+                                </dt>
+                                <dd className="m-0 font-semibold text-bone">
+                                    {offer.timeline}
+                                </dd>
+                            </dl>
+                            <div className="mt-auto pt-6">
+                                <Button asChild className="w-full">
+                                    <BookLink />
+                                </Button>
+                            </div>
                         </article>
                     ))}
                 </div>
@@ -293,7 +209,7 @@ function About() {
         <section
             id="about"
             aria-labelledby="about-title"
-            className="border-t border-line py-24 md:py-32"
+            className="border-t border-line py-16 md:py-20"
         >
             <div className={wrap}>
                 <h2 id="about-title">About</h2>
@@ -316,20 +232,22 @@ function Contact() {
         <section
             id="contact"
             aria-labelledby="contact-title"
-            className="border-t border-line py-24 md:py-32"
+            className="border-t border-line bg-panel py-28 md:py-40"
         >
             <div className={wrap}>
-                <h2 id="contact-title">Contact</h2>
-                <p>Tell me what you want shipped.</p>
-                <Button asChild className="mt-2 w-full sm:w-auto">
+                <p className="m-0 text-[15px] font-semibold text-quiet">Contact</p>
+                <h2
+                    id="contact-title"
+                    className="mt-3 text-[clamp(2.2rem,5vw,3.5rem)] leading-[1.05]"
+                >
+                    Tell me what you want shipped
+                </h2>
+                <Button asChild className="mt-8 w-full sm:w-auto">
                     <BookLink />
                 </Button>
-                <ul className="mt-6 list-none p-0">
+                <ul className="mt-8 flex list-none flex-wrap gap-x-6 p-0">
                     <li>
-                        <a
-                            href={`mailto:${email}`}
-                            className="inline-flex min-h-11 items-center text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
-                        >
+                        <a href={`mailto:${email}`} className={textLink}>
                             {email}
                         </a>
                     </li>
@@ -339,9 +257,10 @@ function Contact() {
                                 href={profile.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex min-h-11 items-center text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
+                                className={textLink}
                             >
                                 {profile.label}
+                                <span className="sr-only"> (opens in a new tab)</span>
                             </a>
                         </li>
                     ))}
@@ -392,23 +311,24 @@ export function Page() {
             </header>
             <main id="content">
                 <Hero />
-                <div className="border-t border-line">
-                    <Work />
-                </div>
+                <FamilyStudy />
+                <Observatory />
                 <Process />
                 <Offers />
                 <About />
                 <Contact />
             </main>
             <footer className="border-t border-line">
-                <div className={`${wrap} flex flex-wrap items-center justify-between gap-3 py-6 text-sm text-quiet`}>
-                    <p className="m-0 max-w-none">Shaun Offenbacher, Salt Lake City</p>
-                    <a
-                        href={`mailto:${email}`}
-                        className="inline-flex min-h-11 items-center text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass"
-                    >
-                        {email}
-                    </a>
+                <div
+                    className="relative h-16 overflow-hidden opacity-40"
+                    aria-hidden="true"
+                >
+                    <LifeField />
+                </div>
+                <div className={`${wrap} py-6`}>
+                    <p className="m-0 max-w-none text-sm text-quiet">
+                        Shaun Offenbacher, Salt Lake City
+                    </p>
                 </div>
             </footer>
         </>

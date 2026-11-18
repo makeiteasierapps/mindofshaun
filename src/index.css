@@ -46,12 +46,12 @@
     html {
         color-scheme: dark;
         scroll-padding-top: 5rem;
-        overflow-x: clip;
         background: var(--color-ground);
     }
 
     body {
         margin: 0;
+        overflow-x: clip;
         background: var(--color-ground);
         color: var(--color-parchment);
         font-family: var(--font-sans);
