@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { motion } from 'motion/react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { MediaFrame, usePrefersReducedMotion } from '@/components/MediaFrame';
 import { familyStudy } from '@/content';
 import { cn } from '@/lib/utils';
+
+const SWITCH_AFTER = 72;
 
 const textLink =
     'text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass';
@@ -84,58 +85,30 @@ function StepIndex({ index }) {
     );
 }
 
-function asStill(media) {
-    if (media.kind !== 'video') return media;
-    return {
-        ...media,
-        kind: 'still',
-        src: media.poster,
-        src2x: null,
-    };
-}
-
 function FrameStage({ steps, active, reduce }) {
-    const [hold, setHold] = useState(active);
-    const next = Math.min(active + 1, steps.length - 1);
-    const aspect = (steps[active]?.slot.aspect || '16:10').replace(':', ' / ');
-
-    useEffect(() => {
-        if (reduce) {
-            setHold(active);
-            return undefined;
-        }
-        const id = window.setTimeout(() => setHold(active), 320);
-        return () => window.clearTimeout(id);
-    }, [active, reduce]);
-
-    const indices = [];
-    for (let index = 0; index < steps.length; index += 1) {
-        if (index === active || index === hold || index === next) indices.push(index);
-    }
+    const aspect = (steps[0]?.slot.aspect || '16:10').replace(':', ' / ');
 
     return (
-        <div className="relative">
+        <div className="relative w-full">
             <div
                 aria-hidden="true"
                 className="invisible rounded-[8px] border border-transparent"
             >
                 <div className="h-9" />
-                <div style={{ aspectRatio: aspect }} />
+                <div className="max-h-[calc(100svh-13.25rem)]" style={{ aspectRatio: aspect }} />
             </div>
-            {indices.map((index) => {
-                const step = steps[index];
+            {steps.map((step, index) => {
                 const current = index === active;
                 return (
-                    <motion.div
+                    <div
                         key={step.id}
-                        className={cn('absolute inset-0', !current && 'pointer-events-none')}
-                        style={{ zIndex: current ? 2 : 1 }}
-                        initial={false}
-                        animate={{ opacity: current ? 1 : 0 }}
-                        transition={{
-                            duration: reduce ? 0 : 0.3,
-                            ease: [0.22, 1, 0.36, 1],
-                        }}
+                        className={cn(
+                            'absolute inset-0',
+                            !current && 'pointer-events-none',
+                            !reduce &&
+                                'transition-opacity duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
+                        )}
+                        style={{ opacity: current ? 1 : 0, zIndex: current ? 2 : 1 }}
                         aria-hidden={!current}
                         inert={current ? undefined : true}
                     >
@@ -143,54 +116,12 @@ function FrameStage({ steps, active, reduce }) {
                             slot={step.slot}
                             chrome="browser"
                             elevated
-                            playback={current || index === hold}
+                            playback={current}
                         />
-                    </motion.div>
+                    </div>
                 );
             })}
         </div>
-    );
-}
-
-function Bento() {
-    return (
-        <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 lg:grid-cols-6">
-            {familyStudy.bento.filter(Boolean).map((item) => {
-                const span = item.span === 3 ? 'lg:col-span-3' : 'lg:col-span-2';
-                if (item.bento === 'visual') {
-                    return (
-                        <li key={item.lead} className={span}>
-                            <h3 className="mb-3">{item.lead}</h3>
-                            <figure className="m-0">
-                                <MediaFrame
-                                    slot={asStill(item.slot)}
-                                    chrome="device"
-                                    ratio={item.ratio}
-                                />
-                                {item.slot.caption ? (
-                                    <figcaption className="mt-3 text-sm leading-snug text-quiet">
-                                        {item.slot.caption}
-                                    </figcaption>
-                                ) : null}
-                            </figure>
-                        </li>
-                    );
-                }
-
-                return (
-                    <li
-                        key={item.lead}
-                        className={cn(
-                            span,
-                            'rounded-[8px] border border-line bg-panel px-5 py-5',
-                        )}
-                    >
-                        <h3>{item.lead}</h3>
-                        <p className="mb-0">{item.body}</p>
-                    </li>
-                );
-            })}
-        </ul>
     );
 }
 
@@ -198,38 +129,55 @@ export function FamilyStudy() {
     const desktop = useMinWidth(1024);
     const reduce = usePrefersReducedMotion();
     const stepRefs = useRef([]);
+    const activeRef = useRef(0);
     const [active, setActive] = useState(0);
     const steps = useMemo(() => stepsForBand(familyStudy.steps), []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!desktop) return undefined;
-        const nodes = stepRefs.current.slice(0, steps.length);
-        if (!nodes.some(Boolean)) return undefined;
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const visible = entries.filter((entry) => entry.isIntersecting && entry.rootBounds);
-                if (!visible.length) return;
-                const bandMid =
-                    visible[0].rootBounds.top + visible[0].rootBounds.height / 2;
-                visible.sort((a, b) => {
-                    const amid = a.boundingClientRect.top + a.boundingClientRect.height / 2;
-                    const bmid = b.boundingClientRect.top + b.boundingClientRect.height / 2;
-                    return Math.abs(amid - bandMid) - Math.abs(bmid - bandMid);
-                });
-                const index = nodes.indexOf(visible[0].target);
-                if (index >= 0) setActive(index);
-            },
-            {
-                rootMargin: '-40% 0px -40% 0px',
-                threshold: [0, 0.25, 0.5, 0.75, 1],
-            },
-        );
+        const measure = () => {
+            const focus = window.innerHeight / 2;
+            let containing = -1;
+            for (let index = 0; index < steps.length; index += 1) {
+                const node = stepRefs.current[index];
+                if (!node) continue;
+                const rect = node.getBoundingClientRect();
+                if (rect.top <= focus && rect.bottom >= focus) {
+                    containing = index;
+                    break;
+                }
+            }
+            if (containing < 0) return;
 
-        nodes.forEach((node) => {
-            if (node) observer.observe(node);
-        });
-        return () => observer.disconnect();
+            const current = activeRef.current;
+            if (containing === current) return;
+
+            const rect = stepRefs.current[containing].getBoundingClientRect();
+            const into = containing > current ? focus - rect.top : rect.bottom - focus;
+            if (into < SWITCH_AFTER) return;
+
+            activeRef.current = containing;
+            setActive(containing);
+        };
+
+        let raf = 0;
+        const onScroll = () => {
+            if (raf) return;
+            raf = window.requestAnimationFrame(() => {
+                raf = 0;
+                measure();
+            });
+        };
+
+        measure();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+            if (raf) window.cancelAnimationFrame(raf);
+        };
     }, [desktop, steps.length]);
 
     return (
@@ -265,7 +213,7 @@ export function FamilyStudy() {
                                     ref={(node) => {
                                         stepRefs.current[index] = node;
                                     }}
-                                    className="flex min-h-[42svh] flex-col justify-center py-10"
+                                    className="flex min-h-[100svh] flex-col justify-center"
                                 >
                                     <StepIndex index={index} />
                                     <StepBody step={step} />
@@ -273,11 +221,13 @@ export function FamilyStudy() {
                             ))}
                         </div>
                         <div>
-                            <div className="sticky top-24">
-                                <FrameStage steps={steps} active={active} reduce={reduce} />
-                                <p className="mb-0 mt-3 min-h-10 text-sm leading-snug text-quiet">
-                                    {steps[active].slot.caption}
-                                </p>
+                            <div className="sticky top-0 flex h-svh items-center">
+                                <div className="relative mx-auto w-[min(100%,calc((100svh-13.25rem)*1.6))]">
+                                    <FrameStage steps={steps} active={active} reduce={reduce} />
+                                    <p className="absolute inset-x-0 top-full mb-0 mt-3 min-h-10 text-sm leading-snug text-quiet">
+                                        {steps[active].slot.caption}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -303,10 +253,6 @@ export function FamilyStudy() {
                         ))}
                     </div>
                 )}
-
-                <div className="mt-16 border-t border-line pt-12 md:mt-24">
-                    <Bento />
-                </div>
             </div>
         </section>
     );

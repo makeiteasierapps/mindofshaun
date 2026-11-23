@@ -37,43 +37,55 @@ export function MediaFrame({
 }) {
     const rootRef = useRef(null);
     const videoRef = useRef(null);
+    const shouldPlayRef = useRef(false);
     const reduce = usePrefersReducedMotion();
     const [inView, setInView] = useState(false);
+    const [near, setNear] = useState(false);
     const [paused, setPaused] = useState(false);
+    const [playing, setPlaying] = useState(false);
     const aspect = ratio || slot.aspect;
-    const showVideo =
-        slot.kind === 'video' && Boolean(slot.src) && playback && !reduce;
+    const isVideo = slot.kind === 'video' && Boolean(slot.src) && !reduce;
     const stillSrc = slot.kind === 'video' ? slot.poster : slot.src;
     const stillAlt = slot.alt || slot.label || '';
+    shouldPlayRef.current = Boolean(isVideo && playback && inView && !paused);
 
     useEffect(() => {
-        if (!showVideo) return undefined;
+        if (!isVideo) return undefined;
         const node = rootRef.current;
         if (!node) return undefined;
-        const observer = new IntersectionObserver(
+        const viewObserver = new IntersectionObserver(
             ([entry]) => setInView(entry.isIntersecting),
             { threshold: 0.35 },
         );
-        observer.observe(node);
-        return () => observer.disconnect();
-    }, [showVideo]);
+        const nearObserver = new IntersectionObserver(
+            ([entry]) => setNear(entry.isIntersecting),
+            { rootMargin: '50% 0px', threshold: 0 },
+        );
+        viewObserver.observe(node);
+        nearObserver.observe(node);
+        return () => {
+            viewObserver.disconnect();
+            nearObserver.disconnect();
+        };
+    }, [isVideo]);
 
     useEffect(() => {
         const video = videoRef.current;
-        if (!video || !showVideo) return undefined;
+        if (!video || !isVideo) return undefined;
         video.muted = true;
-        if (!inView || paused) {
+        if (!video.getAttribute('src') && (near || inView)) {
+            video.preload = 'auto';
+            video.src = slot.src;
+        }
+        if (!playback || !inView || paused) {
             video.pause();
             return undefined;
         }
-        if (!video.src) {
-            video.preload = 'metadata';
-            video.src = slot.src;
-        }
+        if (!video.getAttribute('src')) return undefined;
         const play = video.play();
         if (play) play.catch(() => {});
         return undefined;
-    }, [showVideo, inView, paused, slot.src]);
+    }, [isVideo, inView, near, playback, paused, slot.src]);
 
     return (
         <div
@@ -104,7 +116,7 @@ export function MediaFrame({
                                 ? `${slot.src} 1x, ${slot.src2x} 2x`
                                 : undefined
                         }
-                        alt={showVideo ? '' : stillAlt}
+                        alt={isVideo ? '' : stillAlt}
                         width={slot.width}
                         height={slot.height}
                         loading={priority ? 'eager' : 'lazy'}
@@ -113,10 +125,10 @@ export function MediaFrame({
                         className="absolute inset-0 h-full w-full object-cover"
                     />
                 ) : null}
-                {!stillSrc && !showVideo ? (
+                {!stillSrc && !isVideo ? (
                     <Placeholder slot={slot} aspect={aspect} />
                 ) : null}
-                {showVideo ? (
+                {isVideo ? (
                     <video
                         ref={videoRef}
                         poster={slot.poster || undefined}
@@ -130,10 +142,21 @@ export function MediaFrame({
                         disablePictureInPicture
                         tabIndex={-1}
                         aria-label={slot.label || slot.alt || slot.id}
-                        className="absolute inset-0 h-full w-full object-cover"
+                        onPlaying={() => setPlaying(true)}
+                        onCanPlay={() => {
+                            const video = videoRef.current;
+                            if (!video || !shouldPlayRef.current) return;
+                            const play = video.play();
+                            if (play) play.catch(() => {});
+                        }}
+                        className={cn(
+                            'absolute inset-0 h-full w-full object-cover',
+                            playing ? 'opacity-100' : 'opacity-0',
+                            !reduce && 'transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)]',
+                        )}
                     />
                 ) : null}
-                {showVideo ? (
+                {isVideo && playback ? (
                     <button
                         type="button"
                         className="absolute bottom-3 right-3 z-10 inline-flex h-11 items-center rounded-[6px] border border-line bg-ground/90 px-3 text-[15px] font-semibold text-bone transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] fine-hover:hover:border-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass active:scale-[0.97]"
