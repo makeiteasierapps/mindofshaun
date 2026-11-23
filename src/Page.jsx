@@ -68,7 +68,7 @@ function Hero() {
                     </Button>
                 </div>
             </motion.div>
-            <MediaFrame slot={heroSlot} chrome="browser" elevated priority />
+            <MediaFrame slot={heroSlot} elevated priority />
         </section>
     );
 }

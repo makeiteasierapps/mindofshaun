@@ -24,7 +24,9 @@ function useMinWidth(px) {
 }
 
 function slotHasMedia(slot) {
-    return Boolean(slot && (slot.src || slot.poster));
+    if (!slot) return false;
+    if (slot.kind === 'collage') return Boolean(slot.images?.some((image) => image.src));
+    return Boolean(slot.hold || slot.src || slot.poster || slot.back?.src);
 }
 
 function blocksFrom(step) {
@@ -94,8 +96,7 @@ function FrameStage({ steps, active, reduce }) {
                 aria-hidden="true"
                 className="invisible rounded-[8px] border border-transparent"
             >
-                <div className="h-9" />
-                <div className="max-h-[calc(100svh-13.25rem)]" style={{ aspectRatio: aspect }} />
+                <div className="max-h-[calc(100svh-11rem)]" style={{ aspectRatio: aspect }} />
             </div>
             {steps.map((step, index) => {
                 const current = index === active;
@@ -112,12 +113,7 @@ function FrameStage({ steps, active, reduce }) {
                         aria-hidden={!current}
                         inert={current ? undefined : true}
                     >
-                        <MediaFrame
-                            slot={step.slot}
-                            chrome="browser"
-                            elevated
-                            playback={current}
-                        />
+                        <MediaFrame slot={step.slot} elevated playback={current} />
                     </div>
                 );
             })}
@@ -222,7 +218,7 @@ export function FamilyStudy() {
                         </div>
                         <div>
                             <div className="sticky top-0 flex h-svh items-center">
-                                <div className="relative mx-auto w-[min(100%,calc((100svh-13.25rem)*1.6))]">
+                                <div className="relative mx-auto w-[min(100%,calc((100svh-11rem)*1.6))]">
                                     <FrameStage steps={steps} active={active} reduce={reduce} />
                                     <p className="absolute inset-x-0 top-full mb-0 mt-3 min-h-10 text-sm leading-snug text-quiet">
                                         {steps[active].slot.caption}
@@ -242,7 +238,7 @@ export function FamilyStudy() {
                                 <StepIndex index={index} />
                                 <StepBody step={step} />
                                 <div className="mt-5">
-                                    <MediaFrame slot={step.slot} chrome="browser" elevated />
+                                    <MediaFrame slot={step.slot} elevated />
                                     {step.slot.caption ? (
                                         <p className="mb-0 mt-3 text-sm leading-snug text-quiet">
                                             {step.slot.caption}

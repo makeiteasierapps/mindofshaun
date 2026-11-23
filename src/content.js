@@ -38,7 +38,12 @@ export const heroSlot = slot({
     aspect: '16:10',
     width: 1600,
     height: 1000,
-    kind: 'video',
+    kind: 'still',
+    chrome: 'none',
+    fit: 'contain',
+    src: '/work/family-aha/01-did-you-know.webp',
+    alt: 'A Family AHA Did You Know card, with a Wonder card behind it.',
+    back: { src: '/work/family-aha/02-wonder.webp', alt: '' },
 });
 
 // No src yet, so the sticky band folds this copy into the next step that has
@@ -49,6 +54,8 @@ const faProblem = slot({
     width: 1440,
     height: 900,
     kind: 'still',
+    chrome: 'none',
+    fit: 'contain',
 });
 
 const faWriter = slot({
@@ -56,18 +63,25 @@ const faWriter = slot({
     aspect: '16:10',
     width: 1440,
     height: 900,
-    kind: 'still',
-});
-
-const faFacts = slot({
-    id: 'fa-facts',
-    aspect: '16:10',
-    width: 1440,
-    height: 900,
-    kind: 'still',
-    src: '/work/01-did-you-know.webp',
-    alt: 'Did You Know card. An illustrated baby on a stone path, beside a fact about how often new walkers fall.',
-    caption: 'Did You Know. The fact and the illustration for it.',
+    kind: 'collage',
+    layout: 'strip-3',
+    chrome: 'none',
+    fit: 'contain',
+    caption: 'The session, then Did You Know and Wonder.',
+    images: [
+        {
+            src: '/work/family-aha/12-stage-panel.webp',
+            alt: 'A finished session: fields, daily story, guide letters, and session art marked done.',
+        },
+        {
+            src: '/work/family-aha/01-did-you-know.webp',
+            alt: 'Did You Know card. An illustrated baby on a stone path, beside a fact about how often new walkers fall.',
+        },
+        {
+            src: '/work/family-aha/02-wonder.webp',
+            alt: "Wonder of the World card. An illustrated grass rope bridge in a canyon, with copy about Q'eswachaka in Peru.",
+        },
+    ],
 });
 
 // Same as fa-problem: add a src and this frame returns to the band.
@@ -77,6 +91,8 @@ const faUnique = slot({
     width: 1440,
     height: 900,
     kind: 'still',
+    chrome: 'none',
+    fit: 'contain',
 });
 
 const faStory = slot({
@@ -84,10 +100,21 @@ const faStory = slot({
     aspect: '16:10',
     width: 1440,
     height: 900,
-    kind: 'still',
-    src: '/work/04-daily-story.webp',
-    alt: "Daily story titled Gray's Origin: Step Off the Rock, told in the first person by a wolf named Gray.",
-    caption: "The night's story.",
+    kind: 'collage',
+    layout: 'stack',
+    chrome: 'none',
+    fit: 'contain',
+    caption: "The night's story, with the guide's letter behind it.",
+    images: [
+        {
+            src: '/work/family-aha/04-daily-story.webp',
+            alt: "Daily story titled Gray's Origin: Step Off the Rock, told in the first person by a wolf named Gray.",
+        },
+        {
+            src: '/work/family-aha/05-guide-letter.webp',
+            alt: "A letter from Sam's guide, Forest, titled The One Who Owns It, with a challenge for the week.",
+        },
+    ],
 });
 
 const faArt = slot({
@@ -95,10 +122,37 @@ const faArt = slot({
     aspect: '16:10',
     width: 1440,
     height: 900,
-    kind: 'still',
-    src: '/work/02-wonder.webp',
-    alt: "Wonder of the World card. An illustrated grass rope bridge in a canyon, with copy about Q'eswachaka in Peru.",
-    caption: 'Wonder of the World. Written from the sources, not free-written.',
+    kind: 'collage',
+    layout: 'grid',
+    chrome: 'none',
+    fit: 'contain',
+    caption: "Wordless illustrations for the day's cards.",
+    images: [
+        {
+            src: '/work/family-aha/art/1-embodiment-did-you-know.webp',
+            alt: 'Wordless illustration for an Embodiment Did You Know card.',
+        },
+        {
+            src: '/work/family-aha/art/1-embodiment-wonder.webp',
+            alt: 'Wordless illustration for an Embodiment Wonder card.',
+        },
+        {
+            src: '/work/family-aha/art/1-faith-did-you-know.webp',
+            alt: 'Wordless illustration for a Faith Did You Know card.',
+        },
+        {
+            src: '/work/family-aha/art/1-love-wonder.webp',
+            alt: 'Wordless illustration for a Love Wonder card.',
+        },
+        {
+            src: '/work/family-aha/art/1-forgiveness-wonder.webp',
+            alt: 'Wordless illustration for a Forgiveness Wonder card.',
+        },
+        {
+            src: '/work/family-aha/art/1-spirituality-did-you-know.webp',
+            alt: 'Wordless illustration for a Spirituality Did You Know card.',
+        },
+    ],
 });
 
 const faCheck = slot({
@@ -107,33 +161,26 @@ const faCheck = slot({
     width: 1440,
     height: 900,
     kind: 'still',
-    src: '/work/08-fact-check.webp',
+    chrome: 'none',
+    fit: 'contain',
+    src: '/work/family-aha/08-fact-check.webp',
     alt: 'Fact-check in the admin studio. A Did You Know sentence is marked Supported, with source passages underneath.',
     caption: 'Fact-check. Supported, with the passages it came from.',
 });
 
+// Hold the frame until a new portrait clip replaces the placeholder.
 const faPortrait = slot({
     id: 'fa-portrait',
     aspect: '16:10',
     width: 1440,
     height: 900,
     kind: 'video',
-    src: '/work/03-portrait.webm',
-    poster: '/work/03-portrait.webp',
+    chrome: 'none',
+    fit: 'contain',
+    hold: true,
     alt: 'Dev Family stands with a dog in a painted forest clearing.',
     label: 'Recording of a Family AHA portrait. Dev Family stands with a dog in a painted forest clearing.',
     caption: 'The family portrait, repainted into one world.',
-});
-
-const faQuiz = slot({
-    id: 'fa-quiz',
-    aspect: '16:10',
-    width: 1440,
-    height: 900,
-    kind: 'still',
-    src: '/work/06-quiz-reveal.webp',
-    alt: 'Animal Guide result for Maya. Her guide is Shilo, an eagle called The Dream Builder, with a short reason for the match.',
-    caption: 'The Animal Guide quiz, with a reason for the match.',
 });
 
 const faEngineering = slot({
@@ -141,11 +188,11 @@ const faEngineering = slot({
     aspect: '16:10',
     width: 1440,
     height: 900,
-    kind: 'video',
-    src: '/work/07-admin-generate.webm',
-    poster: '/work/07-admin-generate.webp',
-    alt: 'The AI Studio generating Taking Ownership, with Session fields as the stage in progress.',
-    label: 'Recording of the AI Studio generating Taking Ownership. Session fields is the stage in progress.',
+    kind: 'still',
+    chrome: 'none',
+    fit: 'contain',
+    src: '/work/family-aha/07-admin-generate.webp',
+    alt: 'The admin studio generating a session. Session fields is the stage in progress.',
     caption: 'The admin studio, generating a session.',
 });
 
@@ -161,27 +208,28 @@ export const mediaSlots = [
     heroSlot,
     faProblem,
     faWriter,
-    faFacts,
     faUnique,
     faStory,
     faArt,
     faCheck,
     faPortrait,
-    faQuiz,
     faEngineering,
     observatorySlot,
 ];
 
 const pipeline = [
     {
-        lead: 'Session writer',
-        body: "Claude writes each day's session as validated structured output. Earlier sessions go in as lines it isn't allowed to reuse.",
         slot: faWriter,
-    },
-    {
-        lead: 'Grounded fact cards',
-        body: "Did You Know and Wonder aren't free-written. The model proposes what to research, the pipeline pulls real sources, and the cards are written from those passages. A ledger blocks reusing a fact.",
-        slot: faFacts,
+        blocks: [
+            {
+                heading: 'Session writer',
+                body: "Claude writes each day's session as validated structured output. Earlier sessions go in as lines it isn't allowed to reuse.",
+            },
+            {
+                heading: 'Grounded fact cards',
+                body: "Did You Know and Wonder aren't free-written. The model proposes what to research, the pipeline pulls real sources, and the cards are written from those passages. A ledger blocks reusing a fact.",
+            },
+        ],
     },
     {
         lead: 'Uniqueness checks',
@@ -190,7 +238,7 @@ const pipeline = [
     },
     {
         lead: 'Daily story and guide letters',
-        body: "A second pass writes the night's story with its own rules against repeating plots. Then each animal guide writes a letter adapted to the kid's age.",
+        body: "A second pass writes the night's story with its own rules against repeating plots. Then each animal guide writes a letter adapted to the kid's age. Each kid's animal guide gets an AI-written reason for the match, then nightly letters in its voice.",
         slot: faStory,
     },
     {
@@ -208,11 +256,6 @@ const pipeline = [
         body: "One uploaded photo gets repainted into a curated world. A vision model checks that the same people came back and repaints once if they didn't.",
         slot: faPortrait,
     },
-    {
-        lead: 'Animal Guide quiz',
-        body: 'A small OpenAI model writes a personalized "why this guide" for each family member, with a safe fallback.',
-        slot: faQuiz,
-    },
 ];
 
 export const familyStudy = {
@@ -227,12 +270,16 @@ export const familyStudy = {
             body: "Families need a short evening ritual they'll actually repeat. Generic AI copy goes stale, repeats itself, and can't be trusted with facts a kid might remember. It also has to feel like it belongs to this family, not a template.",
             slot: faProblem,
         },
-        ...pipeline.map((item) => ({
-            id: item.slot.id,
-            heading: item.lead,
-            body: item.body,
-            slot: item.slot,
-        })),
+        ...pipeline.map((item) =>
+            item.blocks
+                ? { id: item.slot.id, slot: item.slot, blocks: item.blocks }
+                : {
+                      id: item.slot.id,
+                      heading: item.lead,
+                      body: item.body,
+                      slot: item.slot,
+                  },
+        ),
         {
             id: 'engineering',
             slot: faEngineering,
