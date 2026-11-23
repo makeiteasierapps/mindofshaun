@@ -342,6 +342,14 @@ function Tile({ image, fitClass, priority }) {
 }
 
 function Placeholder({ slot, aspect }) {
+    if (slot.label) {
+        return (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-6 text-center">
+                <p className="m-0 max-w-none text-[15px] font-semibold text-bone">{slot.label}</p>
+            </div>
+        );
+    }
+
     const kind =
         slot.kind === 'video'
             ? 'Video + poster'

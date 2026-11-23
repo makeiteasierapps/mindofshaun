@@ -42,7 +42,7 @@ export const heroSlot = slot({
     chrome: 'none',
     fit: 'contain',
     src: '/work/family-aha/01-did-you-know.webp',
-    alt: 'A Family AHA Did You Know card, with a Wonder card behind it.',
+    alt: 'Did You Know card. Illustrated macaques on a beach; a fact about Imo on Koshima in 1953 washing sweet potatoes. The last lines of the fact are clipped.',
     back: { src: '/work/family-aha/02-wonder.webp', alt: '' },
 });
 
@@ -75,11 +75,11 @@ const faWriter = slot({
         },
         {
             src: '/work/family-aha/01-did-you-know.webp',
-            alt: 'Did You Know card. An illustrated baby on a stone path, beside a fact about how often new walkers fall.',
+            alt: 'Did You Know card. Illustrated macaques on a beach; a fact about Imo on Koshima in 1953 washing sweet potatoes. The last lines of the fact are clipped.',
         },
         {
             src: '/work/family-aha/02-wonder.webp',
-            alt: "Wonder of the World card. An illustrated grass rope bridge in a canyon, with copy about Q'eswachaka in Peru.",
+            alt: 'Wonder of the World card. Illustrated rocky island in rough sea; copy about the 1963 birth of Surtsey off Iceland. The last lines are clipped.',
         },
     ],
 });
@@ -108,7 +108,7 @@ const faStory = slot({
     images: [
         {
             src: '/work/family-aha/04-daily-story.webp',
-            alt: "Daily story titled Gray's Origin: Step Off the Rock, told in the first person by a wolf named Gray.",
+            alt: 'Daily story titled Where Would the Door Be?, told in the first person by Merlin the monkey, about a mouse named Tamsin.',
         },
         {
             src: '/work/family-aha/05-guide-letter.webp',
@@ -155,6 +155,8 @@ const faArt = slot({
     ],
 });
 
+// No src until a replacement still exists, so the sticky band folds this copy
+// into the next step that has one. Set src, alt, and caption and the frame returns.
 const faCheck = slot({
     id: 'fa-check',
     aspect: '16:10',
@@ -163,9 +165,6 @@ const faCheck = slot({
     kind: 'still',
     chrome: 'none',
     fit: 'contain',
-    src: '/work/family-aha/08-fact-check.webp',
-    alt: 'Fact-check in the admin studio. A Did You Know sentence is marked Supported, with source passages underneath.',
-    caption: 'Fact-check. Supported, with the passages it came from.',
 });
 
 // Hold the frame until a new portrait clip replaces the placeholder.
@@ -179,7 +178,7 @@ const faPortrait = slot({
     fit: 'contain',
     hold: true,
     alt: 'Dev Family stands with a dog in a painted forest clearing.',
-    label: 'Recording of a Family AHA portrait. Dev Family stands with a dog in a painted forest clearing.',
+    label: 'Family portrait, coming soon',
     caption: 'The family portrait, repainted into one world.',
 });
 
@@ -192,7 +191,7 @@ const faEngineering = slot({
     chrome: 'none',
     fit: 'contain',
     src: '/work/family-aha/07-admin-generate.webp',
-    alt: 'The admin studio generating a session. Session fields is the stage in progress.',
+    alt: 'The admin studio Generate sessions dialog. Session fields, daily story, and save draft are done (story title The Gate on the Hill). Guide letters is in progress, 1 of 18, Cal. Session art has not started.',
     caption: 'The admin studio, generating a session.',
 });
 
@@ -238,7 +237,7 @@ const pipeline = [
     },
     {
         lead: 'Daily story and guide letters',
-        body: "A second pass writes the night's story with its own rules against repeating plots. Then each animal guide writes a letter adapted to the kid's age. Each kid's animal guide gets an AI-written reason for the match, then nightly letters in its voice.",
+        body: "A second pass writes the night's story with its own rules against repeating plots. Each kid's animal guide gets an AI-written reason for the match, then writes letters in that voice, adapted to the kid's age.",
         slot: faStory,
     },
     {
