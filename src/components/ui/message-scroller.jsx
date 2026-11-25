@@ -6,9 +6,27 @@ import {
   useMessageScrollerVisibility,
 } from "@shadcn/react/message-scroller"
 import { cn } from "@/lib/utils"
-import { ArrowDownIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+
+function ArrowDownIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="size-4"
+    >
+      <path d="M12 5v14" />
+      <path d="m19 12-7 7-7-7" />
+    </svg>
+  )
+}
 
 function MessageScrollerProvider(
   props

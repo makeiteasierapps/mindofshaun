@@ -1,12 +1,29 @@
+import { lazy, Suspense } from 'react';
 import { motion } from 'motion/react';
 
 import { BookLink } from '@/components/BookLink';
-import { Chat } from '@/components/Chat';
 import { ProjectCard } from '@/components/ProjectCard';
-import { usePrefersReducedMotion } from '@/components/MediaFrame';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { Button } from '@/components/ui/button';
-import { LifeField } from '@/LifeField';
 import { email, profiles, projects, steps } from '@/content';
+
+const Chat = lazy(() =>
+    import('@/components/Chat').then((mod) => ({ default: mod.Chat })),
+);
+const LifeField = lazy(() =>
+    import('@/LifeField').then((mod) => ({ default: mod.LifeField })),
+);
+
+function ChatFallback() {
+    return (
+        <div
+            className="h-[min(36rem,70dvh)] rounded-[8px] border border-border bg-card"
+            aria-busy="true"
+        >
+            <span className="sr-only">Loading chat…</span>
+        </div>
+    );
+}
 
 const wrap = 'mx-auto w-full max-w-[1120px] px-5 sm:px-8 lg:px-12';
 const textLink =
@@ -30,13 +47,9 @@ function Hero() {
                 </h1>
                 <p className="max-w-[42ch] text-[17px] text-parchment">
                     For founders and small teams who want an AI product built
-                    and shipped.
+                    and shipped. I’m Shaun, in Salt Lake City.
                 </p>
-                <p className="max-w-[42ch] text-[17px] text-parchment">
-                    I'm Shaun. I live in Salt Lake City, ride whenever there's
-                    snow, and build AI products that actually ship.
-                </p>
-                <div className="mt-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-6">
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
                     <Button asChild className="w-full sm:w-auto">
                         <BookLink />
                     </Button>
@@ -59,7 +72,9 @@ function Ask() {
             <div className={wrap}>
                 <h2 id="chat-title">Ask about my work</h2>
                 <p>Ask about a project, the stack, or how I ship it.</p>
-                <Chat />
+                <Suspense fallback={<ChatFallback />}>
+                    <Chat />
+                </Suspense>
             </div>
         </section>
     );
@@ -105,8 +120,7 @@ function Process() {
                     ))}
                 </ol>
                 <p className="mt-6 text-bone">
-                    Everything I ship is hosted and monitored on a platform I
-                    built.
+                    What I ship stays hosted and watched on a platform I built.
                 </p>
             </div>
         </section>
@@ -123,13 +137,12 @@ function About() {
             <div className={wrap}>
                 <h2 id="about-title">About</h2>
                 <p className="max-w-[40em]">
-                    I'm Shaun Offenbacher. I live in Salt Lake City, and I
-                    snowboard whenever there's snow.
+                    I’m Shaun Offenbacher. I live in Salt Lake City, and I
+                    snowboard when there’s snow.
                 </p>
                 <p className="max-w-[40em]">
-                    Novapaxx is my company in Utah. I want to build AI-powered
-                    apps for founders and small teams, and I want them to
-                    actually ship.
+                    Novapaxx is my company. I build AI apps for founders and
+                    small teams, and I ship them.
                 </p>
             </div>
         </section>
@@ -184,7 +197,7 @@ export function Page() {
         <>
             <a
                 href="#content"
-                className="absolute left-4 top-3 z-30 -translate-y-[140%] rounded-[6px] bg-brass px-3 py-2 text-[15px] font-semibold text-ground focus:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bone"
+                className="absolute left-4 top-3 z-30 inline-flex min-h-11 -translate-y-[140%] items-center rounded-[6px] bg-brass px-3 text-[15px] font-semibold text-ground focus:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bone"
             >
                 Skip to content
             </a>
@@ -209,7 +222,7 @@ export function Page() {
                             <a
                                 key={href}
                                 href={href}
-                                className="inline-flex min-h-11 items-center text-[15px] text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass fine-hover:hover:text-brass"
+                                className="inline-flex min-h-11 min-w-11 items-center justify-center text-[15px] text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass fine-hover:hover:text-brass"
                             >
                                 {label}
                             </a>
@@ -230,7 +243,9 @@ export function Page() {
                     className="relative h-16 overflow-hidden opacity-40"
                     aria-hidden="true"
                 >
-                    <LifeField />
+                    <Suspense fallback={null}>
+                        <LifeField />
+                    </Suspense>
                 </div>
                 <div className={`${wrap} py-6`}>
                     <p className="m-0 max-w-none text-sm text-quiet">

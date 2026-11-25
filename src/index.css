@@ -30,7 +30,7 @@
     --color-parchment: #c8c2b4;
     --color-brass: #c4a574;
     --color-brass-hover: #d7b07a;
-    --color-quiet: #8e8678;
+    --color-quiet: #9e9686;
     --color-line: rgb(255 255 255 / 0.08);
 
     --color-background: #08090a;
@@ -42,7 +42,7 @@
     --color-card: #131417;
     --color-card-foreground: #c8c2b4;
     --color-muted: #131417;
-    --color-muted-foreground: #8e8678;
+    --color-muted-foreground: #9e9686;
     --color-secondary: #0e0f11;
     --color-secondary-foreground: #f3f0e8;
     --color-accent: #1c1e22;
@@ -56,8 +56,14 @@
 @layer base {
     html {
         color-scheme: dark;
-        scroll-padding-top: 5rem;
+        scroll-padding-top: 8rem;
         background: var(--color-ground);
+    }
+
+    @media (min-width: 768px) {
+        html {
+            scroll-padding-top: 5.5rem;
+        }
     }
 
     body {
@@ -78,6 +84,20 @@
         color: var(--color-bone);
         font-weight: 600;
         letter-spacing: -0.03em;
+        scroll-margin-top: 8rem;
+    }
+
+    @media (min-width: 768px) {
+        h1,
+        h2,
+        h3 {
+            scroll-margin-top: 5.5rem;
+        }
+    }
+
+    h1,
+    h2 {
+        text-wrap: balance;
     }
 
     h1 {

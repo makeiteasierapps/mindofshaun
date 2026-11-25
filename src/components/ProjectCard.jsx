@@ -27,8 +27,8 @@ export function ProjectCard({ project }) {
                         <img
                             src={project.image.src}
                             alt={project.image.alt}
-                            width={976}
-                            height={936}
+                            width={project.image.width}
+                            height={project.image.height}
                             loading="lazy"
                             decoding="async"
                             className="h-auto max-h-96 w-auto max-w-full object-contain"

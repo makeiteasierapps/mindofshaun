@@ -4,7 +4,7 @@ import { Streamdown, defaultRehypePlugins } from 'streamdown';
 import { useEffect, useState } from 'react';
 
 import { BookLink } from '@/components/BookLink';
-import { usePrefersReducedMotion } from '@/components/MediaFrame';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Bubble, BubbleContent } from '@/components/ui/bubble';
 import { Button } from '@/components/ui/button';
@@ -198,7 +198,7 @@ function PlanCard({ part }) {
 
     if (streaming) {
         return (
-            <Card className="rounded-[8px] shadow-none" aria-busy="true">
+            <Card className="min-w-0 rounded-[8px] break-words shadow-none" aria-busy="true">
                 <CardHeader>
                     <CardTitle>App plan</CardTitle>
                 </CardHeader>
@@ -231,7 +231,7 @@ function PlanCard({ part }) {
     }
 
     return (
-        <Card className="rounded-[8px] shadow-none">
+        <Card className="min-w-0 rounded-[8px] break-words shadow-none">
             <CardHeader>
                 <CardTitle>App plan</CardTitle>
             </CardHeader>
@@ -288,11 +288,11 @@ function PlanCard({ part }) {
                 </PlanSection>
                 <PlanSection title="Next step">{plan.next_step}</PlanSection>
             </CardContent>
-            <CardFooter className="flex-wrap gap-3">
-                <Button type="button" variant="outline" onClick={copyPlan}>
+            <CardFooter className="flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={copyPlan}>
                     {copied ? 'Copied' : 'Copy plan'}
                 </Button>
-                <Button asChild>
+                <Button asChild className="w-full sm:w-auto">
                     <BookLink />
                 </Button>
             </CardFooter>
@@ -312,6 +312,11 @@ function AssistantText({ text, live, reduce }) {
             caret={live && !reduce ? 'block' : undefined}
             isAnimating={live && !reduce}
             components={{
+                h1: ({ children }) => (
+                    <p className="m-0 mb-2 max-w-none text-base font-semibold text-bone">
+                        {children}
+                    </p>
+                ),
                 a: ({ href, children }) => (
                     <a
                         href={href}
@@ -379,13 +384,17 @@ export function Chat() {
 
     return (
         <div className="flex h-[min(36rem,70dvh)] flex-col overflow-hidden rounded-[8px] border border-border bg-card">
-            <MessageScrollerProvider autoScroll defaultScrollPosition="start">
+            <MessageScrollerProvider
+                autoScroll={messages.length > 0}
+                defaultScrollPosition="start"
+            >
                 <MessageScroller className="min-h-0 flex-1">
                     <MessageScrollerViewport>
                         <MessageScrollerContent
                             aria-live="polite"
                             aria-busy={busy}
                             aria-relevant="additions text"
+                            className="px-3 py-3"
                         >
                             {messages.length === 0 ? (
                                 <MessageScrollerItem messageId="greeting">
@@ -547,7 +556,9 @@ export function Chat() {
                                 value={draft}
                                 maxLength={MAX_CHARS}
                                 disabled={locked || resting}
-                                placeholder="Ask about a project, the stack, or how I ship it."
+                                autoComplete="off"
+                                placeholder="Ask about a project, the stack, or how I ship it…"
+                                className="max-h-32 overflow-y-auto"
                                 aria-describedby="chat-count chat-note"
                                 onChange={(event) => setDraft(event.target.value)}
                                 onKeyDown={onKeyDown}
