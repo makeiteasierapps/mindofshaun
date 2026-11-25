@@ -38,6 +38,9 @@
     --color-primary-foreground: #08090a;
     --color-border: rgb(255 255 255 / 0.08);
     --color-ring: #c4a574;
+    --color-card: #131417;
+    --color-card-foreground: #c8c2b4;
+    --color-muted-foreground: #8e8678;
 
     --radius: 8px;
 }

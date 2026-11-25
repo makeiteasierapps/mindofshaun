@@ -33,19 +33,6 @@ function slot(spec) {
     };
 }
 
-export const heroSlot = slot({
-    id: 'hero',
-    aspect: '16:10',
-    width: 1600,
-    height: 1000,
-    kind: 'still',
-    chrome: 'none',
-    fit: 'contain',
-    src: '/work/family-aha/01-did-you-know.webp',
-    alt: 'Did You Know card. Illustrated macaques on a beach; a fact about Imo on Koshima in 1953 washing sweet potatoes. The last lines of the fact are clipped.',
-    back: { src: '/work/family-aha/02-wonder.webp', alt: '' },
-});
-
 // No src yet, so the sticky band folds this copy into the next step that has
 // one. Set src, alt, and caption and the step comes back as its own frame.
 const faProblem = slot({
@@ -195,27 +182,6 @@ const faEngineering = slot({
     caption: 'The admin studio, generating a session.',
 });
 
-export const observatorySlot = slot({
-    id: 'obs-dashboard',
-    aspect: '16:10',
-    width: 1600,
-    height: 1000,
-    kind: 'still',
-});
-
-export const mediaSlots = [
-    heroSlot,
-    faProblem,
-    faWriter,
-    faUnique,
-    faStory,
-    faArt,
-    faCheck,
-    faPortrait,
-    faEngineering,
-    observatorySlot,
-];
-
 const pipeline = [
     {
         slot: faWriter,
@@ -300,40 +266,45 @@ export const familyStudy = {
     ],
 };
 
-export const diagram = [
-    'The model proposes',
-    'Code decides',
-    'A human gets paged only when needed',
+export const projects = [
+    {
+        title: 'Family AHA',
+        lede: 'A production family app whose daily ritual is written, fact-checked, illustrated, and personalized by a multi-stage AI pipeline.',
+        body: "Families need a short evening ritual they'll actually repeat, and generic AI copy goes stale, repeats itself, and can't be trusted with a fact a kid might remember. The app writes each day's session as structured output, researches Did You Know and Wonder from real sources, then writes the night's story and a letter from each kid's animal guide. A faster model rewrites anything that overlaps a past session, Flux paints a wordless illustration for each card, and claims are checked against Wikipedia, OpenAlex, and Tavily. Prompts stay versioned, each stage runs as a job you can watch, and every model call is logged with its cost.",
+        stack: [
+            'React',
+            'Tailwind',
+            'shadcn/ui',
+            'FastAPI',
+            'MongoDB',
+            'Ory Kratos',
+            'Stripe',
+            'Claude',
+            'OpenAI',
+            'Flux',
+            'Tavily',
+            'TypeSafe',
+        ],
+        image: {
+            src: '/work/family-aha/05-guide-letter.webp',
+            alt: "A letter from Sam's guide, Forest, titled The One Who Owns It, with a challenge for the week.",
+        },
+        href: 'https://familyaha.com',
+        linkLabel: 'familyaha.com',
+    },
+    {
+        title: 'Novapaxx / Observatory',
+        lede: 'AI that watches a cluster and stays quiet until a person is needed.',
+        body: 'A Kubernetes cluster produces more signals than a person should watch, and a page for every blip is a page nobody reads. Observatory opens a situation from those signals, and a judgment model classifies it into a closed playbook. Reversible fixes can run on their own. Anything else waits for a person, because the model proposes and code decides whether a write happens.',
+        stack: ['Kubernetes', 'Flux', 'FastAPI', 'MongoDB', 'TypeSafe', 'Discord'],
+    },
+    {
+        title: 'Hosting platform',
+        lede: 'Apps ship from a template onto a cluster I run.',
+        body: 'An app starts from a template, publishes an image to GHCR, and rolls out through Flux onto the Kubernetes cluster. Family AHA runs there, and so does the rest of what I host.',
+        stack: ['Flux', 'Kubernetes', 'GitOps', 'GHCR'],
+    },
 ];
-
-export const observatory = {
-    id: 'observatory',
-    title: 'Observatory',
-    lede: 'AI that runs real systems.',
-    slot: observatorySlot,
-    parts: [
-        {
-            heading: 'Problem',
-            body: 'A Kubernetes cluster produces more signals than a person should watch. Page someone for every blip, and they stop reading the page.',
-        },
-        {
-            heading: 'What I built',
-            body: 'Observatory scans those signals and opens a situation. The cluster is managed through GitOps. A person is paged only when a situation needs one.',
-        },
-        {
-            heading: 'The AI',
-            body: 'A judgment model classifies each situation into a closed playbook. Reversible fixes can run on their own. Anything else waits for approval. The model proposes. Code decides whether a write happens.',
-        },
-        {
-            heading: 'Stack',
-            body: 'Kubernetes, Flux, FastAPI, MongoDB, and TypeSafe for the judgment calls. Discord is how a page goes out.',
-        },
-        {
-            heading: 'Outcome',
-            body: 'This is the system that runs Family AHA and the rest of what I host. The ordinary state is silence.',
-        },
-    ],
-};
 
 export const steps = [
     {
@@ -350,33 +321,5 @@ export const steps = [
         n: '03',
         title: 'Run',
         body: 'It stays hosted and watched. You hear about it when a situation needs a person.',
-    },
-];
-
-export const offers = [
-    {
-        title: 'AI MVP Build',
-        // Bracketed price and timeline stay hidden until real values replace them.
-        price: '[price]',
-        timeline: '[timeline]',
-        featured: true,
-        included: [
-            'A scope: who it\'s for, what it has to do, and what is out',
-            'The product designed and shipped to a real deployment',
-            'Prompts versioned, outputs checked against a schema, and every model call logged with its cost',
-            'Hosting and monitoring after it ships',
-        ],
-    },
-    {
-        title: 'AI Feature Sprint',
-        price: '[price]',
-        timeline: '[timeline]',
-        featured: false,
-        included: [
-            'One feature, with what is out of it written down',
-            'Built into the product you already have',
-            'Shipped to the deployment that product already runs on',
-            'A schema check and a cost log for the model call, left in place',
-        ],
     },
 ];

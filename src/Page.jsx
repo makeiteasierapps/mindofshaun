@@ -1,22 +1,12 @@
 import { motion } from 'motion/react';
 
-import { FamilyStudy } from '@/components/FamilyStudy';
-import { MediaFrame, usePrefersReducedMotion } from '@/components/MediaFrame';
+import { ProjectCard } from '@/components/ProjectCard';
+import { usePrefersReducedMotion } from '@/components/MediaFrame';
 import { Button } from '@/components/ui/button';
 import { LifeField } from '@/LifeField';
-import {
-    BOOKING_URL,
-    diagram,
-    email,
-    heroSlot,
-    observatory,
-    offers,
-    profiles,
-    steps,
-} from '@/content';
+import { BOOKING_URL, email, profiles, projects, steps } from '@/content';
 
 const wrap = 'mx-auto w-full max-w-[1120px] px-5 sm:px-8 lg:px-12';
-const wide = 'mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12';
 const textLink =
     'inline-flex min-h-11 items-center text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass';
 
@@ -39,11 +29,7 @@ function Hero() {
     const reduce = usePrefersReducedMotion();
 
     return (
-        <section
-            id="top"
-            aria-labelledby="hero-title"
-            className={`${wrap} grid items-center gap-10 py-10 md:min-h-[calc(100svh-4.5rem)] md:grid-cols-[minmax(0,0.92fr)_minmax(300px,1.08fr)] md:gap-14 md:py-16`}
-        >
+        <section id="top" aria-labelledby="hero-title" className={`${wrap} py-16 md:py-24`}>
             <motion.div
                 initial={reduce ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -59,67 +45,56 @@ function Hero() {
                     For founders and small teams who want an AI product built
                     and shipped.
                 </p>
+                <p className="max-w-[42ch] text-[17px] text-parchment">
+                    I'm Shaun. I live in Salt Lake City, ride whenever there's
+                    snow, and build AI products that actually ship.
+                </p>
                 <div className="mt-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-6">
                     <Button asChild className="w-full sm:w-auto">
                         <BookLink />
                     </Button>
                     <Button asChild variant="link" className="w-full sm:w-auto">
-                        <a href="#work">See the work</a>
+                        <a href="#chat">Try the AI</a>
                     </Button>
                 </div>
             </motion.div>
-            <MediaFrame slot={heroSlot} elevated priority />
         </section>
     );
 }
 
-function Diagram() {
+function Ask() {
     return (
-        <ol className="m-0 mt-10 grid list-none gap-px overflow-hidden rounded-[8px] border border-line bg-line p-0 sm:grid-cols-3">
-            {diagram.map((line, index) => (
-                <li key={line} className="bg-raised px-4 py-4">
-                    <span
-                        aria-hidden="true"
-                        className="mb-2 block text-[15px] font-semibold text-quiet"
-                    >
-                        {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <p className="m-0 max-w-none text-[15px] font-semibold leading-snug text-bone">
-                        {line}
-                    </p>
-                </li>
-            ))}
-        </ol>
+        <section
+            id="chat"
+            aria-labelledby="chat-title"
+            className="border-t border-line py-16 md:py-20"
+        >
+            <div className={wrap}>
+                <h2 id="chat-title">Ask about my work</h2>
+                <p>Ask about a project, the stack, or how I ship it.</p>
+                {/* Chat UI mounts here in a later session. */}
+                <div
+                    aria-hidden="true"
+                    className="min-h-48 rounded-[8px] border border-line bg-raised"
+                />
+            </div>
+        </section>
     );
 }
 
-function Observatory() {
+function Projects() {
     return (
         <section
-            id="observatory"
-            aria-labelledby="observatory-title"
-            className="border-t border-line bg-panel"
+            id="work"
+            aria-labelledby="work-title"
+            className="border-t border-line py-16 md:py-24"
         >
-            <div className={`${wide} py-20 md:py-28`}>
-                <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-16">
-                    <div>
-                        <h2 id="observatory-title">{observatory.title}</h2>
-                        <p className="text-parchment">{observatory.lede}</p>
-                        {observatory.parts.map((part) => (
-                            <div key={part.heading} className="mt-8">
-                                <h3>{part.heading}</h3>
-                                <p className="mb-0">{part.body}</p>
-                            </div>
-                        ))}
-                        <Diagram />
-                    </div>
-                    <div className="lg:sticky lg:top-24">
-                        <MediaFrame
-                            slot={observatory.slot}
-                            chrome="browser"
-                            elevated
-                        />
-                    </div>
+            <div className={wrap}>
+                <h2 id="work-title">Projects</h2>
+                <div className="flex flex-col gap-6">
+                    {projects.map((project) => (
+                        <ProjectCard key={project.title} project={project} />
+                    ))}
                 </div>
             </div>
         </section>
@@ -155,81 +130,6 @@ function Process() {
     );
 }
 
-function isPlaceholder(value) {
-    return typeof value !== 'string' || /^\[[^\]]*\]$/.test(value.trim());
-}
-
-function Offers() {
-    return (
-        <section
-            id="offers"
-            aria-labelledby="offers-title"
-            className="border-t border-line py-16 md:py-24"
-        >
-            <div className={wrap}>
-                <h2 id="offers-title">Offers</h2>
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                    {offers.map((offer) => {
-                        const pricePending = isPlaceholder(offer.price);
-                        const timelinePending = isPlaceholder(offer.timeline);
-                        return (
-                            <article
-                                key={offer.title}
-                                className={
-                                    offer.featured
-                                        ? 'flex h-full flex-col rounded-[8px] border border-brass bg-raised px-6 py-6 md:px-8 md:py-8'
-                                        : 'flex h-full flex-col rounded-[8px] border border-line bg-panel px-6 py-6 md:px-8 md:py-8'
-                                }
-                            >
-                                <h3>{offer.title}</h3>
-                                {pricePending ? (
-                                    <p className="m-0 text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.03em] text-bone">
-                                        Scoped on a call
-                                    </p>
-                                ) : (
-                                    <p className="m-0 text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.03em] text-bone">
-                                        <span className="sr-only">Price: </span>
-                                        {offer.price}
-                                    </p>
-                                )}
-                                <dl className="m-0">
-                                    <dt className="mb-2 mt-5 text-[15px] text-quiet">
-                                        Included
-                                    </dt>
-                                    <dd className="m-0">
-                                        <ul className="m-0 flex list-disc flex-col gap-2 pl-5 marker:text-brass">
-                                            {offer.included.map((item) => (
-                                                <li key={item} className="pl-1">
-                                                    {item}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </dd>
-                                    {timelinePending ? null : (
-                                        <>
-                                            <dt className="mb-1 mt-5 text-[15px] text-quiet">
-                                                Timeline
-                                            </dt>
-                                            <dd className="m-0 font-semibold text-bone">
-                                                {offer.timeline}
-                                            </dd>
-                                        </>
-                                    )}
-                                </dl>
-                                <div className="mt-auto pt-6">
-                                    <Button asChild className="w-full">
-                                        <BookLink />
-                                    </Button>
-                                </div>
-                            </article>
-                        );
-                    })}
-                </div>
-            </div>
-        </section>
-    );
-}
-
 function About() {
     return (
         <section
@@ -241,12 +141,12 @@ function About() {
                 <h2 id="about-title">About</h2>
                 <p className="max-w-[40em]">
                     I'm Shaun Offenbacher. I live in Salt Lake City, and I
-                    snowboard when the snow is in. I build AI products for
-                    founders and small teams, then I keep them running.
+                    snowboard whenever there's snow.
                 </p>
                 <p className="max-w-[40em]">
-                    Family AHA is mine. Observatory is the platform under it,
-                    and under the work I take on.
+                    Novapaxx is my company in Utah. I want to build AI-powered
+                    apps for founders and small teams, and I want them to
+                    actually ship.
                 </p>
             </div>
         </section>
@@ -320,9 +220,6 @@ export function Page() {
                     >
                         {[
                             ['#work', 'Work'],
-                            ['#observatory', 'Observatory'],
-                            ['#process', 'How I work'],
-                            ['#offers', 'Offers'],
                             ['#about', 'About'],
                             ['#contact', 'Contact'],
                         ].map(([href, label]) => (
@@ -339,10 +236,9 @@ export function Page() {
             </header>
             <main id="content">
                 <Hero />
-                <FamilyStudy />
-                <Observatory />
+                <Ask />
+                <Projects />
                 <Process />
-                <Offers />
                 <About />
                 <Contact />
             </main>
