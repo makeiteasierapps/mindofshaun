@@ -10,10 +10,15 @@ const buttonVariants = cva(
             variant: {
                 default:
                     'rounded-[6px] bg-brass text-ground fine-hover:hover:bg-brass-hover',
+                outline:
+                    'rounded-[6px] border border-border bg-transparent text-bone fine-hover:hover:bg-raised',
+                secondary:
+                    'rounded-[6px] border border-border bg-raised text-bone fine-hover:hover:bg-panel',
                 link: 'h-auto min-h-12 bg-transparent px-0 text-bone underline-offset-[4px] fine-hover:hover:underline active:scale-100',
             },
             size: {
                 default: 'h-12 px-[18px] text-[15px]',
+                icon: 'size-11 p-0',
             },
         },
         defaultVariants: {

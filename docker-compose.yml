@@ -3,13 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        VITE_BACKEND_URL_PROD: "mindofshaun.com/api"
     image: ${IMAGE_NAME:-mindofshaun}:${IMAGE_TAG:-latest}
     ports:
-      - "6066:6066"
+      - "8000:8000"
     env_file:
       - ./server/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: bash -c "service nginx start && python run.py" 

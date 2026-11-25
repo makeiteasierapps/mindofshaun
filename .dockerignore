@@ -10,6 +10,8 @@ yarn-error.log
 
 # Python
 __pycache__/
+server/.venv
+.agents
 *.py[cod]
 *$py.class
 *.so

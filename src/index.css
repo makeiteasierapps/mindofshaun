@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@source "../node_modules/streamdown/dist/*.js";
 
 @font-face {
     font-family: "Familjen Grotesk";
@@ -40,7 +41,14 @@
     --color-ring: #c4a574;
     --color-card: #131417;
     --color-card-foreground: #c8c2b4;
+    --color-muted: #131417;
     --color-muted-foreground: #8e8678;
+    --color-secondary: #0e0f11;
+    --color-secondary-foreground: #f3f0e8;
+    --color-accent: #1c1e22;
+    --color-accent-foreground: #f3f0e8;
+    --color-destructive: #e07a6a;
+    --color-input: rgb(255 255 255 / 0.08);
 
     --radius: 8px;
 }

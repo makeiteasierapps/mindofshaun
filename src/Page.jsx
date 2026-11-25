@@ -1,29 +1,16 @@
 import { motion } from 'motion/react';
 
+import { BookLink } from '@/components/BookLink';
+import { Chat } from '@/components/Chat';
 import { ProjectCard } from '@/components/ProjectCard';
 import { usePrefersReducedMotion } from '@/components/MediaFrame';
 import { Button } from '@/components/ui/button';
 import { LifeField } from '@/LifeField';
-import { BOOKING_URL, email, profiles, projects, steps } from '@/content';
+import { email, profiles, projects, steps } from '@/content';
 
 const wrap = 'mx-auto w-full max-w-[1120px] px-5 sm:px-8 lg:px-12';
 const textLink =
     'inline-flex min-h-11 items-center text-bone underline underline-offset-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass';
-
-function BookLink({ className, ...props }) {
-    return (
-        <a
-            {...props}
-            href={BOOKING_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={className}
-        >
-            Book a call
-            <span className="sr-only"> (opens in a new tab)</span>
-        </a>
-    );
-}
 
 function Hero() {
     const reduce = usePrefersReducedMotion();
@@ -72,11 +59,7 @@ function Ask() {
             <div className={wrap}>
                 <h2 id="chat-title">Ask about my work</h2>
                 <p>Ask about a project, the stack, or how I ship it.</p>
-                {/* Chat UI mounts here in a later session. */}
-                <div
-                    aria-hidden="true"
-                    className="min-h-48 rounded-[8px] border border-line bg-raised"
-                />
+                <Chat />
             </div>
         </section>
     );

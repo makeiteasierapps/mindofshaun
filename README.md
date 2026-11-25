@@ -17,12 +17,19 @@ This project is containerized with Docker and supports automatic failover to a c
 
 - Docker and Docker Compose
 - Node.js 20+ (for local development)
-- Python 3.11+ (for the container's health API)
+- Python 3.12+ and [uv](https://docs.astral.sh/uv/) (for the API)
 - AWS CLI (configured with appropriate permissions)
 
 ### Local Development
 
-The site is static. The Python process only serves `GET /api/health` so the nginx container still has an API upstream.
+The API is a FastAPI app in `server/`, on port 8001. It serves `POST /api/chat`, `GET /api/health`, and, when `dist/` exists, the built site. Copy `server/.env.example` to `server/.env` and set a provider key before chatting against a real model.
+
+```bash
+cd server
+uv run fastapi dev --port 8001
+```
+
+In another terminal, from the repo root, the Vite dev server proxies `/api` to that process:
 
 ```bash
 npm install
@@ -143,7 +150,7 @@ To set up the AWS ECR repository:
 
 ## Health Monitoring
 
-The application exposes a health check endpoint at `/health` that returns the service status.
+The application exposes a health check endpoint at `/api/health` that returns the service status.
 
 ## License
 

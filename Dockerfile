@@ -1,54 +1,29 @@
-# --- Stage 1: Build the React frontend ---
-FROM node:20-alpine AS client-builder
+# --- Web build ---
+FROM node:20-alpine AS web-builder
 
-# Install dependencies first (separate from code to improve caching)
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --prefer-offline --no-audit
-
-# Copy source
 COPY . .
-
-# Set build arg and create .env file for Vite
-ARG VITE_BACKEND_URL_PROD
-RUN echo "VITE_BACKEND_URL_PROD=${VITE_BACKEND_URL_PROD}" > .env
-
-# Build the app
 RUN npm run build
 
-# --- Stage 2: Backend + NGINX ---
-FROM python:3.11-slim AS server-builder
+# --- API and built site, one process on port 8000 ---
+FROM python:3.12-slim AS runtime
 
-# Install Python dependencies first (separate layer)
+COPY --from=ghcr.io/astral-sh/uv:0.12.5 /uv /uvx /bin/
+
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY server/pyproject.toml server/uv.lock ./
+RUN uv sync --frozen --no-dev
 
-# Install OS packages in a single layer
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends nginx && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+COPY server/app ./app
+COPY --from=web-builder /app/dist ./static
 
-# Copy Python backend code
-COPY server/ ./server/
-COPY run.py .
+ENV PATH="/app/.venv/bin:$PATH" \
+    STATIC_DIR=/app/static \
+    APP_ENV=production \
+    PYDANTIC_AI_NO_BANNER=1
 
-# Copy built static files from client
-COPY --from=client-builder /app/dist /dist
+EXPOSE 8000
 
-# Configure nginx
-COPY nginx/nginx.conf /etc/nginx/sites-available/default
-RUN mkdir -p /var/log/nginx && \
-    mkdir -p /var/lib/nginx/body && \
-    mkdir -p /run/nginx && \
-    chown -R www-data:www-data /var/log/nginx /var/lib/nginx /run/nginx && \
-    ln -sf /dev/stdout /var/log/nginx/access.log && \
-    ln -sf /dev/stderr /var/log/nginx/error.log && \
-    ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
-# Expose the container port (NGINX listens here)
-EXPOSE 6066
-
-# Start NGINX and the Python API server
-CMD service nginx start && python run.py
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
