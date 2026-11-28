@@ -7,11 +7,23 @@
       "skillPath": "skills/ai-elements/SKILL.md",
       "computedHash": "6d7ccc65b98adb04d6c47632746dbfea55528903de9b027f6b39b80983d5aa55"
     },
+    "ai-sdk": {
+      "source": "vercel/ai",
+      "sourceType": "github",
+      "skillPath": "skills/ai-sdk/SKILL.md",
+      "computedHash": "d6910e7d8bb527d2823ba58b6225b304ae649c135fc7e43ec2d2152251c218db"
+    },
     "building-pydantic-ai-agents": {
       "source": "pydantic/skills",
       "sourceType": "github",
       "skillPath": "skills/building-pydantic-ai-agents/SKILL.md",
       "computedHash": "fca23a3734a865f11786ee59230c0df0dc5c1263bb5945c8cf34e712214de35e"
+    },
+    "claude-api": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/claude-api/SKILL.md",
+      "computedHash": "b0d8cf8ac6b744f9e8feb3aa0f5c8e2c621952974cd114bea4dbd009c57b2cf3"
     },
     "dark-tech": {
       "source": "/tmp/design-taste",
@@ -40,6 +52,12 @@
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "playwright-cli": {
+      "source": "microsoft/playwright-cli",
+      "sourceType": "github",
+      "skillPath": "skills/playwright-cli/SKILL.md",
+      "computedHash": "0a6e4b6d897111df89926a2c57619f3893bd5c6aa716fee64e2f52c78492fc4c"
     },
     "shadcn": {
       "source": "shadcn-ui/ui",
